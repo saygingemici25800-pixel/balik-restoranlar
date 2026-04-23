@@ -1,0 +1,9 @@
+:root {
+  --color-bg: #fbfaf6;
+  --color-fg: #1f2937;
+  --color-accent: #0f766e;
+  --color-muted: #6b7280;
+
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+}
