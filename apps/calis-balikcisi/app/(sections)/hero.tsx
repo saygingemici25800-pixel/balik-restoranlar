@@ -14,17 +14,8 @@ const HERO_IMAGES: { src: string; alt: string }[] = [
 
 const INTERVAL_MS = 5000;
 
-const NAV_LINKS: { id: string; label: string; href: string }[] = [
-  { id: 'menu', label: 'Menü', href: '#menu' },
-  { id: 'konsept', label: 'Konsept', href: '#konsept' },
-  { id: 'bugun-tezgahta', label: 'Bugün Tezgâhta', href: '#bugun-tezgahta' },
-  { id: 'iletisim', label: 'İletişim', href: '#iletisim' },
-  { id: 'rezervasyon', label: 'Masa Ayırt', href: '/rezervasyon' },
-];
-
 export function CalisHero() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [activeId, setActiveId] = useState('menu');
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -34,28 +25,6 @@ export function CalisHero() {
       setActiveIndex((i) => (i + 1) % HERO_IMAGES.length);
     }, INTERVAL_MS);
     return () => clearInterval(id);
-  }, []);
-
-  useEffect(() => {
-    const sections = NAV_LINKS.filter((link) => link.href.startsWith('#'))
-      .map((link) => document.getElementById(link.id))
-      .filter((el): el is HTMLElement => el !== null);
-
-    if (sections.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        }
-      },
-      { rootMargin: '-40% 0px -40% 0px', threshold: 0 },
-    );
-
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
   }, []);
 
   return (
@@ -81,62 +50,83 @@ export function CalisHero() {
       </div>
 
       <div
-        className="absolute inset-0 bg-gradient-to-b from-bg/50 via-bg/10 to-bg/50"
+        className="absolute inset-0 bg-gradient-to-b from-bg/60 via-bg/30 to-bg/70"
         aria-hidden="true"
       />
 
-      <header className="fixed top-0 left-0 right-0 z-20 px-10 md:px-16 py-6 grid grid-cols-3 items-center">
-        <Link
-          href="/rezervasyon"
-          className="group relative inline-block justify-self-start pb-1"
+      <header className="absolute top-0 left-0 right-0 z-20 px-6 md:px-16 py-6 grid grid-cols-3 items-center">
+        <button
+          type="button"
+          aria-label="Menüyü aç"
+          className="justify-self-start -ml-2 p-2 text-fg hover:text-accent transition-colors"
         >
-          <span className="text-sm uppercase tracking-widest text-fg opacity-80">
-            Rezervasyon
-          </span>
-          <span
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="square"
             aria-hidden="true"
-            className="absolute left-0 bottom-0 h-px w-full origin-left scale-x-0 bg-accent transition-transform duration-300 ease-out group-hover:scale-x-100"
-          />
-        </Link>
+          >
+            <line x1="3" y1="8" x2="21" y2="8" />
+            <line x1="3" y1="16" x2="21" y2="16" />
+          </svg>
+        </button>
+
         <Link
           href="/"
           className="font-display text-xl uppercase text-fg tracking-[0.25em] justify-self-center"
         >
           Çalış Balıkçısı
         </Link>
-        <div aria-hidden="true" />
+
+        <Link
+          href="/rezervasyon"
+          className="relative inline-block justify-self-end pb-1"
+        >
+          <span className="text-xs uppercase tracking-[0.3em] text-accent">
+            Reservation
+          </span>
+          <span
+            aria-hidden="true"
+            className="absolute left-0 bottom-0 h-px w-full bg-accent"
+          />
+        </Link>
       </header>
 
-      <nav
-        aria-label="Bölümler"
-        className="fixed right-6 md:right-10 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col gap-12"
+      <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+        <p className="text-xs uppercase tracking-[0.4em] text-accent mb-8">
+          Fethiye, Türkiye
+        </p>
+        <h1 className="font-display text-6xl md:text-8xl leading-[1.05] text-fg">
+          A Table by the Sea
+        </h1>
+        <p className="mt-8 max-w-xl text-fg/80 leading-relaxed">
+          Where the Aegean meets the Mediterranean. We honor the daily catch with minimalist precision and elemental fire.
+        </p>
+      </div>
+
+      <div
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 text-fg/60"
+        aria-hidden="true"
       >
-        {NAV_LINKS.map((link) => {
-          const isActive = activeId === link.id;
-          return (
-            <Link
-              key={link.id}
-              href={link.href}
-              aria-current={isActive ? 'true' : undefined}
-              className="group flex items-center gap-3"
-            >
-              <span
-                className={`text-xs uppercase tracking-widest transition-colors ${
-                  isActive ? 'text-accent' : 'text-fg/50 group-hover:text-fg/80'
-                }`}
-              >
-                {link.label}
-              </span>
-              <span
-                aria-hidden="true"
-                className={`h-1.5 w-1.5 rounded-full transition-colors ${
-                  isActive ? 'bg-accent' : 'border border-fg/30'
-                }`}
-              />
-            </Link>
-          );
-        })}
-      </nav>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.25"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </div>
     </section>
   );
 }
