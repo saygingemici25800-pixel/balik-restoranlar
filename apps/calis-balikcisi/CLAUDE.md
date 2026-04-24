@@ -149,7 +149,7 @@ Formda girilen tarih/saat/kişi bilgisi mesaja pre-fill edilir. Kullanıcı iste
 ## Yapma
 
 - Ana sayfada otomatik açılan popup, newsletter modal, cookie wall.
-- Hero'da carousel / slider.
+- Hero'da metin veya CTA carousel'i / slider'ı — otomatik görsel slideshow (arka plan) kabul, manuel kontrol gerekmez.
 - Menüde fiyatları "XX TL'den başlayan" şeklinde yazma — net fiyat.
 - PDF menü linki.
 - Fotoğrafları filtresiz/işlenmemiş koyma.
