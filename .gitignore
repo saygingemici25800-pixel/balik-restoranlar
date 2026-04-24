@@ -38,3 +38,6 @@ Thumbs.db
 
 # Testing
 coverage/
+
+# Stitch tasarım referansları (local only)
+**/public/images/stitch/
