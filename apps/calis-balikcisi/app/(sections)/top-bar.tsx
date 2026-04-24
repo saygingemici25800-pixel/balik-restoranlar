@@ -7,7 +7,7 @@ type Props = {
 export function SiteTopBar({ className = '' }: Props) {
   return (
     <header
-      className={`px-6 md:px-16 py-6 grid grid-cols-3 items-center ${className}`}
+      className={`px-4 md:px-8 py-4 md:py-6 grid grid-cols-3 items-center ${className}`}
     >
       <button
         type="button"
@@ -16,14 +16,13 @@ export function SiteTopBar({ className = '' }: Props) {
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="22"
-          height="22"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           strokeWidth="1.5"
           strokeLinecap="square"
           aria-hidden="true"
+          className="h-5 w-5 md:h-6 md:w-6"
         >
           <line x1="3" y1="8" x2="21" y2="8" />
           <line x1="3" y1="16" x2="21" y2="16" />
@@ -32,7 +31,7 @@ export function SiteTopBar({ className = '' }: Props) {
 
       <Link
         href="/"
-        className="font-display text-xl uppercase text-fg tracking-[0.25em] justify-self-center"
+        className="font-display text-base md:text-xl uppercase text-fg tracking-wider md:tracking-[0.25em] justify-self-center"
       >
         Çalış Balıkçısı
       </Link>
