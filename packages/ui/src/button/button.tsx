@@ -15,10 +15,19 @@ const variants: Record<ButtonVariant, string> = {
   secondary: 'border border-accent text-accent bg-transparent hover:bg-accent hover:text-bg',
 };
 
+export function buttonVariants({
+  variant = 'primary',
+  className,
+}: {
+  variant?: ButtonVariant;
+  className?: string;
+} = {}): string {
+  return [base, variants[variant], className].filter(Boolean).join(' ');
+}
+
 export function Button({ variant = 'primary', className, children, ...rest }: ButtonProps) {
-  const classes = [base, variants[variant], className].filter(Boolean).join(' ');
   return (
-    <button className={classes} {...rest}>
+    <button className={buttonVariants({ variant, className })} {...rest}>
       {children}
     </button>
   );
