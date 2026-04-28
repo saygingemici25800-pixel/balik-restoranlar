@@ -1,53 +1,98 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { MenuDrawer } from './menu-drawer';
 
 type Props = {
   className?: string;
 };
 
 export function SiteTopBar({ className = '' }: Props) {
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleScroll = () => setIsOpen(false);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isOpen]);
+
   return (
-    <header
-      className={`px-4 md:px-8 py-4 md:py-6 grid grid-cols-3 items-center ${className}`}
-    >
-      <button
-        type="button"
-        aria-label="Menüyü aç"
-        className="justify-self-start -ml-2 p-2 text-fg hover:text-accent transition-colors"
+    <>
+      <header
+        className={`px-4 md:px-8 py-4 md:py-6 grid grid-cols-3 items-center ${className}`}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="square"
-          aria-hidden="true"
-          className="h-5 w-5 md:h-6 md:w-6"
+        <button
+          type="button"
+          onClick={() => setIsOpen((o) => !o)}
+          aria-expanded={isOpen}
+          aria-controls="menu-drawer"
+          aria-label={isOpen ? 'Menüyü kapat' : 'Menüyü aç'}
+          className="group justify-self-start -ml-2 p-2 text-fg hover:text-accent transition-colors"
         >
-          <line x1="3" y1="8" x2="21" y2="8" />
-          <line x1="3" y1="16" x2="21" y2="16" />
-        </svg>
-      </button>
+          <svg
+            className="pointer-events-none h-5 w-5 md:h-6 md:w-6"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path
+              d="M4 12L20 12"
+              className="origin-center -translate-y-[7px] transition-all duration-300 [transition-timing-function:cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-x-0 group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[315deg]"
+            />
+            <path
+              d="M4 12H20"
+              className="origin-center transition-all duration-300 [transition-timing-function:cubic-bezier(.5,.85,.25,1.8)] group-aria-expanded:rotate-45"
+            />
+            <path
+              d="M4 12H20"
+              className="origin-center translate-y-[7px] transition-all duration-300 [transition-timing-function:cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[135deg]"
+            />
+          </svg>
+        </button>
 
-      <Link
-        href="/"
-        className="font-display text-base md:text-xl uppercase text-fg tracking-wider md:tracking-[0.25em] justify-self-center"
-      >
-        Çalış Balıkçısı
-      </Link>
+        <Link
+          href="/"
+          className="font-display text-base md:text-xl uppercase text-fg tracking-wider md:tracking-[0.25em] justify-self-center"
+        >
+          Çalış Balıkçısı
+        </Link>
 
-      <Link
-        href="/rezervasyon"
-        className="relative inline-block justify-self-end pb-1"
-      >
-        <span className="text-xs uppercase tracking-[0.3em] text-accent">
-          Reservation
-        </span>
-        <span
-          aria-hidden="true"
-          className="absolute left-0 bottom-0 h-px w-full bg-accent"
-        />
-      </Link>
-    </header>
+        <Link
+          href="/rezervasyon"
+          className="relative inline-block justify-self-end pb-1"
+        >
+          <span className="text-xs uppercase tracking-[0.3em] text-accent">
+            Reservation
+          </span>
+          <span
+            aria-hidden="true"
+            className="absolute left-0 bottom-0 h-px w-full bg-accent"
+          />
+        </Link>
+      </header>
+
+      <MenuDrawer isOpen={isOpen} />
+    </>
   );
 }
