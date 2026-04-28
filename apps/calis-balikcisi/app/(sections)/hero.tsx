@@ -1,52 +1,18 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { SiteTopBar } from './top-bar';
 
-const HERO_IMAGES: { src: string; alt: string }[] = [
-  { src: '/images/calis-hero.png', alt: 'Çalış Balıkçısı — deniz manzarası' },
-  { src: '/images/calis-hero.png', alt: 'Çalış Balıkçısı — deniz manzarası' },
-  { src: '/images/calis-hero.png', alt: 'Çalış Balıkçısı — deniz manzarası' },
-  { src: '/images/calis-hero.png', alt: 'Çalış Balıkçısı — deniz manzarası' },
-  { src: '/images/calis-hero.png', alt: 'Çalış Balıkçısı — deniz manzarası' },
-];
-
-const INTERVAL_MS = 5000;
-
 export function CalisHero() {
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
-
-    const id = setInterval(() => {
-      setActiveIndex((i) => (i + 1) % HERO_IMAGES.length);
-    }, INTERVAL_MS);
-    return () => clearInterval(id);
-  }, []);
-
   return (
     <section className="relative h-[100svh] w-full overflow-hidden text-fg">
       <div className="absolute inset-0">
-        {HERO_IMAGES.map((img, i) => (
-          <div
-            key={i}
-            className="absolute inset-0 motion-safe:transition-opacity motion-safe:duration-1000"
-            style={{ opacity: i === activeIndex ? 1 : 0 }}
-            aria-hidden={i !== activeIndex}
-          >
-            <Image
-              src={img.src}
-              alt={img.alt}
-              fill
-              priority={i === 0}
-              sizes="100vw"
-              className="object-cover object-center"
-            />
-          </div>
-        ))}
+        <Image
+          src="/images/calis-hero-sunset.png"
+          alt="Çalış Balıkçısı sahil gün batımı"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
       </div>
 
       <div
