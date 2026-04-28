@@ -1,16 +1,18 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import type { GalleryItem, GallerySection } from '../_data';
+import { useEffect, useId, useRef } from 'react';
+import Image from 'next/image';
+import type { MenuItem } from '../_data';
 
 type Props = {
-  item: GalleryItem;
-  section: GallerySection;
+  item: MenuItem;
+  eyebrow: string;
   onClose: () => void;
 };
 
-export function GalleryItemModal({ item, section, onClose }: Props) {
+export function MenuItemModal({ item, eyebrow, onClose }: Props) {
   const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const titleId = useId();
 
   useEffect(() => {
     closeBtnRef.current?.focus();
@@ -43,13 +45,13 @@ export function GalleryItemModal({ item, section, onClose }: Props) {
     <div
       role="dialog"
       aria-modal="true"
-      aria-labelledby={`modal-${item.id}-title`}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-bg/95 p-6"
+      aria-labelledby={titleId}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 backdrop-blur-md p-6"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-bg border border-fg/10 p-8 md:p-12">
+      <div className="relative w-[90vw] max-w-2xl max-h-[90vh] overflow-y-auto bg-bg border border-fg/10 p-8 md:p-12">
         <button
           ref={closeBtnRef}
           type="button"
@@ -74,17 +76,29 @@ export function GalleryItemModal({ item, section, onClose }: Props) {
         </button>
 
         <p className="text-xs uppercase tracking-[0.35em] text-accent">
-          {section.eyebrow}
+          {eyebrow}
         </p>
         <h2
-          id={`modal-${item.id}-title`}
+          id={titleId}
           className="mt-4 font-display text-3xl md:text-4xl text-fg"
         >
           {item.name}
         </h2>
-        <div className="mt-8 aspect-[4/3] bg-fg/5" aria-hidden="true" />
+
+        <div className="mt-8 relative aspect-[4/3] bg-fg/5 overflow-hidden">
+          {item.photoUrl ? (
+            <Image
+              src={item.photoUrl}
+              alt={item.name}
+              fill
+              sizes="(min-width: 768px) 40rem, 90vw"
+              className="object-cover"
+            />
+          ) : null}
+        </div>
+
         <p className="mt-8 text-fg/80 leading-relaxed whitespace-pre-line">
-          {item.description}
+          {item.longDescription}
         </p>
       </div>
     </div>

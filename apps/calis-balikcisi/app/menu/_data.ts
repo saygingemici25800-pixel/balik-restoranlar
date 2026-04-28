@@ -1,6 +1,8 @@
 export type MenuItem = {
   name: string;
   description?: string;
+  photoUrl?: string;
+  longDescription?: string;
 };
 
 export type MenuSection = {
@@ -11,117 +13,121 @@ export type MenuSection = {
   fullList: MenuItem[];
 };
 
+const SPOTLIGHT_LONG =
+  'Taze tezgâhtan, geleneksel yöntemlerle hazırlanmış. Her lokma, denizin o günkü hikayesini anlatır. Basit malzemeler, özenli ellerde bütünleşir.';
+
+const LIST_LONG = 'Klasik tarifle, günün en iyisinden.';
+
+function spotlightItem(name: string, description: string): MenuItem {
+  return { name, description, longDescription: SPOTLIGHT_LONG };
+}
+
+function listItem(name: string): MenuItem {
+  return { name, longDescription: LIST_LONG };
+}
+
 export const MEZELER: MenuSection = {
   id: 'mezeler',
-    eyebrow: 'Mezes & Starters',
-    listLabel: '— The Complete Selection —',
-    spotlight: [
-      {
-        name: 'Ahtapot Izgara',
-        description:
-          'Charred over open flame, served with creamy fava purée, caper leaves, and cold-pressed Aegean olive oil.',
-      },
-      {
-        name: 'Deniz Börülcesi',
-        description:
-          'Tender samphire from the rocks of the Aegean, dressed with lemon and olive oil.',
-      },
-      {
-        name: 'Levrek Marine',
-        description:
-          'Thinly sliced and cured in citrus juices, finished with fresh dill, pink peppercorn, and a touch of sea salt.',
-      },
-      {
-        name: 'Közlenmiş Biber',
-        description:
-          'Smoked local peppers, slowly roasted and paired with whipped aged feta and wild oregano.',
-      },
-    ],
-    fullList: [
-      { name: 'Humus' },
-      { name: 'Babaganuş' },
-      { name: 'Cacık' },
-      { name: 'Haydari' },
-      { name: 'Kalamari Tava' },
-      { name: 'Karides Tuzlama' },
-      { name: 'Ahtapot Salatası' },
-      { name: 'Midye Dolma' },
-      { name: 'Sigara Böreği' },
-      { name: 'Soğan Piyazı' },
-      { name: 'Patlıcan Salatası' },
-      { name: 'Antep Ezmesi' },
-      { name: 'Muhammara' },
-      { name: 'Şakşuka' },
-      { name: 'Semizotu' },
-      { name: 'Tarama' },
-      { name: 'Lakerda' },
-      { name: 'Çiroz Salatası' },
-      { name: 'Fesleğenli Domates' },
-      { name: 'Cevizli Biber' },
-      { name: 'Çerkez Tavuğu' },
-      { name: 'Topik' },
-    ],
+  eyebrow: 'Mezes & Starters',
+  listLabel: '— The Complete Selection —',
+  spotlight: [
+    spotlightItem(
+      'Ahtapot Izgara',
+      'Charred over open flame, served with creamy fava purée, caper leaves, and cold-pressed Aegean olive oil.',
+    ),
+    spotlightItem(
+      'Deniz Börülcesi',
+      'Tender samphire from the rocks of the Aegean, dressed with lemon and olive oil.',
+    ),
+    spotlightItem(
+      'Levrek Marine',
+      'Thinly sliced and cured in citrus juices, finished with fresh dill, pink peppercorn, and a touch of sea salt.',
+    ),
+    spotlightItem(
+      'Közlenmiş Biber',
+      'Smoked local peppers, slowly roasted and paired with whipped aged feta and wild oregano.',
+    ),
+  ],
+  fullList: [
+    listItem('Humus'),
+    listItem('Babaganuş'),
+    listItem('Cacık'),
+    listItem('Haydari'),
+    listItem('Kalamari Tava'),
+    listItem('Karides Tuzlama'),
+    listItem('Ahtapot Salatası'),
+    listItem('Midye Dolma'),
+    listItem('Sigara Böreği'),
+    listItem('Soğan Piyazı'),
+    listItem('Patlıcan Salatası'),
+    listItem('Antep Ezmesi'),
+    listItem('Muhammara'),
+    listItem('Şakşuka'),
+    listItem('Semizotu'),
+    listItem('Tarama'),
+    listItem('Lakerda'),
+    listItem('Çiroz Salatası'),
+    listItem('Fesleğenli Domates'),
+    listItem('Cevizli Biber'),
+    listItem('Çerkez Tavuğu'),
+    listItem('Topik'),
+  ],
 };
 
 export const IZGARA: MenuSection = {
   id: 'izgara',
-    eyebrow: 'From the Charcoal',
-    listLabel: '— Diğer Izgaralar —',
-    spotlight: [
-      {
-        name: 'Günün Balığı',
-        description:
-          'Çipura ya da levrek, sabah teknelerinden. Odun ateşinde, limon-ot emülsiyonuyla.',
-      },
-      {
-        name: 'Signature İstakoz',
-        description:
-          'Közleri üzerinde yavaş pişirilmiş, sarımsak tereyağı ve safranlı deniz börülcesi eşliğinde.',
-      },
-    ],
-    fullList: [
-      { name: 'Çipura' },
-      { name: 'Levrek' },
-      { name: 'Palamut' },
-      { name: 'Lüfer' },
-      { name: 'Mercan' },
-      { name: 'Barbun' },
-      { name: 'İskorpit' },
-      { name: 'Lagos' },
-      { name: 'Kalkan' },
-      { name: 'Fangri' },
-      { name: 'Trança' },
-      { name: 'Sarıgöz' },
-    ],
+  eyebrow: 'From the Charcoal',
+  listLabel: '— Diğer Izgaralar —',
+  spotlight: [
+    spotlightItem(
+      'Günün Balığı',
+      'Çipura ya da levrek, sabah teknelerinden. Odun ateşinde, limon-ot emülsiyonuyla.',
+    ),
+    spotlightItem(
+      'Signature İstakoz',
+      'Közleri üzerinde yavaş pişirilmiş, sarımsak tereyağı ve safranlı deniz börülcesi eşliğinde.',
+    ),
+  ],
+  fullList: [
+    listItem('Çipura'),
+    listItem('Levrek'),
+    listItem('Palamut'),
+    listItem('Lüfer'),
+    listItem('Mercan'),
+    listItem('Barbun'),
+    listItem('İskorpit'),
+    listItem('Lagos'),
+    listItem('Kalkan'),
+    listItem('Fangri'),
+    listItem('Trança'),
+    listItem('Sarıgöz'),
+  ],
 };
 
 export const TATLI: MenuSection = {
   id: 'tatli',
-    eyebrow: 'Sweet Endings',
-    listLabel: '— Diğer Tatlılar —',
-    spotlight: [
-      {
-        name: 'Tahini Sufle',
-        description:
-          'Warm, molten center of rich sesame paste, baked to order and served with a dusting of roasted pistachios.',
-      },
-      {
-        name: 'Sakız Dondurması',
-        description:
-          'Traditional stretched ice cream flavored with wild mastic resin, offering a subtle pine note and unique texture.',
-      },
-      {
-        name: 'Klasik Sütlaç',
-        description:
-          'Klasik Türk sütlacı, taş fırında altın rengine kadar pişirilmiş.',
-      },
-    ],
-    fullList: [
-      { name: 'Baklava' },
-      { name: 'Kazandibi' },
-      { name: 'Revani' },
-      { name: 'Aşure' },
-    ],
+  eyebrow: 'Sweet Endings',
+  listLabel: '— Diğer Tatlılar —',
+  spotlight: [
+    spotlightItem(
+      'Tahini Sufle',
+      'Warm, molten center of rich sesame paste, baked to order and served with a dusting of roasted pistachios.',
+    ),
+    spotlightItem(
+      'Sakız Dondurması',
+      'Traditional stretched ice cream flavored with wild mastic resin, offering a subtle pine note and unique texture.',
+    ),
+    spotlightItem(
+      'Klasik Sütlaç',
+      'Klasik Türk sütlacı, taş fırında altın rengine kadar pişirilmiş.',
+    ),
+  ],
+  fullList: [
+    listItem('Baklava'),
+    listItem('Kazandibi'),
+    listItem('Revani'),
+    listItem('Aşure'),
+  ],
 };
 
 export const MENU_DATA: MenuSection[] = [MEZELER, IZGARA, TATLI];

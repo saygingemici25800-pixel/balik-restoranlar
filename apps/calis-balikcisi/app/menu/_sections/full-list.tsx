@@ -3,9 +3,11 @@ import type { MenuItem } from '../_data';
 type Props = {
   label: string;
   items: MenuItem[];
+  eyebrow: string;
+  onItemClick: (item: MenuItem, eyebrow: string) => void;
 };
 
-export function FullList({ label, items }: Props) {
+export function FullList({ label, items, eyebrow, onItemClick }: Props) {
   if (items.length === 0) return null;
 
   return (
@@ -17,11 +19,14 @@ export function FullList({ label, items }: Props) {
 
         <ul className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-3">
           {items.map((item) => (
-            <li
-              key={item.name}
-              className="font-display text-lg md:text-xl text-fg/90 text-center md:text-left"
-            >
-              {item.name}
+            <li key={item.name}>
+              <button
+                type="button"
+                onClick={() => onItemClick(item, eyebrow)}
+                className="font-display text-lg md:text-xl text-fg/90 hover:text-accent transition-colors cursor-pointer text-center md:text-left w-full"
+              >
+                {item.name}
+              </button>
             </li>
           ))}
         </ul>
