@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState, type FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import { TablePicker } from './table-picker';
 import { GUEST_OPTIONS, TIME_SLOTS } from '../_data';
 
@@ -31,6 +32,7 @@ const LABEL_CLASS =
   'block text-[11px] md:text-xs uppercase tracking-wider text-fg/70 mb-1.5 md:mb-2';
 
 export function ReservationForm() {
+  const router = useRouter();
   const [formData, setFormData] = useState<FormData>(INITIAL);
   const todayISO = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
@@ -50,8 +52,8 @@ export function ReservationForm() {
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!isValid) return;
-    console.log('Reservation submitted', formData);
-    alert('Rezervasyon alındı — onay sayfası yakında eklenecek.');
+    sessionStorage.setItem('reservationData', JSON.stringify(formData));
+    router.push('/rezervasyon/onay');
   }
 
   return (
