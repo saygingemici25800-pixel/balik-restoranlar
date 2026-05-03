@@ -70,6 +70,16 @@ export function MenuAccordion({ onItemClick }: Props) {
   }, []);
 
   useEffect(() => {
+    MENU_DATA.forEach((category) => {
+      category.spotlight.forEach((item) => {
+        if (!item.photoUrl) return;
+        const img = new window.Image();
+        img.src = item.photoUrl;
+      });
+    });
+  }, []);
+
+  useEffect(() => {
     const hash = window.location.hash.replace('#', '');
     if (!hash || !MENU_DATA.some((s) => s.id === hash)) return;
 

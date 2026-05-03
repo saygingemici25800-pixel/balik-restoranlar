@@ -18,8 +18,9 @@ function spotlightItem(
   name: string,
   description: string,
   longDescription: string,
+  photoUrl?: string,
 ): MenuItem {
-  return { name, description, longDescription };
+  return { name, description, longDescription, photoUrl };
 }
 
 function listItem(name: string, longDescription: string): MenuItem {
@@ -67,12 +68,14 @@ export const CORBA: MenuSection = {
     spotlightItem(
       'Balık Çorbası',
       'Günün taze balığından, hafif kremalı. Limon damlası bekler.',
-      LONG.corbaSpot,
+      'Günün taze balığından çıkarılan stokla pişen, hafifçe limonlanmış sıcak başlangıç. Tezgâhın özü, ilk kaşıkta dile gelen şey.',
+      'https://images.unsplash.com/photo-1609355108742-dcbc6c51a3a3?q=80&w=987&auto=format&fit=crop',
     ),
     spotlightItem(
       'Günün Çorbası',
       'Tezgâhın o günkü tercihi. Mevsime göre değişir.',
-      LONG.corbaSpot,
+      'Mevsimin getirdiğine göre değişen, mutfaktan o güne özel çıkan çorba. Sürpriz seven sofralar için.',
+      'https://images.unsplash.com/photo-1616501268209-edfff098fdd2?q=80&w=987&auto=format&fit=crop',
     ),
   ],
   fullList: [],
@@ -87,12 +90,14 @@ export const YOGURTLU_MEZELER: MenuSection = {
     spotlightItem(
       'Atom',
       "Süzme yoğurt, közlenmiş biber, sarımsak. Çalış'ın klasiklerinden.",
-      LONG.mezeSpot,
+      'Süzme yoğurt, közlenmiş kuru biber ve cevizin sıcak tereyağıyla buluşması. Acımtırak ve dolgun, rakının yanında parlayan bir başlangıç.',
+      'https://images.unsplash.com/photo-1777199264017-84af9308a41f?q=80&w=2070&auto=format&fit=crop',
     ),
     spotlightItem(
       'Cacık',
       'Süzme yoğurt, salatalık ve nane. Soğuk servis.',
-      LONG.mezeSpot,
+      'İnce doğranmış salatalık, dövülmüş sarımsak ve taze nanenin yoğurttaki serin uyumu. Yaz öğlenleri için hafif, ferahlatıcı bir başlangıç.',
+      'https://images.unsplash.com/photo-1687540953277-2ead6ffb3a1c?q=80&w=927&auto=format&fit=crop',
     ),
     spotlightItem(
       'Haydari',
@@ -123,7 +128,8 @@ export const SEBZELI_MEZELER: MenuSection = {
     spotlightItem(
       'Tahinli Köz Patlıcan',
       'Köz patlıcan, tahinle çırpılır. Üzerine zeytinyağı.',
-      LONG.mezeSpot,
+      'Açık ateşte közlenen patlıcanın dumanlı tadı, tahin ve sarımsakla yoğrulur. Pürüzsüz, bal kıvamında, ekmek banılacak bir tabak.',
+      'https://images.unsplash.com/photo-1740077975984-f2670ed698d9?q=80&w=2070&auto=format&fit=crop',
     ),
     spotlightItem(
       'Antep Acılı Ezme',
@@ -133,7 +139,8 @@ export const SEBZELI_MEZELER: MenuSection = {
     spotlightItem(
       'Avokado Meze',
       'Olgun avokado, limon ve taze ot. Hafif bir başlangıç.',
-      LONG.mezeSpot,
+      'Olgun avokadonun limon ve zeytinyağıyla ezildiği, ev usulü bir mezemiz. Hafif ve doyurucu, sahil sofrasının yeni klasiği.',
+      'https://images.unsplash.com/photo-1680364344159-eea9659b843f?q=80&w=2071&auto=format&fit=crop',
     ),
   ],
   fullList: [
@@ -158,17 +165,20 @@ export const BAKLIYATLI_MEZELER: MenuSection = {
     spotlightItem(
       'Fava',
       'Sarı bezelye püresi, dereotu ve zeytinyağı.',
-      LONG.mezeSpot,
+      "Suda tatlanmış iç bakla püresi, soğuk soğuk dilimlenip dereotuyla servis edilir. Çalış'ın geleneksel başlangıcı, zeytinyağı dökülerek yenir.",
+      'https://images.unsplash.com/photo-1680990999782-ba7fe26e4d0b?q=80&w=1910&auto=format&fit=crop',
     ),
     spotlightItem(
       'Humus',
       'Nohut ve tahin, sade ve doyurucu.',
-      LONG.mezeSpot,
+      'Nohut ve tahinin limonla buluştuğu, sumakla bezenen Akdeniz klasiği. Ekmek, krudite ya da çıtır pide ile.',
+      'https://images.unsplash.com/photo-1753364547864-679728b22c31?q=80&w=987&auto=format&fit=crop',
     ),
     spotlightItem(
       'Cunda',
       'Ada usulü, yoğun lezzetli bakliyat tabağı.',
-      LONG.mezeSpot,
+      'Beyaz fasulyenin soğuk soğuk hazırlanan, sirke ve zeytinyağlı versiyonu. Adasından adına yakışır, yaz mezesi.',
+      'https://media.istockphoto.com/id/506470075/photo/bean-salad.webp?a=1&b=1&s=612x612&w=0&k=20&c=qBCeC1Z_2u4gvZu1O3XKe28gUqhDEYXmpOqOzMAuDi0=',
     ),
   ],
   fullList: [

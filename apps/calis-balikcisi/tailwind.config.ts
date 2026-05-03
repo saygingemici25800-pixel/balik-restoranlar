@@ -16,6 +16,9 @@ const config: Config = {
       fontFamily: {
         display: ['var(--font-display)'],
         body: ['var(--font-body)'],
+        fraunces: ['var(--font-fraunces)'],
+        mono: ['var(--font-dm-mono)'],
+        reader: ['var(--font-newsreader)'],
       },
     },
   },
