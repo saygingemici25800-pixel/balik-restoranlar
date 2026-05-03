@@ -1,23 +1,54 @@
-import { SiteTopBar } from '../(sections)/top-bar';
-import { SiteFooter } from '../(sections)/footer';
-import { ReservationForm } from './_components/reservation-form';
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Inter_Tight, Spectral } from 'next/font/google';
+import styles from './_styles/reservation.module.css';
+import { VenueMap } from './_components/venue-map';
+
+const spectral = Spectral({
+  subsets: ['latin', 'latin-ext'],
+  variable: '--font-spectral',
+  weight: ['300', '400', '500'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+});
+
+const interTight = Inter_Tight({
+  subsets: ['latin', 'latin-ext'],
+  variable: '--font-inter-tight',
+  weight: ['400', '500', '600'],
+  display: 'swap',
+});
+
+export const metadata: Metadata = {
+  title: 'Rezervasyon — Çalış Balıkçısı',
+  description: 'Sahil kenarında bir akşam için masa seçin.',
+};
 
 export default function RezervasyonPage() {
   return (
-    <>
-      <main>
-        <SiteTopBar className="absolute top-0 left-0 right-0 z-20" />
-        <div className="grid md:grid-cols-2 min-h-screen">
-          <div
-            className="hidden md:block md:min-h-screen bg-fg/5"
-            aria-hidden="true"
-          />
-          <div className="px-6 pt-20 pb-16 md:p-16 lg:p-24 md:pt-32">
-            <ReservationForm />
-          </div>
-        </div>
-      </main>
-      <SiteFooter />
-    </>
+    <div
+      data-rezervasyon
+      className={`${styles.reservationRoot} ${spectral.variable} ${interTight.variable}`}
+    >
+      <Link href="/" className={styles.brand}>
+        Çalış Balıkçısı
+        <small>Fethiye · Çalış sahili</small>
+      </Link>
+
+      <section className={styles.intro}>
+        <span className={styles.label}>Rezervasyon</span>
+        <h1>
+          Hangi masada <span className={styles.italic}>yemek istersiniz?</span>
+        </h1>
+        <p className={styles.subline}>
+          Masanızı seçin, kalanını biz hallederiz.
+        </p>
+        <a href="#" className={styles.altLink}>
+          Acelen varsa klasik formla rezervasyon yap →
+        </a>
+      </section>
+
+      <VenueMap />
+    </div>
   );
 }

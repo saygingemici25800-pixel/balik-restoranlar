@@ -9,6 +9,13 @@ body {
   font-family: var(--font-body);
 }
 
+/* /rezervasyon kağıt zemin — body'nin koyu deniz overscroll'da sızmasın */
+html:has([data-rezervasyon]),
+body:has([data-rezervasyon]) {
+  background-color: #f3ead8;
+  color: #1f1a12;
+}
+
 @keyframes cinema-letterbox-top {
   from {
     transform: translateY(-100%);
@@ -186,5 +193,76 @@ body {
   .scroll-progress-fill::after {
     animation: none;
     opacity: 0.5;
+  }
+}
+
+@keyframes venue-sun-breath {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.92;
+  }
+  50% {
+    transform: translate(0, -4px) scale(1.04);
+    opacity: 1;
+  }
+}
+
+@keyframes venue-wave-drift {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-80px);
+  }
+}
+
+@keyframes venue-shimmer-twinkle {
+  0%,
+  100% {
+    opacity: 0.18;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.venue-sun {
+  transform-origin: 200px 200px;
+  animation: venue-sun-breath 6s ease-in-out infinite;
+}
+
+.venue-wave {
+  transform-origin: 0 0;
+}
+
+.venue-wave-1 {
+  animation: venue-wave-drift 9s linear infinite;
+}
+
+.venue-wave-2 {
+  animation: venue-wave-drift 11s linear infinite;
+}
+
+.venue-wave-3 {
+  animation: venue-wave-drift 13s linear infinite;
+}
+
+.venue-wave-4 {
+  animation: venue-wave-drift 15s linear infinite;
+}
+
+.venue-shimmer {
+  animation: venue-shimmer-twinkle 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .venue-sun,
+  .venue-wave-1,
+  .venue-wave-2,
+  .venue-wave-3,
+  .venue-wave-4,
+  .venue-shimmer {
+    animation: none !important;
   }
 }

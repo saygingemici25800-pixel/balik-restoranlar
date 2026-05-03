@@ -1,13 +1,24 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getLenis } from './lenis-provider';
 
+const HIDE_ON_PATHS: ReadonlyArray<string> = ['/rezervasyon'];
+
 export function ScrollProgress() {
+  const pathname = usePathname();
   const [progress, setProgress] = useState(0);
+
+  const hidden =
+    !!pathname &&
+    HIDE_ON_PATHS.some(
+      (p) => pathname === p || pathname.startsWith(`${p}/`),
+    );
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    if (hidden) return;
 
     let cleanup: (() => void) | null = null;
 
@@ -75,7 +86,9 @@ export function ScrollProgress() {
     return () => {
       cleanup?.();
     };
-  }, []);
+  }, [hidden]);
+
+  if (hidden) return null;
 
   return (
     <div className="scroll-progress-track" aria-hidden="true">

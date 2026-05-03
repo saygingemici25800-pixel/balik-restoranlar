@@ -1,0 +1,595 @@
+/* Çalış Balıkçısı — Karakalem rezervasyon (sayfa-scope) */
+
+.reservationRoot {
+  --paper: #f3ead8;
+  --paper-deep: #ead9b8;
+  --paper-shadow: #d9c8a3;
+  --ink: #1f1a12;
+  --ink-soft: #3b3326;
+  --ink-mute: #6e624c;
+  --ink-faint: #a8997a;
+  --sun: #d97a3c;
+  --sun-deep: #b85a1f;
+  --sea: #4a6f7a;
+  --sea-deep: #2c4a55;
+  --rule: rgba(31, 26, 18, 0.18);
+  --rule-soft: rgba(31, 26, 18, 0.08);
+  --serif: var(--font-spectral), 'EB Garamond', Georgia, serif;
+  --sans: var(--font-inter-tight), system-ui, -apple-system, sans-serif;
+
+  position: relative;
+  min-height: 100vh;
+  background: var(--paper);
+  background-image:
+    radial-gradient(
+      ellipse 1200px 600px at 30% -20%,
+      rgba(217, 122, 60, 0.08),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 800px 500px at 90% 110%,
+      rgba(74, 111, 122, 0.06),
+      transparent 60%
+    );
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Scoped paper grain — sadece bu sayfaya */
+.reservationRoot::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .12  0 0 0 0 .10  0 0 0 0 .07  0 0 0 .35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/></svg>");
+  mix-blend-mode: multiply;
+  opacity: 0.35;
+  z-index: 100;
+}
+
+/* ── Header (eyebrow + h1 + alt link) ────────────────────── */
+.intro {
+  padding: 14px 32px 8px;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+.intro .label {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 500;
+  display: block;
+  margin-bottom: 8px;
+}
+.intro h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  line-height: 1.1;
+  max-width: 40ch;
+  color: var(--ink);
+}
+.intro h1 .italic {
+  font-style: italic;
+}
+.intro .subline {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-soft);
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+  max-width: 50ch;
+}
+.intro .altLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-mute);
+  font-size: 0.82rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 0.5px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+.intro .altLink:hover {
+  color: var(--ink);
+}
+@media (max-width: 720px) {
+  .intro {
+    padding: 12px 18px 6px;
+  }
+}
+
+/* Brand strip (top-left) */
+.brand {
+  position: relative;
+  z-index: 5;
+  padding: 22px 32px 0;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  display: block;
+  text-decoration: none;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+.brand small {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: block;
+  margin-top: 2px;
+  font-weight: 500;
+}
+@media (max-width: 720px) {
+  .brand {
+    padding: 16px 18px 0;
+  }
+}
+
+/* ── Map view ─────────────────────────────────────────────── */
+.mapStage {
+  position: relative;
+  background: var(--paper);
+  border-top: 0.5px solid var(--rule);
+  margin-top: 18px;
+  padding: 0;
+}
+
+.legend {
+  display: flex;
+  gap: 18px;
+  padding: 8px 32px 0;
+  max-width: 1500px;
+  margin: 0 auto;
+  font-size: 0.76rem;
+  color: var(--ink-mute);
+  flex-wrap: wrap;
+}
+.legend > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.legend i {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  display: inline-block;
+  border: 1px solid var(--ink);
+}
+.legend .swatchFree {
+  background: rgba(255, 255, 255, 0.5);
+}
+.legend .swatchTaken {
+  background: transparent;
+  border-color: var(--ink-faint);
+  border-style: dashed;
+}
+.legend .swatchRecommended {
+  background: var(--ink);
+}
+@media (max-width: 720px) {
+  .legend {
+    padding: 12px 18px 0;
+  }
+}
+
+.mapFrame {
+  position: relative;
+  margin: 8px auto 36px;
+  max-width: 1500px;
+  padding: 0 32px;
+}
+@media (max-width: 720px) {
+  .mapFrame {
+    padding: 0 18px;
+    margin-bottom: 24px;
+  }
+}
+
+.isoCanvas {
+  position: relative;
+  width: 100%;
+  /* 1440x900 viewport hedefi: brand+intro+legend+marginlar ≈ 296px chrome
+     bırakıyor, kalan ~604px canvas için aspect 16/7 (2.286). Kullanıcı
+     spec'i 16/11 idi ama matematik tersine — 16/11 daha tall yapardı. */
+  aspect-ratio: 16 / 7;
+  background:
+    linear-gradient(180deg, rgba(217, 122, 60, 0.05) 0%, transparent 35%),
+    var(--paper);
+  border: 0.5px solid var(--rule);
+  overflow: hidden;
+}
+@media (max-width: 720px) {
+  .isoCanvas {
+    aspect-ratio: 4 / 5;
+  }
+}
+.isoCanvas .iso {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.tableTip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--ink);
+  color: var(--paper);
+  font: 500 0.72rem/1 var(--sans);
+  padding: 6px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+  transform: translate(-50%, -130%);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 4;
+}
+.tableTip.show {
+  opacity: 1;
+}
+
+/* Hand-drawn table interactions */
+.tbl {
+  cursor: pointer;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.tbl.taken {
+  cursor: not-allowed;
+}
+/* Hover lift — sadece transform olmayan idle/static durumda. Framer Motion
+   selected/ambient durumda transform'u kontrol ederken CSS hover devreye
+   girmesin diye sadece pointerover yokken çalışır (Framer'ın inline
+   transform'u CSS transform'undan baskın çıkar). */
+
+/* Ambient animations */
+.ambientSun {
+  transform-origin: -300px -130px;
+  animation: rezSunBreathe 6s ease-in-out infinite;
+}
+@keyframes rezSunBreathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 0.92;
+  }
+}
+.ambientSea path {
+  animation: rezSeaWave 7s ease-in-out infinite;
+}
+.ambientSea path:nth-child(2) {
+  animation-delay: -2s;
+}
+.ambientSea path:nth-child(3) {
+  animation-delay: -4s;
+}
+@keyframes rezSeaWave {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-6px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ambientSun,
+  .ambientSea path {
+    animation: none !important;
+  }
+}
+
+/* ── Reservation panel ───────────────────────────────────── */
+.scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 26, 18, 0.32);
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+.scrim.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.panel {
+  position: fixed;
+  background: var(--paper);
+  z-index: 51;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -20px 0 60px -20px rgba(31, 26, 18, 0.3);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+@media (min-width: 721px) {
+  .panel {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 440px;
+    transform: translateX(100%);
+  }
+  .panel.open {
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 720px) {
+  .panel {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 88vh;
+    border-radius: 18px 18px 0 0;
+    transform: translateY(100%);
+    box-shadow: 0 -10px 40px -10px rgba(31, 26, 18, 0.3);
+  }
+  .panel.open {
+    transform: translateY(0);
+  }
+  .grabber {
+    width: 44px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--ink-faint);
+    margin: 10px auto 4px;
+  }
+}
+
+.panelBody {
+  padding: 26px 28px 28px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+@media (max-width: 720px) {
+  .panelBody {
+    padding: 6px 22px 28px;
+  }
+}
+
+.panelHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.panelHead .label {
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+.panelHead h3 {
+  font-family: var(--serif);
+  font-size: 1.4rem;
+  font-weight: 400;
+  margin: 0;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.panelHead .x {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--ink-mute);
+  padding: 4px 6px;
+  cursor: pointer;
+}
+.panelHead .x:hover {
+  color: var(--ink);
+}
+
+.metaLine {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  margin: 4px 0 0;
+}
+
+.thinRule {
+  height: 1px;
+  background: var(--rule);
+  border: 0;
+  margin: 0;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.fieldGroup .label {
+  display: block;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+
+.chipRow {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.chip {
+  appearance: none;
+  border: 0.5px solid var(--rule);
+  background: transparent;
+  padding: 8px 14px;
+  min-height: 38px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.chip:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.chip.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.chipDayWd {
+  display: block;
+  font-size: 0.7rem;
+  opacity: 0.7;
+  margin-bottom: 2px;
+}
+.chipDayDn {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1rem;
+}
+
+.input {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 0.5px solid var(--rule);
+  padding: 10px 0;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  outline: none;
+  width: 100%;
+  min-height: 44px;
+  font-family: var(--serif);
+}
+.input::placeholder {
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.input:focus {
+  border-bottom-color: var(--ink);
+}
+
+.summaryRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 0.5px solid var(--rule);
+  font-family: var(--serif);
+}
+.summaryRow .key {
+  color: var(--ink-mute);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+.summaryRow .val {
+  color: var(--ink);
+  font-size: 1rem;
+}
+
+.btnPrimary {
+  appearance: none;
+  border: 0;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 14px 22px;
+  font: inherit;
+  font-family: var(--serif);
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  width: 100%;
+  min-height: 52px;
+  transition: background 0.2s;
+}
+.btnPrimary:hover {
+  background: var(--ink-soft);
+}
+.btnPrimary:disabled {
+  background: var(--ink-faint);
+  cursor: not-allowed;
+}
+
+.fineprint {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.82rem;
+  color: var(--ink-mute);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Toast ───────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 80;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: 0.9rem;
+  padding: 12px 20px;
+  border-radius: 999px;
+  box-shadow: 0 12px 30px -12px rgba(31, 26, 18, 0.4);
+  pointer-events: none;
+  max-width: 90vw;
+  text-align: center;
+  animation: rezToastIn 0.3s ease-out both;
+}
+@keyframes rezToastIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 12px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
+}
