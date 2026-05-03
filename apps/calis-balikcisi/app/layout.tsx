@@ -9,6 +9,7 @@ import {
 import '@balik/design-tokens/calis-balikcisi.css';
 import './globals.css';
 import { LenisProvider } from './_components/lenis-provider';
+import { ScrollProgress } from './_components/scroll-progress';
 
 const displayFont = Cormorant_Garamond({
   subsets: ['latin'],
@@ -56,7 +57,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${displayFont.variable} ${bodyFont.variable} ${frauncesFont.variable} ${dmMonoFont.variable} ${newsreaderFont.variable}`}
     >
       <body>
-        <LenisProvider>{children}</LenisProvider>
+        <LenisProvider>
+          <ScrollProgress />
+          {children}
+        </LenisProvider>
       </body>
     </html>
   );
