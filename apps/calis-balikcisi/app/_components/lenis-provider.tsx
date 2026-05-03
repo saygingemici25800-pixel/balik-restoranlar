@@ -3,54 +3,39 @@
 import Lenis from 'lenis';
 import { useEffect, type ReactNode } from 'react';
 
+let lenisInstance: Lenis | null = null;
+
+export function getLenis(): Lenis | null {
+  return lenisInstance;
+}
+
 type Props = {
   children: ReactNode;
 };
 
 export function LenisProvider({ children }: Props) {
   useEffect(() => {
-    const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (typeof window === 'undefined') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    let lenis: Lenis | null = null;
-    let frameId: number | null = null;
+    lenisInstance = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      touchMultiplier: 2,
+    });
 
-    const start = () => {
-      if (lenis) return;
-      lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smoothWheel: true,
-        touchMultiplier: 2,
-        infinite: false,
-      });
-      const raf = (time: number) => {
-        lenis?.raf(time);
-        frameId = requestAnimationFrame(raf);
-      };
-      frameId = requestAnimationFrame(raf);
-    };
-
-    const stop = () => {
-      if (frameId !== null) {
-        cancelAnimationFrame(frameId);
-        frameId = null;
-      }
-      lenis?.destroy();
-      lenis = null;
-    };
-
-    if (!reduceMotionQuery.matches) start();
-
-    const handleChange = (event: MediaQueryListEvent) => {
-      if (event.matches) stop();
-      else start();
-    };
-
-    reduceMotionQuery.addEventListener('change', handleChange);
+    let rafId = 0;
+    function raf(time: number) {
+      lenisInstance?.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+    rafId = requestAnimationFrame(raf);
 
     return () => {
-      reduceMotionQuery.removeEventListener('change', handleChange);
-      stop();
+      cancelAnimationFrame(rafId);
+      lenisInstance?.destroy();
+      lenisInstance = null;
     };
   }, []);
 

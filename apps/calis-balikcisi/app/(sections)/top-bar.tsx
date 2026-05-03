@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -36,7 +37,7 @@ export function SiteTopBar({ className = '' }: Props) {
   return (
     <>
       <header
-        className={`px-4 md:px-8 py-4 md:py-6 grid grid-cols-3 items-center ${className}`}
+        className={`px-4 md:px-8 py-2 md:py-3 grid grid-cols-3 items-center ${className}`}
       >
         <button
           type="button"
@@ -73,9 +74,17 @@ export function SiteTopBar({ className = '' }: Props) {
 
         <Link
           href="/"
-          className="font-display text-base md:text-xl uppercase text-fg tracking-wider md:tracking-[0.25em] justify-self-center"
+          aria-label="Çalış Balıkçısı — Anasayfa"
+          className="justify-self-center"
         >
-          Çalış Balıkçısı
+          <Image
+            src="/images/calis-logo.png"
+            alt="Çalış Balıkçısı Akif Usta"
+            width={420}
+            height={594}
+            className="h-auto w-32 md:w-40 max-h-12 md:max-h-14"
+            priority
+          />
         </Link>
 
         <Link
