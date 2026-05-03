@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { SiteTopBar } from './top-bar';
 
 export function CalisHero() {
@@ -16,22 +17,38 @@ export function CalisHero() {
       </div>
 
       <div
-        className="absolute inset-0 bg-gradient-to-b from-bg/60 via-bg/30 to-bg/70"
+        className="absolute inset-0 bg-gradient-to-b from-bg/70 via-bg/55 to-bg/80"
         aria-hidden="true"
       />
 
       <SiteTopBar className="absolute top-0 left-0 right-0 z-20" />
 
-      <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
-        <p className="text-xs uppercase tracking-[0.4em] text-accent mb-8">
-          Fethiye, Türkiye
-        </p>
-        <h1 className="font-display text-6xl md:text-8xl leading-[1.05] text-fg">
-          A Table by the Sea
-        </h1>
-        <p className="mt-8 max-w-xl text-fg/80 leading-relaxed">
-          Where the Aegean meets the Mediterranean. We honor the daily catch with minimalist precision and elemental fire.
-        </p>
+      <div className="relative z-10 h-full flex flex-col items-center justify-center px-6">
+        <div className="max-w-2xl mx-auto bg-bg/40 backdrop-blur-md border border-fg/10 p-8 md:p-12 text-center">
+          <p className="text-xs uppercase tracking-[0.4em] text-accent mb-8">
+            Çalış Plajı, Fethiye
+          </p>
+          <h1
+            className="font-display italic text-fg leading-[1.05]"
+            style={{ fontSize: 'clamp(3.5rem, 8vw, 6rem)' }}
+          >
+            <span className="block">Tezgâhtan</span>
+            <span className="block text-accent">Sofraya</span>
+          </h1>
+          <div className="mt-8 space-y-1 text-fg/70 leading-relaxed text-base md:text-lg">
+            <p>Her sabah denizden, her akşam sofranıza.</p>
+            <p>Akif Usta&apos;nın elinden, 1987&apos;den beri.</p>
+          </div>
+          <Link href="/menu" className="relative inline-block pb-1 mt-10">
+            <span className="text-xs uppercase tracking-[0.3em] text-accent">
+              Sofraya Göz At
+            </span>
+            <span
+              aria-hidden="true"
+              className="absolute left-0 bottom-0 h-px w-full bg-accent"
+            />
+          </Link>
+        </div>
       </div>
 
       <div
