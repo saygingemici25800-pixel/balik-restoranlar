@@ -1,5 +1,58 @@
 /* Çalış Balıkçısı — Karakalem rezervasyon (sayfa-scope) */
 
+/* ── Atmosfer fazı CSS variable'ları ─────────────────────
+   @property kaydı: tarayıcının renk interpolation yapabilmesi için zorunlu
+   (Chrome 85+, Safari 16.4+, Firefox 128+). Eski tarayıcılarda anında
+   değişir, transition smoot olmaz ama işlevsel kalır. */
+@property --rez-sky-top {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #f5b889;
+}
+@property --rez-sky-bottom {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #d97a3c;
+}
+@property --rez-sand {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #e6c9a0;
+}
+@property --rez-ink {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #1f1a12;
+}
+@property --rez-wave-stroke {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #1f1a12;
+}
+@property --rez-table-fill {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(255, 255, 255, 0.5);
+}
+
+/* Atmosfer wrapper — token'lar burada set edilir, transition burada uygulanır
+   ve cascade ile tüm child'lara akar. */
+.atmosphereWrapper {
+  transition:
+    --rez-sky-top 1000ms cubic-bezier(0.4, 0, 0.2, 1),
+    --rez-sky-bottom 1000ms cubic-bezier(0.4, 0, 0.2, 1),
+    --rez-sand 1000ms cubic-bezier(0.4, 0, 0.2, 1),
+    --rez-ink 1000ms cubic-bezier(0.4, 0, 0.2, 1),
+    --rez-wave-stroke 1000ms cubic-bezier(0.4, 0, 0.2, 1),
+    --rez-table-fill 1000ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .atmosphereWrapper {
+    transition: none;
+  }
+}
+
+
 .reservationRoot {
   --paper: #f3ead8;
   --paper-deep: #ead9b8;
@@ -213,9 +266,14 @@
      bırakıyor, kalan ~604px canvas için aspect 16/7 (2.286). Kullanıcı
      spec'i 16/11 idi ama matematik tersine — 16/11 daha tall yapardı. */
   aspect-ratio: 16 / 7;
-  background:
-    linear-gradient(180deg, rgba(217, 122, 60, 0.05) 0%, transparent 35%),
-    var(--paper);
+  /* Sky gradient — atmosfer fazına göre değişir. @property registration
+     sayesinde --rez-sky-top/--rez-sky-bottom değişimi tarayıcı tarafından
+     interpolate edilir (atmosphereWrapper transition ile). */
+  background: linear-gradient(
+    180deg,
+    var(--rez-sky-top) 0%,
+    var(--rez-sky-bottom) 100%
+  );
   border: 0.5px solid var(--rule);
   overflow: hidden;
 }

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { TABLES_BY_ID } from '../_data/tables';
 import { TAKEN_IDS } from '../_data/mock-reservations';
+import { getAtmosphereTokens } from '../_lib/atmosphere';
 import type {
   ReservationDraft,
   SelectedTable,
@@ -44,7 +45,12 @@ export function VenueMap() {
   const [flightActive, setFlightActive] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  // Sahne saati — panel kapalıyken bile yansır. Default 19:00 (gün batımı,
+  // mevcut estetik). Time chip'lerinden değişir.
+  const [time, setTime] = useState<string>('19:00');
   const closeTimerRef = useRef<number | null>(null);
+
+  const tokens = getAtmosphereTokens(time);
 
   useEffect(() => {
     return () => {
@@ -97,8 +103,23 @@ export function VenueMap() {
     setToast('Rezervasyon talebiniz alındı, sizi arayacağız.');
   }
 
+  // Atmosphere wrapper'a CSS custom property'leri inline style ile geçir.
+  // @property registration sayesinde değişimler 600ms cubic-bezier ile
+  // interpolate olur (atmosphereWrapper class transition'ından).
+  const atmosphereStyle = {
+    '--rez-sky-top': tokens.skyTop,
+    '--rez-sky-bottom': tokens.skyBottom,
+    '--rez-sand': tokens.sand,
+    '--rez-ink': tokens.ink,
+    '--rez-wave-stroke': tokens.waveStroke,
+    '--rez-table-fill': tokens.tableFill,
+  } as React.CSSProperties;
+
   return (
-    <section className={styles.mapStage}>
+    <section
+      className={`${styles.mapStage} ${styles.atmosphereWrapper}`}
+      style={atmosphereStyle}
+    >
       <Legend />
       <div className={styles.mapFrame}>
         <IsoMap
@@ -106,12 +127,15 @@ export function VenueMap() {
           flightId={flightActive ? (selected?.id ?? null) : null}
           isDesktop={isDesktop}
           reducedMotion={reducedMotion}
+          tokens={tokens}
           onSelect={handleSelect}
         />
       </div>
       <ReservationPanel
         open={panelOpen}
         table={selected}
+        time={time}
+        onTimeChange={setTime}
         onClose={handleClose}
         onConfirm={handleConfirm}
       />

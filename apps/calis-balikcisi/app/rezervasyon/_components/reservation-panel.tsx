@@ -56,14 +56,22 @@ function buildDays(): Day[] {
 type Props = {
   open: boolean;
   table: SelectedTable | null;
+  time: string;
+  onTimeChange: (time: string) => void;
   onClose: () => void;
   onConfirm: (draft: ReservationDraft) => void;
 };
 
-export function ReservationPanel({ open, table, onClose, onConfirm }: Props) {
+export function ReservationPanel({
+  open,
+  table,
+  time,
+  onTimeChange,
+  onClose,
+  onConfirm,
+}: Props) {
   const days = useMemo(buildDays, []);
   const [people, setPeople] = useState(2);
-  const [time, setTime] = useState<string>('19:00');
   const [date, setDate] = useState<string>(
     () => days[1]?.key ?? days[0]?.key ?? '',
   );
@@ -196,7 +204,7 @@ export function ReservationPanel({ open, table, onClose, onConfirm }: Props) {
                   key={s}
                   type="button"
                   className={`${styles.chip} ${time === s ? styles.active : ''}`}
-                  onClick={() => setTime(s)}
+                  onClick={() => onTimeChange(s)}
                   aria-pressed={time === s}
                 >
                   {s}

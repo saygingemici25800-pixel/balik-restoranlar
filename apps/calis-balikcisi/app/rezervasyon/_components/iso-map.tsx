@@ -4,6 +4,7 @@ import { motion, type Transition } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { INDOOR_TABLES, SEA_TABLES } from '../_data/tables';
 import { RECOMMENDED_IDS, TAKEN_IDS } from '../_data/mock-reservations';
+import { SUN_BASE_CX, type AtmosphereTokens } from '../_lib/atmosphere';
 import type { Table, TableStatus } from '../_types/reservation';
 import styles from '../_styles/reservation.module.css';
 
@@ -58,14 +59,16 @@ function FlatTable({
   const { id, label, x, y } = table;
   const w = 22;
   const d = 14;
-  const ink = status === 'taken' ? 'rgba(31,26,18,.32)' : '#1f1a12';
+  // Ink: currentColor sayesinde --rez-ink mirası alır → faz değişiminde
+  // smooth interpolate. Taken için ayrıca opacity uygulanır (aşağıda).
+  const ink = 'currentColor';
   const dash = status === 'taken' ? '2 2.5' : '0';
   const fill =
     status === 'recommended'
       ? 'rgba(217,122,60,.18)'
       : status === 'selected'
         ? 'rgba(217,122,60,.32)'
-        : 'rgba(255,255,255,.5)';
+        : 'var(--rez-table-fill)';
   const sw = status === 'selected' ? 1.6 : status === 'taken' ? 0.7 : 1;
   const number = id.slice(1);
 
@@ -188,7 +191,7 @@ function FlatTable({
     <>
     <motion.g
       style={{
-        color: ink,
+        color: 'var(--rez-ink)',
         transformBox: 'fill-box',
         transformOrigin: 'center',
       }}
@@ -234,7 +237,7 @@ function FlatTable({
         cy={shadowCy}
         rx={12}
         ry={shadowRy}
-        fill="#1f1a12"
+        fill="currentColor"
         opacity={shadowOpacity}
       />
       <line
@@ -345,7 +348,12 @@ function FlatTable({
   );
 }
 
-function SeaBackdrop() {
+type SeaBackdropProps = {
+  tokens: AtmosphereTokens;
+  reducedMotion: boolean;
+};
+
+function SeaBackdrop({ tokens, reducedMotion }: SeaBackdropProps) {
   // Hand-drawn choppy waves — port from handoff.
   const wave = (y: number, amp = 5, phase = 0, choppy = false) => {
     const start = -380;
@@ -373,32 +381,107 @@ function SeaBackdrop() {
   };
 
   return (
-    <g opacity={0.75}>
-      <g className={styles.ambientSun}>
-        {/* Güneş yarısı denize batmış — cy=-130 yaklaşık ufuk seviyesinde
-            (shoreline y=-112). Üst yarı görünür, alt yarı dalga şeridiyle
-            örtülü. r=34, alt sınır y=-96 → ufuk altında ~16px su altında. */}
-        <circle
-          cx={-310}
-          cy={-130}
-          r={34}
-          stroke="#1f1a12"
-          strokeWidth="1"
-          strokeDasharray="2 3"
-          fill="rgba(217,122,60,.18)"
-        />
-        <circle
-          cx={-310}
-          cy={-130}
-          r={20}
-          fill="#d97a3c"
-          fillOpacity={0.15}
-        />
-      </g>
+    // currentColor: tüm child'lar `stroke="currentColor"` / `fill="currentColor"`
+    // ile bu rengi kullanır → faz değişiminde @property registration ile
+    // smooth interpolate olur. Wave stroke ayrı (kendi tokeni var).
+    <g opacity={0.75} style={{ color: 'var(--rez-ink)' }}>
+      {/* Güneş — sunCy/sunOpacity token'a bağlı, sunCx (default -310).
+          17:30 cy=-170 (yüksek) → 19:00 cy=-130 (yarı batık) → 20:00 cy=-100
+          opacity 0.3 (neredeyse battı) → 20:30+ opacity 0 (kayboldu). */}
+      <motion.g
+        animate={{ y: tokens.sunCy, opacity: tokens.sunOpacity }}
+        transition={{
+          duration: reducedMotion ? 0 : 1,
+          ease: [0.4, 0, 0.2, 1],
+        }}
+        style={{ x: tokens.sunCx }}
+      >
+        <g className={styles.ambientSun}>
+          <circle
+            cx={0}
+            cy={0}
+            r={34}
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeDasharray="2 3"
+            fill="rgba(217,122,60,.18)"
+          />
+          <circle
+            cx={0}
+            cy={0}
+            r={20}
+            fill="#d97a3c"
+            fillOpacity={0.15}
+          />
+        </g>
+      </motion.g>
+
+      {/* Ay — moonCx default -80 (sahnenin sol-orta, panel açıkken görünür).
+          19:30'da denizden doğmaya başlar (cy=-90, op 0.2, phase 0.3 yarım
+          ay). 22:00+'da tam ay (op 1, phase 1, cy=-185). Yarım/gibbous için
+          OVERLAP yöntemi: krem ana disk üstüne sky-top fill'li gölge daire
+          offset'le çizilir, hilal illüzyonu verir. (Mask karmaşık + ID
+          rerender riskli — overlap daha güvenli.) */}
+      {tokens.moonOpacity > 0 && (
+        <motion.g
+          animate={{
+            x: tokens.moonCx,
+            y: tokens.moonCy,
+            opacity: tokens.moonOpacity,
+          }}
+          transition={{
+            duration: reducedMotion ? 0 : 1,
+            ease: [0.4, 0, 0.2, 1],
+          }}
+          aria-hidden="true"
+        >
+          {/* Ana ay diski — krem fill, dashed currentColor border */}
+          <circle
+            cx={0}
+            cy={0}
+            r={32}
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeDasharray="2 3"
+            fill="rgba(245,235,210,0.85)"
+            opacity={0.9}
+          />
+          {/* Faz gölgesi: sky-top fill'le ay'ın bir kısmını "yutar".
+              moonPhase=1.0'da gölge daire ay'ın dışına kayar (görünmez).
+              moonPhase=0.3'te gölge ay'ın çoğunu kapsar (hilal). */}
+          {tokens.moonPhase < 1 && (
+            <circle
+              cx={(1 - tokens.moonPhase) * 30}
+              cy={(1 - tokens.moonPhase) * 20}
+              r={32 - tokens.moonPhase * 6}
+              fill="var(--rez-sky-top)"
+            />
+          )}
+          {/* Kraterler — sadece moonPhase > 0.7 (gibbous+ ve tam) */}
+          {tokens.moonPhase > 0.7 && (
+            <>
+              <circle
+                cx={-8}
+                cy={-5}
+                r={3}
+                fill="currentColor"
+                opacity={0.25}
+              />
+              <circle
+                cx={10}
+                cy={8}
+                r={2}
+                fill="currentColor"
+                opacity={0.2}
+              />
+            </>
+          )}
+        </motion.g>
+      )}
 
       <g
         className={styles.ambientSea}
-        stroke="#1f1a12"
+        stroke="var(--rez-wave-stroke)"
         fill="none"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -414,32 +497,59 @@ function SeaBackdrop() {
         <path d={wave(-90, 2, 14, false)} strokeWidth="0.4" opacity={0.35} />
       </g>
 
-      <g
+      {/* Sun glitter — copper yansımalar. Saat ilerledikçe (güneş battıkça)
+          opacity azalır, 20:30+'da 0. Pozisyonu güneşle birlikte sağa kayar:
+          path'ler SUN_BASE_CX (-310) referans alarak yazılmış, motion.g
+          x offset'i = tokens.sunCx - SUN_BASE_CX (17:30=0, 20:00=180). */}
+      <motion.g
         stroke="#d97a3c"
         strokeWidth="0.9"
         fill="none"
-        opacity={0.5}
         strokeLinecap="round"
+        animate={{
+          opacity: tokens.sunGlitterOpacity,
+          x: tokens.sunCx - SUN_BASE_CX,
+        }}
+        transition={{
+          duration: reducedMotion ? 0 : 1,
+          ease: [0.4, 0, 0.2, 1],
+        }}
       >
-        {/* Glitter güneşin yeni cy=-130 pozisyonundan ufka (-112) doğru kısa
-            yansımalar. Eskiden 6 uzun çizgi vardı; sun aşağı indiği için
-            mesafe kısaldı, 4 küçük yansıma yeter. */}
         <path d="M-272 -126 l10 0" />
         <path d="M-252 -122 l14 -1" />
         <path d="M-228 -118 l18 -2" />
         <path d="M-200 -114 l22 -2" />
-      </g>
+      </motion.g>
+
+      {/* Moon glitter — krem ay yansıması ufuk seviyesinde, ay'ın altında.
+          Ay cx=-80 etrafında, y=-104 ile -110 arası 3 kısa beyaz çizgi.
+          19:30'da hafif belirir, 22:30'da en parlak. */}
+      <motion.g
+        stroke="rgba(245,235,210,0.9)"
+        strokeWidth="0.7"
+        fill="none"
+        strokeLinecap="round"
+        animate={{ opacity: tokens.moonGlitterOpacity }}
+        transition={{
+          duration: reducedMotion ? 0 : 1,
+          ease: [0.4, 0, 0.2, 1],
+        }}
+      >
+        <path d="M-95 -106 l8 0" />
+        <path d="M-86 -110 l12 -1" />
+        <path d="M-72 -104 l10 0" />
+      </motion.g>
 
       <path
         d="M-380 -112 Q-200 -122 -40 -114 T200 -108 T380 -102"
-        stroke="#1f1a12"
+        stroke="currentColor"
         strokeWidth="0.8"
         opacity={0.55}
         fill="none"
       />
       <path
         d="M-380 -106 Q-200 -116 -40 -108 T200 -102 T380 -96"
-        stroke="#1f1a12"
+        stroke="currentColor"
         strokeWidth="0.4"
         opacity={0.3}
         fill="none"
@@ -450,7 +560,7 @@ function SeaBackdrop() {
         y={-106}
         width={760}
         height={22}
-        fill="#ead9b8"
+        fill="var(--rez-sand)"
         fillOpacity={0.6}
       />
       <rect
@@ -461,14 +571,14 @@ function SeaBackdrop() {
         fill="#d97a3c"
         fillOpacity={0.06}
       />
-      <g fill="#1f1a12" opacity={0.28}>
+      <g fill="currentColor" opacity={0.28}>
         {Array.from({ length: 70 }, (_, i) => {
           const sx = -370 + i * 10.8 + ((i * 31) % 7);
           const sy = -102 + ((i * 17) % 18);
           return <circle key={i} cx={sx} cy={sy} r={0.7} />;
         })}
       </g>
-      <g fill="#1f1a12" opacity={0.22}>
+      <g fill="currentColor" opacity={0.22}>
         <ellipse
           cx={-180}
           cy={-98}
@@ -511,7 +621,7 @@ function SeaBackdrop() {
         fontFamily="var(--font-spectral), serif"
         fontStyle="italic"
         fontSize={11}
-        fill="#1f1a12"
+        fill="currentColor"
         opacity={0.45}
       >
         kum
@@ -523,7 +633,7 @@ function SeaBackdrop() {
         y1={-85}
         x2={380}
         y2={-85}
-        stroke="#1f1a12"
+        stroke="currentColor"
         strokeWidth="0.7"
         opacity={0.5}
       />
@@ -532,25 +642,25 @@ function SeaBackdrop() {
         y1={-72}
         x2={380}
         y2={-72}
-        stroke="#1f1a12"
+        stroke="currentColor"
         strokeWidth="0.7"
         opacity={0.5}
       />
-      <g stroke="#1f1a12" strokeWidth="0.5" opacity={0.38}>
+      <g stroke="currentColor" strokeWidth="0.5" opacity={0.38}>
         {Array.from({ length: 22 }, (_, i) => {
           const lx = -360 + i * 35;
           return <line key={i} x1={lx} y1={-85} x2={lx} y2={-72} />;
         })}
       </g>
       <g
-        stroke="#1f1a12"
+        stroke="currentColor"
         strokeWidth="0.8"
         fill="none"
         opacity={0.7}
         strokeLinecap="round"
       >
         <g transform="translate(-90 -78)">
-          <circle cx={0} cy={-6} r={1.4} fill="#1f1a12" />
+          <circle cx={0} cy={-6} r={1.4} fill="currentColor" />
           <line x1={0} y1={-4} x2={0} y2={3} />
           <line x1={0} y1={-2} x2={-3} y2={1} />
           <line x1={0} y1={-2} x2={3} y2={1} />
@@ -558,14 +668,14 @@ function SeaBackdrop() {
           <line x1={0} y1={3} x2={2} y2={7} />
         </g>
         <g transform="translate(-82 -78)">
-          <circle cx={0} cy={-6} r={1.2} fill="#1f1a12" />
+          <circle cx={0} cy={-6} r={1.2} fill="currentColor" />
           <line x1={0} y1={-4} x2={0} y2={2} />
           <line x1={0} y1={-2} x2={3} y2={0} />
           <line x1={0} y1={2} x2={-2} y2={6} />
           <line x1={0} y1={2} x2={2} y2={6} />
         </g>
         <g transform="translate(160 -78)">
-          <circle cx={0} cy={-6} r={1.4} fill="#1f1a12" />
+          <circle cx={0} cy={-6} r={1.4} fill="currentColor" />
           <line x1={0} y1={-4} x2={0} y2={3} />
           <line x1={0} y1={-2} x2={-3} y2={1} />
           <line x1={0} y1={-2} x2={3} y2={1} />
@@ -579,13 +689,13 @@ function SeaBackdrop() {
         fontFamily="var(--font-spectral), serif"
         fontStyle="italic"
         fontSize={10}
-        fill="#1f1a12"
+        fill="currentColor"
         opacity={0.45}
       >
         — sahil yolu —
       </text>
 
-      <g stroke="#1f1a12" strokeWidth="0.7" fill="none" opacity={0.55}>
+      <g stroke="currentColor" strokeWidth="0.7" fill="none" opacity={0.55}>
         <line x1={-340} y1={-68} x2={340} y2={-68} />
         <line x1={-340} y1={-64} x2={340} y2={-64} />
         {Array.from({ length: 18 }, (_, i) => {
@@ -600,7 +710,7 @@ function SeaBackdrop() {
         fontFamily="var(--font-spectral), serif"
         fontStyle="italic"
         fontSize={9}
-        fill="#1f1a12"
+        fill="currentColor"
         opacity={0.55}
       >
         ↓ giriş
@@ -619,7 +729,7 @@ function SeaBackdrop() {
         y1={35}
         x2={380}
         y2={35}
-        stroke="#1f1a12"
+        stroke="currentColor"
         strokeWidth="0.5"
         strokeDasharray="3 4"
         opacity={0.5}
@@ -630,7 +740,7 @@ function SeaBackdrop() {
         fontFamily="var(--font-spectral), serif"
         fontStyle="italic"
         fontSize={10}
-        fill="#1f1a12"
+        fill="currentColor"
         opacity={0.5}
       >
         iç salon
@@ -643,7 +753,7 @@ function SeaBackdrop() {
           width={300}
           height={18}
           fill="#f3ead8"
-          stroke="#1f1a12"
+          stroke="currentColor"
           strokeWidth="0.8"
           opacity={0.9}
         />
@@ -653,20 +763,20 @@ function SeaBackdrop() {
           textAnchor="middle"
           fontFamily="var(--font-spectral), serif"
           fontSize={13}
-          fill="#1f1a12"
+          fill="currentColor"
           letterSpacing="0.08em"
         >
           ÇALIŞ BALIKÇISI
         </text>
         <path
           d="M-168 0 q3 -3 7 0 q4 3 7 0 l-3 0 l3 3 l-3 0 q-4 -3 -7 0 q-4 3 -7 0 z"
-          stroke="#1f1a12"
+          stroke="currentColor"
           strokeWidth="0.5"
           fill="none"
         />
         <path
           d="M168 0 q-3 -3 -7 0 q-4 3 -7 0 l3 0 l-3 3 l3 0 q4 -3 7 0 q4 3 7 0 z"
-          stroke="#1f1a12"
+          stroke="currentColor"
           strokeWidth="0.5"
           fill="none"
         />
@@ -677,7 +787,7 @@ function SeaBackdrop() {
         y={112}
         width={760}
         height={64}
-        fill="#1f1a12"
+        fill="currentColor"
         fillOpacity={0.06}
       />
       <line
@@ -685,12 +795,12 @@ function SeaBackdrop() {
         y1={124}
         x2={380}
         y2={124}
-        stroke="#1f1a12"
+        stroke="currentColor"
         strokeWidth="0.6"
         strokeDasharray="3 3"
         opacity={0.5}
       />
-      <g stroke="#1f1a12" strokeWidth="0.7" fill="none" opacity={0.5}>
+      <g stroke="currentColor" strokeWidth="0.7" fill="none" opacity={0.5}>
         {[-260, -90, 90, 260].map((sx, i) => (
           <g key={i}>
             <path d={`M${sx - 30} 120 L${sx - 24} 114 L${sx + 24} 114 L${sx + 30} 120`} />
@@ -699,7 +809,12 @@ function SeaBackdrop() {
           </g>
         ))}
       </g>
-      <g fill="#d97a3c" fillOpacity={0.55} stroke="#1f1a12" strokeWidth="0.5">
+      <g
+        fill="#d97a3c"
+        fillOpacity={tokens.flameOpacity}
+        stroke="currentColor"
+        strokeWidth="0.5"
+      >
         {[-260, -90, 90, 260].map((sx, i) => (
           <g key={i}>
             <path
@@ -708,7 +823,7 @@ function SeaBackdrop() {
           </g>
         ))}
       </g>
-      <g opacity={0.88}>
+      <g opacity={tokens.chefOpacity}>
         {[
           { x: -260, facing: 1 },
           { x: -90, facing: 1 },
@@ -719,32 +834,32 @@ function SeaBackdrop() {
             <path
               d="M-13 0 L-10 -22 L10 -22 L13 0 Z"
               fill="#f3ead8"
-              stroke="#1f1a12"
+              stroke="currentColor"
               strokeWidth="0.7"
             />
-            <line x1={-6} y1={-22} x2={-6} y2={-2} stroke="#1f1a12" strokeWidth="0.4" opacity={0.6} />
-            <line x1={6} y1={-22} x2={6} y2={-2} stroke="#1f1a12" strokeWidth="0.4" opacity={0.6} />
-            <line x1={-2} y1={-22} x2={-2} y2={-26} stroke="#1f1a12" strokeWidth="1.2" />
-            <line x1={2} y1={-22} x2={2} y2={-26} stroke="#1f1a12" strokeWidth="1.2" />
-            <circle cx={0} cy={-31} r={4.2} fill="#e8d4b0" stroke="#1f1a12" strokeWidth="0.7" />
-            <line x1={-2} y1={-31} x2={-1} y2={-30} stroke="#1f1a12" strokeWidth="0.5" />
+            <line x1={-6} y1={-22} x2={-6} y2={-2} stroke="currentColor" strokeWidth="0.4" opacity={0.6} />
+            <line x1={6} y1={-22} x2={6} y2={-2} stroke="currentColor" strokeWidth="0.4" opacity={0.6} />
+            <line x1={-2} y1={-22} x2={-2} y2={-26} stroke="currentColor" strokeWidth="1.2" />
+            <line x1={2} y1={-22} x2={2} y2={-26} stroke="currentColor" strokeWidth="1.2" />
+            <circle cx={0} cy={-31} r={4.2} fill="#e8d4b0" stroke="currentColor" strokeWidth="0.7" />
+            <line x1={-2} y1={-31} x2={-1} y2={-30} stroke="currentColor" strokeWidth="0.5" />
             <path
               d="M-5 -35 q-3 -2 -3 -6 q0 -5 4 -5 q1 -3 4 -3 q3 0 4 3 q4 0 4 5 q0 4 -3 6 z"
               fill="#f3ead8"
-              stroke="#1f1a12"
+              stroke="currentColor"
               strokeWidth="0.7"
             />
-            <line x1={-5} y1={-35} x2={5} y2={-35} stroke="#1f1a12" strokeWidth="0.5" />
+            <line x1={-5} y1={-35} x2={5} y2={-35} stroke="currentColor" strokeWidth="0.5" />
             <path
               d={`M${c.facing * 10} -20 Q${c.facing * 16} -14 ${c.facing * 18} -8`}
-              stroke="#1f1a12"
+              stroke="currentColor"
               strokeWidth="3"
               fill="none"
               strokeLinecap="round"
             />
             <path
               d={`M${c.facing * 18} -8 Q${c.facing * 22} -4 ${c.facing * 24} 2`}
-              stroke="#1f1a12"
+              stroke="currentColor"
               strokeWidth="2.4"
               fill="none"
               strokeLinecap="round"
@@ -754,7 +869,7 @@ function SeaBackdrop() {
               cy={2}
               r={1.4}
               fill="#e8d4b0"
-              stroke="#1f1a12"
+              stroke="currentColor"
               strokeWidth="0.5"
             />
             <line
@@ -762,7 +877,7 @@ function SeaBackdrop() {
               y1={2}
               x2={c.facing * 32}
               y2={-2}
-              stroke="#1f1a12"
+              stroke="currentColor"
               strokeWidth="1"
             />
             <rect
@@ -770,14 +885,14 @@ function SeaBackdrop() {
               y={-4}
               width={3}
               height={3}
-              stroke="#1f1a12"
+              stroke="currentColor"
               strokeWidth="0.5"
               fill="none"
             />
           </g>
         ))}
       </g>
-      <g stroke="#1f1a12" strokeWidth="0.6" fill="none" opacity={0.55}>
+      <g stroke="currentColor" strokeWidth="0.6" fill="none" opacity={0.55}>
         {[-260, -90, 90, 260].map((sx, i) => (
           <g key={i} transform={`translate(${sx} 130)`}>
             <path d="M-7 0 q3 -3 7 0 q4 3 7 0 l-3 0 l3 3 l-3 0 q-4 -3 -7 0 q-4 3 -7 0 z" />
@@ -790,7 +905,7 @@ function SeaBackdrop() {
         fontFamily="var(--font-spectral), serif"
         fontStyle="italic"
         fontSize={11}
-        fill="#1f1a12"
+        fill="currentColor"
         opacity={0.55}
       >
         mutfak — ızgara
@@ -802,7 +917,7 @@ function SeaBackdrop() {
         fontFamily="var(--font-spectral), serif"
         fontStyle="italic"
         fontSize={13}
-        fill="#1f1a12"
+        fill="currentColor"
         opacity={0.55}
       >
         Çalış sahili
@@ -810,7 +925,7 @@ function SeaBackdrop() {
 
       <g
         transform="translate(120 -136)"
-        stroke="#1f1a12"
+        stroke="currentColor"
         strokeWidth="0.8"
         fill="none"
         opacity={0.55}
@@ -821,7 +936,7 @@ function SeaBackdrop() {
       </g>
       <g
         transform="translate(280 -109)"
-        stroke="#1f1a12"
+        stroke="currentColor"
         strokeWidth="0.6"
         fill="none"
         opacity={0.4}
@@ -831,7 +946,7 @@ function SeaBackdrop() {
         <path d="M0 -10 l5 8 l-5 0 z" />
       </g>
 
-      <g stroke="#1f1a12" strokeWidth="0.5" fill="none" opacity={0.5}>
+      <g stroke="currentColor" strokeWidth="0.5" fill="none" opacity={0.5}>
         <path d="M-60 -185 q3 -3 6 0 q3 -3 6 0" />
         <path d="M-30 -175 q2 -2 4 0 q2 -2 4 0" />
         <path d="M40 -188 q3 -3 6 0 q3 -3 6 0" />
@@ -845,6 +960,7 @@ type Props = {
   flightId: string | null;
   isDesktop: boolean;
   reducedMotion: boolean;
+  tokens: AtmosphereTokens;
   onSelect: (id: string) => void;
 };
 
@@ -863,6 +979,7 @@ export function IsoMap({
   flightId,
   isDesktop,
   reducedMotion,
+  tokens,
   onSelect,
 }: Props) {
   const [hover, setHover] = useState<HoverState | null>(null);
@@ -968,7 +1085,7 @@ export function IsoMap({
           fill="url(#rez-groundwash)"
         />
 
-        <SeaBackdrop />
+        <SeaBackdrop tokens={tokens} reducedMotion={reducedMotion} />
 
         <g>
           {orderedTables.map((t) => (
@@ -994,7 +1111,7 @@ export function IsoMap({
           fontFamily="var(--font-spectral), serif"
           fontStyle="italic"
           fontSize={11}
-          fill="#1f1a12"
+          fill="currentColor"
           opacity={0.4}
         >
           — ışık 18:42 civarı
