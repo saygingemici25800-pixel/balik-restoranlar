@@ -375,9 +375,12 @@ function SeaBackdrop() {
   return (
     <g opacity={0.75}>
       <g className={styles.ambientSun}>
+        {/* Güneş yarısı denize batmış — cy=-130 yaklaşık ufuk seviyesinde
+            (shoreline y=-112). Üst yarı görünür, alt yarı dalga şeridiyle
+            örtülü. r=34, alt sınır y=-96 → ufuk altında ~16px su altında. */}
         <circle
           cx={-310}
-          cy={-180}
+          cy={-130}
           r={34}
           stroke="#1f1a12"
           strokeWidth="1"
@@ -386,7 +389,7 @@ function SeaBackdrop() {
         />
         <circle
           cx={-310}
-          cy={-180}
+          cy={-130}
           r={20}
           fill="#d97a3c"
           fillOpacity={0.15}
@@ -400,30 +403,31 @@ function SeaBackdrop() {
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <path d={wave(-180, 4, 3, false)} strokeWidth="0.6" opacity={0.5} />
-        <path d={wave(-168, 5, 18, false)} strokeWidth="0.6" opacity={0.55} />
-        <path d={wave(-157, 7, 41, true)} strokeWidth="0.9" opacity={0.7} />
-        <path d={wave(-147, 9, 17, true)} strokeWidth="1" opacity={0.8} />
-        <path d={wave(-135, 11, 63, true)} strokeWidth="1.1" opacity={0.85} />
-        <path d={wave(-124, 8, 29, true)} strokeWidth="0.9" opacity={0.7} />
-        <path d={wave(-112, 6, 51, true)} strokeWidth="0.8" opacity={0.6} />
-        <path d={wave(-100, 4, 8, false)} strokeWidth="0.6" opacity={0.5} />
-        <path d={wave(-90, 3, 14, false)} strokeWidth="0.5" opacity={0.4} />
+        <path d={wave(-180, 2, 3, false)} strokeWidth="0.5" opacity={0.4} />
+        <path d={wave(-168, 2, 18, false)} strokeWidth="0.5" opacity={0.45} />
+        <path d={wave(-157, 3, 41, false)} strokeWidth="0.6" opacity={0.5} />
+        <path d={wave(-147, 3, 17, false)} strokeWidth="0.7" opacity={0.55} />
+        <path d={wave(-135, 3, 63, false)} strokeWidth="0.8" opacity={0.65} />
+        <path d={wave(-124, 3, 29, false)} strokeWidth="0.6" opacity={0.5} />
+        <path d={wave(-112, 2, 51, false)} strokeWidth="0.55" opacity={0.45} />
+        <path d={wave(-100, 2, 8, false)} strokeWidth="0.5" opacity={0.4} />
+        <path d={wave(-90, 2, 14, false)} strokeWidth="0.4" opacity={0.35} />
       </g>
 
       <g
         stroke="#d97a3c"
-        strokeWidth="1.2"
+        strokeWidth="0.9"
         fill="none"
-        opacity={0.55}
+        opacity={0.5}
         strokeLinecap="round"
       >
-        <path d="M-280 -178 l14 0" />
-        <path d="M-258 -167 l18 -2" />
-        <path d="M-236 -154 l20 -3" />
-        <path d="M-214 -142 l24 -4" />
-        <path d="M-194 -129 l26 -5" />
-        <path d="M-174 -117 l28 -6" />
+        {/* Glitter güneşin yeni cy=-130 pozisyonundan ufka (-112) doğru kısa
+            yansımalar. Eskiden 6 uzun çizgi vardı; sun aşağı indiği için
+            mesafe kısaldı, 4 küçük yansıma yeter. */}
+        <path d="M-272 -126 l10 0" />
+        <path d="M-252 -122 l14 -1" />
+        <path d="M-228 -118 l18 -2" />
+        <path d="M-200 -114 l22 -2" />
       </g>
 
       <path
@@ -794,7 +798,7 @@ function SeaBackdrop() {
 
       <text
         x={-360}
-        y={-180}
+        y={-184}
         fontFamily="var(--font-spectral), serif"
         fontStyle="italic"
         fontSize={13}
