@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { ALL_TABLES, TABLES_BY_ID } from '../_data/tables';
 import { TAKEN_IDS } from '../_data/mock-reservations';
@@ -44,6 +45,7 @@ type Props = {
 };
 
 export function VenueMap({ onHeaderHiddenChange, autoSelectKey = 0 }: Props) {
+  const router = useRouter();
   const isDesktop = useMediaQuery(DESKTOP_QUERY, true);
   const reducedMotion = useMediaQuery(REDUCED_MOTION_QUERY, false);
   const isMobile = !isDesktop;
@@ -133,16 +135,16 @@ export function VenueMap({ onHeaderHiddenChange, autoSelectKey = 0 }: Props) {
   }
 
   function handleConfirm(draft: ReservationDraft) {
-    // eslint-disable-next-line no-console
-    console.log('[rezervasyon] draft:', draft);
-    setPanelOpen(false);
-    setFlightActive(false);
-    clearCloseTimer();
-    closeTimerRef.current = window.setTimeout(() => {
-      setSelected(null);
-      closeTimerRef.current = null;
-    }, SPRING_BACK_MS);
-    setToast('Rezervasyon talebiniz alındı, sizi arayacağız.');
+    const tableMeta = TABLES_BY_ID[draft.tableId];
+    const params = new URLSearchParams({
+      table: draft.tableId,
+      zone: tableMeta?.zone ?? 'sea',
+      date: draft.date,
+      time: draft.time,
+      people: String(draft.partySize),
+      name: draft.guestName,
+    });
+    router.push(`/rezervasyon/onay?${params.toString()}`);
   }
 
   const atmosphereStyle = {

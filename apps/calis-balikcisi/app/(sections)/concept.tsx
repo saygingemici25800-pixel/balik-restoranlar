@@ -18,10 +18,7 @@ export function Concept() {
             <h2 className="font-display text-4xl md:text-5xl leading-tight text-fg">
               The Purest Expression of the Sea
             </h2>
-            <p className="mt-3 font-display italic text-lg md:text-xl text-accent">
-              Az müdahale, çok ihtimam.
-            </p>
-            <div className="mt-8 space-y-6 text-fg/80 leading-relaxed">
+            <div className="mt-16 space-y-6 text-fg/80 leading-relaxed">
               <p>
                 At Çalış Balıkçısı, we believe the ocean speaks for itself. Our culinary philosophy is one of luxurious restraint—removing the unnecessary to reveal the essential character of the wild catch.
               </p>
