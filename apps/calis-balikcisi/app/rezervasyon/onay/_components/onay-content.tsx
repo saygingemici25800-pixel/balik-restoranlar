@@ -25,27 +25,6 @@ export function OnayContent({
   return (
     <div className={styles.shell}>
       <svg
-        className={styles.coastTop}
-        viewBox="0 0 520 60"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1"
-        strokeLinecap="round"
-        aria-hidden="true"
-      >
-        <path d="M0 38 Q 60 30 120 36 T 240 36 T 360 36 T 520 32" />
-        <path
-          d="M0 46 Q 70 42 140 44 T 280 44 T 420 44 T 520 42"
-          opacity="0.55"
-        />
-        <g transform="translate(310 22)">
-          <path d="M0 8 L 28 8 L 24 14 L 4 14 Z" fill="currentColor" opacity="0.7" />
-          <path d="M14 8 L 14 -4" />
-          <path d="M14 -4 L 22 6" />
-        </g>
-      </svg>
-
-      <svg
         className={styles.fish}
         viewBox="0 0 78 40"
         fill="none"
@@ -78,51 +57,83 @@ export function OnayContent({
           </span>
         </div>
         <div className={styles.summaryRow}>
-          <span className={styles.summaryKey}>Tarih</span>
-          <span className={styles.summaryVal}>
-            {formattedDate} · {time}
-          </span>
-        </div>
-        <div className={styles.summaryRow}>
           <span className={styles.summaryKey}>Kişi</span>
           <span className={styles.summaryVal}>{people} kişi</span>
         </div>
         <div className={styles.summaryRow}>
-          <span className={styles.summaryKey}>İsim</span>
+          <span className={styles.summaryKey}>Tarih</span>
+          <span className={styles.summaryVal}>{formattedDate}</span>
+        </div>
+        <div className={styles.summaryRow}>
+          <span className={styles.summaryKey}>Saat</span>
+          <span className={styles.summaryVal}>{time}</span>
+        </div>
+        <div className={`${styles.summaryRow} ${styles.summaryRowFull}`}>
+          <span className={styles.summaryKey}>Adınız</span>
           <span className={styles.summaryVal}>{name}</span>
         </div>
       </div>
 
       <div className={styles.phoneBlock}>
-        <p className={styles.phoneNote}>Aramamızı beklemek istemezseniz —</p>
         <a className={styles.phoneLink} href="tel:+902526143821">
           +90 252 614 38 21
         </a>
+        <p className={styles.phoneNote}>
+          İptal veya değişiklik için aynı numara — telefonda halledelim.
+        </p>
+        <p className={styles.manifesto}>
+          Ayrılış vaktimiz yoktur — masanız sizindir.
+        </p>
       </div>
-
-      <p className={styles.manifesto}>
-        Ayrılış vaktimiz yoktur, masanız sizindir. İptal veya değişiklik için
-        aynı numarayı arayın.
-      </p>
 
       <div className={styles.footRow}>
         <Link href="/" className={styles.homeLink}>
           ← Anasayfa
         </Link>
+        <span className={styles.dot}>·</span>
         <span className={styles.requestNo}>Talep no {requestNo}</span>
       </div>
 
-      <svg
-        className={styles.coastBottom}
-        viewBox="0 0 520 18"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1"
-        strokeLinecap="round"
-        aria-hidden="true"
-      >
-        <path d="M0 9 Q 60 4 120 9 T 240 9 T 360 9 T 520 7" />
-      </svg>
+      <footer className={styles.compactFooter}>
+        <p className={styles.tagline}>
+          Özellikle akşamüstü melteminde rezervasyon iyi olur.
+        </p>
+
+        <div className={styles.twoCol}>
+          <div className={styles.colLeft}>
+            <p>Çalış Plajı, Fethiye</p>
+            <p>
+              <a
+                href="https://instagram.com/calisbalikcisi"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Instagram
+              </a>
+            </p>
+            <p>
+              <a
+                href="https://maps.google.com/?q=%C3%87al%C4%B1%C5%9F+Bal%C4%B1k%C3%A7%C4%B1s%C4%B1+Fethiye"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Google Haritalar
+              </a>
+            </p>
+          </div>
+          <div className={styles.colRight}>
+            <p>
+              <a href="tel:+902526140000">+90 252 614 XX XX</a>
+            </p>
+            <p>
+              <a href="mailto:info@calisbalikcisi.com">info@calisbalikcisi.com</a>
+            </p>
+            <p>Her gün 12:00–23:00 · Pazar 12:00–22:00</p>
+          </div>
+        </div>
+
+        <p className={styles.copyright}>© 2026 Çalış Balıkçısı</p>
+      </footer>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter_Tight, Spectral } from 'next/font/google';
-import { TABLES_BY_ID, ZONE_LABEL } from '../_data/tables';
+import { ZONE_LABEL } from '../_data/tables';
 import type { Zone } from '../_types/reservation';
 import styles from './_styles/onay.module.css';
 import { OnayContent } from './_components/onay-content';
@@ -40,15 +40,27 @@ const TR_MONTHS = [
   'Aralık',
 ];
 
+const TR_DAYS = [
+  'Pazar',
+  'Pazartesi',
+  'Salı',
+  'Çarşamba',
+  'Perşembe',
+  'Cuma',
+  'Cumartesi',
+];
+
 const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
 
 function formatTrDate(iso: string): string {
   const m = DATE_RE.exec(iso);
   if (!m) return iso;
-  const day = parseInt(m[3]!, 10);
+  const year = parseInt(m[1]!, 10);
   const monthIdx = parseInt(m[2]!, 10) - 1;
+  const day = parseInt(m[3]!, 10);
   const month = TR_MONTHS[monthIdx] ?? '';
-  return `${day} ${month}`.trim();
+  const weekday = TR_DAYS[new Date(year, monthIdx, day).getDay()] ?? '';
+  return `${day} ${month}${weekday ? ` ${weekday}` : ''}`.trim();
 }
 
 function buildRequestNo(iso: string, tableId: string): string {
@@ -85,8 +97,7 @@ export default function OnayPage({
   const people = Number.isFinite(peopleRaw) && peopleRaw > 0 ? peopleRaw : 0;
   const name = searchParams.name?.trim() ?? '';
 
-  const tableMeta = tableId ? TABLES_BY_ID[tableId] : undefined;
-  const tableLabel = tableMeta?.label ?? (tableId ? `Masa ${tableId}` : 'Masa');
+  const tableLabel = tableId || '—';
   const zoneLabel = ZONE_LABEL[zone];
   const formattedDate = formatTrDate(date);
   const requestNo = buildRequestNo(date, tableId);
@@ -94,6 +105,7 @@ export default function OnayPage({
   return (
     <div
       data-rezervasyon
+      data-page="onay"
       className={`${styles.onayRoot} ${spectral.variable} ${interTight.variable}`}
     >
       <OnayContent

@@ -16,6 +16,12 @@ body:has([data-rezervasyon]) {
   color: #1f1a12;
 }
 
+/* /rezervasyon/onay — global footer gizli; sayfa kendi kompakt footer'ını
+   render eder. Diğer route'larda ana footer normal görünür. */
+body:has([data-page="onay"]) footer[data-global-footer] {
+  display: none;
+}
+
 @keyframes cinema-letterbox-top {
   from {
     transform: translateY(-100%);
