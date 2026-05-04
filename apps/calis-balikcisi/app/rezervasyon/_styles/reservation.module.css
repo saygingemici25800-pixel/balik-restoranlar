@@ -162,39 +162,110 @@
 .intro .altLink:hover {
   color: var(--ink);
 }
+
+/* Hero CTA — h1+subline altında ortada, italic serif underline.
+   Tıklandığında autoSelect tetikler (VenueMap'te ilk müsait masa). */
+.heroCta {
+  display: block;
+  margin: 12px auto 0;
+  padding: 4px 8px;
+  background: transparent;
+  border: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 0.5px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.heroCta:hover {
+  color: var(--ink);
+}
+@media (max-width: 720px) {
+  .heroCta {
+    font-size: 0.85rem;
+    margin-top: 8px;
+  }
+}
 @media (max-width: 720px) {
   .intro {
-    padding: 12px 18px 6px;
+    padding: 8px 18px 4px;
+  }
+  .intro .label {
+    font-size: 0.62rem;
+    margin-bottom: 6px;
+  }
+  .intro h1 {
+    font-size: clamp(1.2rem, 5vw, 1.6rem);
+    line-height: 1.1;
+    max-width: 100%;
+    margin-bottom: 4px;
+  }
+  .subRow {
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+    font-size: 0.68rem;
+  }
+  .subRow .subline {
+    font-size: inherit;
+    margin: 0;
+    opacity: 0.7;
+  }
+  .subRow .altLink {
+    font-size: inherit;
+    margin-top: 0;
   }
 }
 
-/* Brand strip (top-left) */
-.brand {
+/* Brand satırı — brand solda, REZERVASYON eyebrow sağda. Tek satır,
+   max-width container kuralları burada. */
+.brandRow {
   position: relative;
   z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
   padding: 22px 32px 0;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+.brand {
   font-family: var(--serif);
   font-size: 1.05rem;
   letter-spacing: 0.04em;
   color: var(--ink);
-  display: block;
   text-decoration: none;
-  max-width: 1500px;
-  margin: 0 auto;
+  padding: 0;
+  margin: 0;
 }
-.brand small {
+.brandRow .label {
   font-family: var(--sans);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--ink-mute);
-  display: block;
-  margin-top: 2px;
   font-weight: 500;
+  margin: 0;
 }
 @media (max-width: 720px) {
-  .brand {
+  .brandRow {
     padding: 16px 18px 0;
+    gap: 8px;
+  }
+  .brand {
+    font-size: 0.95rem;
+  }
+  .brandRow .label {
+    font-size: 0.62rem;
   }
 }
 
@@ -237,12 +308,11 @@
   border-color: var(--ink-faint);
   border-style: dashed;
 }
-.legend .swatchRecommended {
-  background: var(--ink);
-}
 @media (max-width: 720px) {
   .legend {
-    padding: 12px 18px 0;
+    padding: 4px 18px 4px;
+    font-size: 0.66rem;
+    gap: 12px;
   }
 }
 
@@ -255,7 +325,10 @@
 @media (max-width: 720px) {
   .mapFrame {
     padding: 0 18px;
-    margin-bottom: 24px;
+    margin: 4px auto 8px;
+  }
+  .mapStage {
+    margin-top: 6px;
   }
 }
 
@@ -279,7 +352,23 @@
 }
 @media (max-width: 720px) {
   .isoCanvas {
-    aspect-ratio: 4 / 5;
+    aspect-ratio: auto;
+    /* 170px tampon = brand (~38) + intro (~80) + legend (~20) + paddings (~32).
+       100dvh: iOS Safari adres çubuğu in/out durumunda doğru çalışır.
+       --canvas-offset CSS değişkeni: panel açıldığında JS 0px set eder
+       (header gizlenir), kapanınca 170px döner. Transition ile smooth. */
+    height: calc(100vh - var(--canvas-offset, 170px));
+    height: calc(100dvh - var(--canvas-offset, 170px));
+    min-height: 360px;
+    transition: height 0.3s ease-out;
+  }
+}
+/* Mobile'da sayfa scroll'sunu kilitleme — root tam viewport'a sığar.
+   isoCanvas min-height tetiklenirse alt taşmayı sayfa kaldırır. */
+@media (max-width: 720px) {
+  .reservationRoot {
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 }
 .isoCanvas .iso {
@@ -402,24 +491,103 @@
 }
 
 @media (max-width: 720px) {
+  /* Mobile panel: soldan içeri kayan yatay panel. Sahnenin alt %52'sini
+     kaplar (kum + sahil + masalar alanı), üst %48 sky+güneş+ay açıkta —
+     sky görsel olarak daha hâkim, atmosfer öne çıkar. Drag/yarım sheet
+     kaldırıldı, tek aşama. */
   .panel {
     left: 0;
     right: 0;
     bottom: 0;
-    max-height: 88vh;
+    height: 52vh;
+    height: 52dvh;
     border-radius: 18px 18px 0 0;
-    transform: translateY(100%);
     box-shadow: 0 -10px 40px -10px rgba(31, 26, 18, 0.3);
+    transform: translateX(-100%);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.3, 1);
   }
   .panel.open {
-    transform: translateY(0);
+    transform: translateX(0);
   }
-  .grabber {
-    width: 44px;
-    height: 4px;
-    border-radius: 2px;
-    background: var(--ink-faint);
-    margin: 10px auto 4px;
+  /* Scrim mobile'da hep gizli: yan panel masaları kaplıyor; sky/sun/moon
+     üzerine perde çekmiyoruz, atmosfer canlı kalır. */
+  .scrim.open {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Form tek sütun — alanlar alt alta, sıralamanın net okunması için.
+     (Önceki turda 2 sütun grid idi; tek sütuna döndü.) */
+  .formGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .panelBody {
+    padding: 14px 18px 18px;
+    gap: 12px;
+  }
+  .panelHead h3 {
+    font-size: 1.05rem;
+    line-height: 1.25;
+  }
+  .panelHead .label {
+    font-size: 0.6rem;
+    margin-bottom: 2px;
+  }
+  /* Başlık ile zone aynı satırda küçük italic */
+  .metaInline {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.78rem;
+    color: var(--ink-mute);
+    letter-spacing: 0;
+  }
+  .formGrid .label {
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+  }
+  .formGrid .fieldGroup {
+    gap: 4px;
+  }
+  .chipRow {
+    gap: 4px;
+  }
+  .chip {
+    padding: 5px 9px;
+    min-height: 32px;
+    font-size: 0.78rem;
+  }
+  .input {
+    min-height: 36px;
+    font-size: 0.92rem;
+    padding: 8px 0;
+  }
+  .summaryRow {
+    padding: 10px 12px;
+  }
+  .summaryRow .key {
+    font-size: 0.78rem;
+  }
+  .summaryRow .val {
+    font-size: 0.88rem;
+  }
+  .btnPrimary {
+    min-height: 46px;
+    font-size: 0.95rem;
+    padding: 10px 16px;
+  }
+  .panelBody .fineprint {
+    font-size: 0.72rem;
+  }
+}
+
+/* prefers-reduced-motion: panel slide animasyonu yok (instant) */
+@media (max-width: 720px) and (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
   }
 }
 
@@ -615,6 +783,17 @@
   color: var(--ink-mute);
   line-height: 1.5;
   margin: 0;
+}
+.phoneLink {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 0.5px;
+  font-style: normal;
+  letter-spacing: 0.02em;
+}
+.phoneLink:hover {
+  color: var(--sun-deep);
 }
 
 /* ── Toast ───────────────────────────────────────────────── */

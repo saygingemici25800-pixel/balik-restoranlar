@@ -3,8 +3,12 @@
 import { motion, type Transition } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { INDOOR_TABLES, SEA_TABLES } from '../_data/tables';
-import { RECOMMENDED_IDS, TAKEN_IDS } from '../_data/mock-reservations';
-import { SUN_BASE_CX, type AtmosphereTokens } from '../_lib/atmosphere';
+import { TAKEN_IDS } from '../_data/mock-reservations';
+import {
+  SUN_BASE_CX,
+  type AtmosphereTokens,
+  type TimeKey,
+} from '../_lib/atmosphere';
 import type { Table, TableStatus } from '../_types/reservation';
 import styles from '../_styles/reservation.module.css';
 
@@ -12,6 +16,16 @@ const VB_W = 760;
 const VB_H = 380;
 const VB_X_MIN = -VB_W / 2; // -380
 const VB_Y_MIN = -VB_H / 2; // -190
+
+// Mobile portre viewBox — sahne dikey kompoz, sky üstte / masalar+mutfak altta.
+// NORMAL: header görünür iken (panel kapalı). h=720 → bottom y=370 → mutfak
+// rect (y=240..340), şefler (y=290..320), "mutfak — ızgara" etiketi (y=335)
+// hepsi viewBox içinde tam görünür.
+// EXPANDED: panel açık + header gizli iken — y daha yukarı (sky alanı 110
+// birim genişler, sun/moon nefes alır), h orantılı büyür. Bottom y=370
+// sabit → masalar+mutfak değişmez, üstte ekstra sky.
+const VB_MOBILE_NORMAL = { x: -200, y: -350, w: 400, h: 720 };
+const VB_MOBILE_EXPANDED = { x: -200, y: -460, w: 400, h: 830 };
 const ENTRY_STAGGER_MS = 30;
 const ENTRY_DURATION_MS = 400;
 const ENTRY_SETTLE_MS = 50;
@@ -23,6 +37,23 @@ const SELECTED_SCALE_REDUCED = 1.5;
 type FlightTarget = { vbX: number; vbY: number };
 
 type HoverState = { id: string; label: string; x: number; y: number };
+
+// Mobile için tablo pozisyonu — masalar aşağı doğru genişlemiş, sıralar
+// arası nefes daha çok. viewBox 400×600 alt kısmına yayılır.
+function getMobileTablePosition(table: Table): { x: number; y: number } {
+  if (table.zone === 'sea') {
+    const idx = parseInt(table.id.slice(1), 10) - 1; // D1 → 0, D30 → 29
+    const row = Math.floor(idx / 10);
+    const col = idx % 10;
+    // 3 sıra: y = -40, +5, +50 (sıra arası 45 birim).
+    return { x: -180 + col * 40, y: -40 + row * 45 };
+  }
+  // indoor — zone y=95..220. row 0 y=130, row 1 y=185 (sıra arası 55).
+  const idx = parseInt(table.id.slice(1), 10) - 1; // S1 → 0, S18 → 17
+  const row = Math.floor(idx / 9);
+  const col = idx % 9;
+  return { x: -160 + col * 40, y: 130 + row * 55 };
+}
 
 // Deterministic 3.5–5.5s ambient period per id (re-render'da değişmesin)
 function ambientPeriod(id: string): number {
@@ -38,8 +69,12 @@ type FlatTableProps = {
   index: number;
   status: TableStatus;
   isDesktop: boolean;
+  isMobile: boolean;
   reducedMotion: boolean;
   flightTarget: FlightTarget | null;
+  /** Pozisyon — mobile/desktop'a göre çağıran hesaplar. */
+  tableX: number;
+  tableY: number;
   onSelect: (id: string) => void;
   onHover: (h: HoverState) => void;
   onLeave: () => void;
@@ -50,25 +85,30 @@ function FlatTable({
   index,
   status,
   isDesktop,
+  isMobile,
   reducedMotion,
   flightTarget,
+  tableX,
+  tableY,
   onSelect,
   onHover,
   onLeave,
 }: FlatTableProps) {
-  const { id, label, x, y } = table;
-  const w = 22;
-  const d = 14;
+  const { id, label } = table;
+  const x = tableX;
+  const y = tableY;
+  // Mobile'da daha büyük tıklanabilir alan: 34×22 viewBox birim → ~33×22px
+  // (mobile viewBox 400×600, container ~390×~674, scale ≈ 0.97).
+  const w = isMobile ? 34 : 22;
+  const d = isMobile ? 22 : 14;
   // Ink: currentColor sayesinde --rez-ink mirası alır → faz değişiminde
   // smooth interpolate. Taken için ayrıca opacity uygulanır (aşağıda).
   const ink = 'currentColor';
   const dash = status === 'taken' ? '2 2.5' : '0';
   const fill =
-    status === 'recommended'
-      ? 'rgba(217,122,60,.18)'
-      : status === 'selected'
-        ? 'rgba(217,122,60,.32)'
-        : 'var(--rez-table-fill)';
+    status === 'selected'
+      ? 'rgba(217,122,60,.32)'
+      : 'var(--rez-table-fill)';
   const sw = status === 'selected' ? 1.6 : status === 'taken' ? 0.7 : 1;
   const number = id.slice(1);
 
@@ -140,10 +180,11 @@ function FlatTable({
 
   // ── Inner motion (ambient breath) ───────────────────────
   // Selection'dan bağımsız, kendi keyframe loop'u. Selected/taken'da kapanır,
-  // outer scale ile compose olduğu için 1.015 jitter'ı 4.5x'i bozmaz.
+  // outer scale ile compose olduğu için scale jitter outer büyümeyi bozmaz.
+  // Genlik biraz büyütüldü (1.025/0.92) — küçük masalarda fark edilirlik için.
   const innerAnimate = useMemo(() => {
     if (ambientOn) {
-      return { scale: [1, 1.015], opacity: [1, 0.97] };
+      return { scale: [1, 1.025], opacity: [1, 0.92] };
     }
     return { scale: 1, opacity: 1 };
   }, [ambientOn]);
@@ -159,6 +200,10 @@ function FlatTable({
     }
     return { duration: 0.25, ease: 'easeOut' };
   }, [ambientOn, period]);
+
+  // Inner'ın initial'ı stable kalsın — hasEntered false→true geçişinde
+  // Framer Motion keyframe loop'u restart ederken initial referansı bozmasın.
+  const innerInitial = useMemo(() => ({ scale: 1, opacity: 1 }), []);
 
   const outerInitial = reducedMotion
     ? { x: 0, y: 0, scale: 1, opacity: 1 }
@@ -229,6 +274,7 @@ function FlatTable({
           transformBox: 'fill-box',
           transformOrigin: 'center',
         }}
+        initial={innerInitial}
         animate={innerAnimate}
         transition={innerTransition}
       >
@@ -304,7 +350,7 @@ function FlatTable({
         dominantBaseline="middle"
         fontFamily="var(--font-spectral), Spectral, Georgia, serif"
         fontStyle="italic"
-        fontSize={9}
+        fontSize={isMobile ? 12 : 9}
         fill="currentColor"
         opacity={isTaken ? 0.4 : 0.7}
         pointerEvents="none"
@@ -312,38 +358,8 @@ function FlatTable({
       >
         {number}
       </text>
-      {status === 'recommended' && (
-        <circle
-          cx={x}
-          cy={y}
-          r={22}
-          stroke="#d97a3c"
-          strokeWidth="0.8"
-          strokeDasharray="2 3"
-          fill="none"
-          opacity={0.7}
-        />
-      )}
       </motion.g>
     </motion.g>
-    {/* "bizden öneri" motion.g'nin DIŞINDA: bbox'ı asimetrikleştirmesin
-        → fill-box origin tablo merkezinde kalsın. Tablo seçilip uçtuğunda
-        text yerinde kalır, "bu masa öneriydi" işareti olarak orada durur. */}
-    {status === 'recommended' && (
-      <text
-        x={x + 16}
-        y={y - 14}
-        fontFamily="var(--font-spectral), Spectral, Georgia, serif"
-        fontStyle="italic"
-        fontSize={9}
-        fill="#d97a3c"
-        opacity={1}
-        pointerEvents="none"
-        style={{ userSelect: 'none' }}
-      >
-        bizden öneri
-      </text>
-    )}
     </>
   );
 }
@@ -351,9 +367,45 @@ function FlatTable({
 type SeaBackdropProps = {
   tokens: AtmosphereTokens;
   reducedMotion: boolean;
+  isMobile: boolean;
+  timeKey: TimeKey;
 };
 
-function SeaBackdrop({ tokens, reducedMotion }: SeaBackdropProps) {
+// Dispatcher — desktop ya da mobile sahne render eder. Mobile portre kompoz
+// ayrı bir component; element pozisyonları viewBox 400×700'e göre düzenlenmiş.
+function SeaBackdrop({
+  tokens,
+  reducedMotion,
+  isMobile,
+  timeKey,
+}: SeaBackdropProps) {
+  if (isMobile) {
+    return (
+      <MobileSeaBackdrop
+        tokens={tokens}
+        reducedMotion={reducedMotion}
+        timeKey={timeKey}
+      />
+    );
+  }
+  return (
+    <DesktopSeaBackdrop tokens={tokens} reducedMotion={reducedMotion} />
+  );
+}
+
+type SubBackdropProps = {
+  tokens: AtmosphereTokens;
+  reducedMotion: boolean;
+};
+
+type MobileBackdropProps = SubBackdropProps & {
+  timeKey: TimeKey;
+};
+
+function DesktopSeaBackdrop({ tokens, reducedMotion }: SubBackdropProps) {
+  // isMobile burada always false — mevcut `!isMobile && ...` koşulları aşağıda
+  // değişmeden kaldı. Mobile branch render edilmez.
+  const isMobile = false;
   // Hand-drawn choppy waves — port from handoff.
   const wave = (y: number, amp = 5, phase = 0, choppy = false) => {
     const start = -380;
@@ -703,15 +755,18 @@ function SeaBackdrop({ tokens, reducedMotion }: SeaBackdropProps) {
           return <line key={i} x1={fx} y1={-70} x2={fx} y2={-61} />;
         })}
       </g>
-      <rect x={-12} y={-71} width={24} height={11} fill="#f3ead8" />
+      {/* "↓ giriş" — çitler hizasında vurgulu, paper rect arkaplanı */}
+      <rect x={-30} y={-71} width={60} height={12} fill="#f3ead8" />
       <text
-        x={-22}
-        y={-61}
+        x={0}
+        y={-62}
+        textAnchor="middle"
         fontFamily="var(--font-spectral), serif"
         fontStyle="italic"
-        fontSize={9}
+        fontSize={10}
+        fontWeight={500}
         fill="currentColor"
-        opacity={0.55}
+        opacity={0.8}
       >
         ↓ giriş
       </text>
@@ -736,16 +791,21 @@ function SeaBackdrop({ tokens, reducedMotion }: SeaBackdropProps) {
       />
       <text
         x={-360}
-        y={46}
+        y={48}
         fontFamily="var(--font-spectral), serif"
         fontStyle="italic"
-        fontSize={10}
+        fontSize={13}
+        fontWeight={500}
         fill="currentColor"
-        opacity={0.5}
+        opacity={0.75}
       >
         iç salon
       </text>
 
+      {/* Tabela + mutfak şeridi — mobile'da yer kaplamasın diye render
+          edilmez. ViewBox da mobile'da y=100'de kırpılır. */}
+      {!isMobile && (
+        <>
       <g transform="translate(0 100)">
         <rect
           x={-150}
@@ -910,6 +970,8 @@ function SeaBackdrop({ tokens, reducedMotion }: SeaBackdropProps) {
       >
         mutfak — ızgara
       </text>
+        </>
+      )}
 
       <text
         x={-360}
@@ -955,12 +1017,486 @@ function SeaBackdrop({ tokens, reducedMotion }: SeaBackdropProps) {
   );
 }
 
+// Mobile portre kompoz — viewBox 400×700, sahne dikey: sky → dalga → kum →
+// sahil yolu → çitler → dış masalar (3 sıra) → iç salon zone (2 sıra).
+// Tüm koordinatlar -200..+200 x range içinde sıkıştırılmış. Sun (cx=-100)
+// ve moon (cx=+80) konumları sabit; token sadece y/opacity hareketi sürer.
+// Mobile sun cy lookup — deniz şimdi y=-260'a kadar yukarı genişlediği
+// için sun aralığı da yukarı kaldırıldı. 17:30'da tepe (-310), 19:00 yarı
+// batık (-230, ufuk seviyesinde), 20:00 batma (-170), 20:30+ görünmez.
+const MOBILE_SUN_CY: Record<TimeKey, number> = {
+  '17:30': -310,
+  '18:00': -290,
+  '18:30': -260,
+  '19:00': -230,
+  '19:30': -200,
+  '20:00': -170,
+  '20:30': -140,
+  '21:00': -140,
+  '21:30': -140,
+  '22:00': -140,
+  '22:30': -140,
+};
+
+// Mobile moon cy lookup — 19:30 denizden doğuş (-160), 22:30 tepe (-345).
+// Sky alanı genişlediği için yüksek değerler -340 civarına çıkarıldı.
+const MOBILE_MOON_CY: Record<TimeKey, number> = {
+  '17:30': -200,
+  '18:00': -200,
+  '18:30': -200,
+  '19:00': -200,
+  '19:30': -160,
+  '20:00': -200,
+  '20:30': -240,
+  '21:00': -280,
+  '21:30': -310,
+  '22:00': -330,
+  '22:30': -345,
+};
+
+function MobileSeaBackdrop({
+  tokens,
+  reducedMotion,
+  timeKey,
+}: MobileBackdropProps) {
+  // Hand-drawn waves — dar viewBox için yeniden generated.
+  const wave = (y: number, amp = 1.5, phase = 0) => {
+    const start = -200;
+    const end = 200;
+    let d = `M${start} ${y}`;
+    let xCur = start;
+    let i = 0;
+    while (xCur < end) {
+      const seed = (i * 13 + phase) % 100;
+      const step = 16 + (seed % 12);
+      const dir = i % 2 === 0 ? -1 : 1;
+      const xMid = xCur + step / 2;
+      const yPeak = y + dir * amp * 0.8;
+      d += ` Q${xMid} ${yPeak} ${xCur + step} ${y + ((seed % 3) - 1) * 0.4}`;
+      xCur += step;
+      i++;
+    }
+    return d;
+  };
+
+  // Sun/moon mobile cy lookup'tan okunur. Multiplier yaklaşımı bırakıldı —
+  // her saat dilimi için elle kalibre edilmiş pozisyonlar daha iyi sonuç
+  // veriyor (sun batış dalga ufkuna oturur, ay denizden doğar).
+  const sunCy = MOBILE_SUN_CY[timeKey];
+  const moonCy = MOBILE_MOON_CY[timeKey];
+
+  return (
+    <g opacity={0.75} style={{ color: 'var(--rez-ink)' }}>
+      {/* "Çalış sahili" — sahnenin tepe sol kısmı, viewBox başlangıcına yakın */}
+      <text
+        x={-180}
+        y={-330}
+        fontFamily="var(--font-spectral), serif"
+        fontStyle="italic"
+        fontSize={11}
+        fill="currentColor"
+        opacity={0.5}
+      >
+        Çalış sahili
+      </text>
+
+      {/* Güneş — cx=-100 sabit, cy lookup'tan; r=42 (büyütüldü).
+          17:30 cy=-260 (tepe), 19:00 cy=-195 (yarı batma), 20:00 cy=-145
+          (dalga ufkuna gömülür). */}
+      <motion.g
+        animate={{ y: sunCy, opacity: tokens.sunOpacity }}
+        transition={{
+          duration: reducedMotion ? 0 : 1,
+          ease: [0.4, 0, 0.2, 1],
+        }}
+        style={{ x: -100 }}
+      >
+        <g className={styles.ambientSun}>
+          <circle
+            cx={0}
+            cy={0}
+            r={42}
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeDasharray="2 3"
+            fill="rgba(217,122,60,.18)"
+          />
+          <circle cx={0} cy={0} r={24} fill="#d97a3c" fillOpacity={0.15} />
+        </g>
+      </motion.g>
+
+      {/* Ay — cx=+80 sabit, cy lookup'tan; r=38 (büyütüldü).
+          19:30 cy=-150 (denizden doğuş, hilal), 22:30 cy=-310 (tepe, tam ay).
+          Faz gölgesi r ve cx/cy ölçeği yeni r=38'e göre orantılı (×1.46). */}
+      {tokens.moonOpacity > 0 && (
+        <motion.g
+          animate={{ y: moonCy, opacity: tokens.moonOpacity }}
+          transition={{
+            duration: reducedMotion ? 0 : 1,
+            ease: [0.4, 0, 0.2, 1],
+          }}
+          style={{ x: 80 }}
+          aria-hidden="true"
+        >
+          <circle
+            cx={0}
+            cy={0}
+            r={38}
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeDasharray="2 3"
+            fill="rgba(245,235,210,0.85)"
+            opacity={0.9}
+          />
+          {tokens.moonPhase < 1 && (
+            <circle
+              cx={(1 - tokens.moonPhase) * 35}
+              cy={(1 - tokens.moonPhase) * 24}
+              r={38 - tokens.moonPhase * 7}
+              fill="var(--rez-sky-top)"
+            />
+          )}
+          {tokens.moonPhase > 0.7 && (
+            <>
+              <circle cx={-9} cy={-6} r={3.6} fill="currentColor" opacity={0.25} />
+              <circle cx={12} cy={9} r={2.4} fill="currentColor" opacity={0.2} />
+            </>
+          )}
+        </motion.g>
+      )}
+
+      {/* Dalgalar — y=-260..-110 (150 birim, deniz büyüdü). Sky boşluğunu
+          doldurur; masalar ve aşağısı aynı yerde kalır. 8 path ~21 birim
+          aralık. */}
+      <g
+        className={styles.ambientSea}
+        stroke="var(--rez-wave-stroke)"
+        fill="none"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d={wave(-260, 1.2, 3)} strokeWidth="0.5" opacity={0.4} />
+        <path d={wave(-238, 1.4, 18)} strokeWidth="0.5" opacity={0.45} />
+        <path d={wave(-216, 1.8, 41)} strokeWidth="0.6" opacity={0.5} />
+        <path d={wave(-194, 2, 17)} strokeWidth="0.7" opacity={0.55} />
+        <path d={wave(-172, 2, 63)} strokeWidth="0.8" opacity={0.65} />
+        <path d={wave(-150, 1.8, 29)} strokeWidth="0.6" opacity={0.5} />
+        <path d={wave(-128, 1.4, 51)} strokeWidth="0.55" opacity={0.45} />
+        <path d={wave(-110, 1.2, 8)} strokeWidth="0.4" opacity={0.35} />
+      </g>
+
+      {/* Sun glitter — sun cx=-100, ufukta y=-115..-105 kompakt yansıma */}
+      <motion.g
+        stroke="#d97a3c"
+        strokeWidth="0.9"
+        fill="none"
+        strokeLinecap="round"
+        animate={{ opacity: tokens.sunGlitterOpacity }}
+        transition={{
+          duration: reducedMotion ? 0 : 1,
+          ease: [0.4, 0, 0.2, 1],
+        }}
+      >
+        <path d="M-114 -113 l8 0" />
+        <path d="M-98 -109 l12 -1" />
+        <path d="M-78 -111 l14 -2" />
+        <path d="M-58 -107 l16 -2" />
+      </motion.g>
+
+      {/* Moon glitter — ay cx=+80, ufukta y=-115..-105 */}
+      <motion.g
+        stroke="rgba(245,235,210,0.9)"
+        strokeWidth="0.7"
+        fill="none"
+        strokeLinecap="round"
+        animate={{ opacity: tokens.moonGlitterOpacity }}
+        transition={{
+          duration: reducedMotion ? 0 : 1,
+          ease: [0.4, 0, 0.2, 1],
+        }}
+      >
+        <path d="M64 -110 l8 0" />
+        <path d="M76 -113 l12 -1" />
+        <path d="M92 -107 l8 0" />
+      </motion.g>
+
+      {/* Kum band y=-110..-82 (h=28, deniz büyüdüğü için biraz büyüdü) */}
+      <rect
+        x={-200}
+        y={-110}
+        width={400}
+        height={28}
+        fill="var(--rez-sand)"
+        fillOpacity={0.6}
+      />
+      <rect
+        x={-200}
+        y={-110}
+        width={400}
+        height={28}
+        fill="#d97a3c"
+        fillOpacity={0.06}
+      />
+      <g fill="currentColor" opacity={0.28}>
+        {Array.from({ length: 36 }, (_, i) => {
+          const sx = -195 + i * 11 + ((i * 31) % 7);
+          const sy = -107 + ((i * 17) % 24);
+          return <circle key={i} cx={sx} cy={sy} r={0.7} />;
+        })}
+      </g>
+
+      {/* Sahil yolu y=-82..-68 (kum kaydığı için kaydı, kalınlık 14 aynı) */}
+      <rect x={-200} y={-82} width={400} height={14} fill="#f3ead8" />
+      <line
+        x1={-200}
+        y1={-82}
+        x2={200}
+        y2={-82}
+        stroke="currentColor"
+        strokeWidth="0.7"
+        opacity={0.5}
+      />
+      <line
+        x1={-200}
+        y1={-68}
+        x2={200}
+        y2={-68}
+        stroke="currentColor"
+        strokeWidth="0.7"
+        opacity={0.5}
+      />
+      <g stroke="currentColor" strokeWidth="0.5" opacity={0.38}>
+        {Array.from({ length: 16 }, (_, i) => {
+          const lx = -190 + i * 26;
+          return <line key={i} x1={lx} y1={-82} x2={lx} y2={-68} />;
+        })}
+      </g>
+
+      {/* Çit y=-68..-58 */}
+      <g stroke="currentColor" strokeWidth="0.7" fill="none" opacity={0.55}>
+        <line x1={-190} y1={-64} x2={190} y2={-64} />
+        <line x1={-190} y1={-60} x2={190} y2={-60} />
+        {Array.from({ length: 14 }, (_, i) => {
+          const fx = -185 + i * 28;
+          return <line key={i} x1={fx} y1={-66} x2={fx} y2={-58} />;
+        })}
+      </g>
+      {/* "↓ giriş" — çitler ile masalar arası boşlukta vurgulu, paper
+          arkaplan rect ile çitlere binmesin */}
+      <rect x={-25} y={-72} width={50} height={11} fill="#f3ead8" />
+      <text
+        x={0}
+        y={-64}
+        textAnchor="middle"
+        fontFamily="var(--font-spectral), serif"
+        fontStyle="italic"
+        fontSize={11}
+        fontWeight={500}
+        fill="currentColor"
+        opacity={0.8}
+      >
+        ↓ giriş
+      </text>
+
+      {/* İç salon zone y=95..220 (h=125, indoor masalar y=130 ve y=185 içinde).
+          Aşağı kaydırıldı — dış masalar y=-40..+50 alanında, iç salon altında. */}
+      <rect
+        x={-200}
+        y={95}
+        width={400}
+        height={125}
+        fill="#ead9b8"
+        fillOpacity={0.35}
+      />
+      <line
+        x1={-200}
+        y1={95}
+        x2={200}
+        y2={95}
+        stroke="currentColor"
+        strokeWidth="0.5"
+        strokeDasharray="3 4"
+        opacity={0.5}
+      />
+      <text
+        x={-180}
+        y={110}
+        fontFamily="var(--font-spectral), serif"
+        fontStyle="italic"
+        fontSize={12}
+        fontWeight={500}
+        fill="currentColor"
+        opacity={0.75}
+      >
+        iç salon
+      </text>
+
+      {/* Tekne — sky orta-üst, deniz/sun yukarı kayınca */}
+      <g
+        transform="translate(70 -280)"
+        stroke="currentColor"
+        strokeWidth="0.7"
+        fill="none"
+        opacity={0.5}
+      >
+        <path d="M-9 0 q9 4 18 0 l-2 -4 l-14 0 z" />
+        <line x1={0} y1={0} x2={0} y2={-12} />
+        <path d="M0 -12 l7 10 l-7 0 z" />
+      </g>
+
+      {/* Martılar — sky'ın tepesinde, y=-340..-300 dağılmış */}
+      <g stroke="currentColor" strokeWidth="0.5" fill="none" opacity={0.5}>
+        <path d="M-50 -320 q3 -3 6 0 q3 -3 6 0" />
+        <path d="M20 -300 q2 -2 4 0 q2 -2 4 0" />
+        <path d="M80 -340 q3 -3 6 0 q3 -3 6 0" />
+      </g>
+
+      {/* Mutfak şeridi — alt boşluğu doldurur (y=240..340), kompakt versiyon.
+          Indoor zone bottom (y=220) ile viewBox bottom (y=250 normal / 250
+          expanded) arasında dar bant; viewBox NORMAL altında 30 birim
+          görünür kalır, EXPANDED'da daha fazlası. Slice/meet ile letterbox
+          alanı zaten paper rengi. */}
+      <g>
+        <rect
+          x={-200}
+          y={240}
+          width={400}
+          height={100}
+          fill="currentColor"
+          fillOpacity={0.06}
+        />
+        <line
+          x1={-200}
+          y1={240}
+          x2={200}
+          y2={240}
+          stroke="currentColor"
+          strokeWidth="0.6"
+          strokeDasharray="3 3"
+          opacity={0.5}
+        />
+
+        {/* "ÇALIŞ BALIKÇISI" tabela (kompakt) */}
+        <g transform="translate(0 254)">
+          <rect
+            x={-100}
+            y={-7}
+            width={200}
+            height={14}
+            fill="#f3ead8"
+            stroke="currentColor"
+            strokeWidth="0.8"
+            opacity={0.9}
+          />
+          <text
+            x={0}
+            y={3}
+            textAnchor="middle"
+            fontFamily="var(--font-spectral), serif"
+            fontSize={9}
+            fill="currentColor"
+            letterSpacing="0.06em"
+          >
+            ÇALIŞ BALIKÇISI
+          </text>
+          {/* Yan balık ornament'ları */}
+          <path
+            d="M-115 0 q2 -2 5 0 q3 2 5 0 l-2 0 l2 2 l-2 0 q-3 -2 -5 0 q-3 2 -5 0 z"
+            stroke="currentColor"
+            strokeWidth="0.4"
+            fill="none"
+          />
+          <path
+            d="M115 0 q-2 -2 -5 0 q-3 2 -5 0 l2 0 l-2 2 l2 0 q3 -2 5 0 q3 2 5 0 z"
+            stroke="currentColor"
+            strokeWidth="0.4"
+            fill="none"
+          />
+        </g>
+
+        {/* Şef figürü — minimalist sembolik (sketch tarzı). İki dikey gövde
+            çizgisi + omuz + toque ellipse + bant + tek çalışan kol. Gerçekçi
+            anatomi yerine "burada şef var" hissi. */}
+        <g opacity={tokens.chefOpacity}>
+          {[
+            { x: -100, facing: 1 },
+            { x: 100, facing: -1 },
+          ].map((c, i) => (
+            <g key={i} transform={`translate(${c.x} 320)`}>
+              {/* Gövde — iki paralel dikey çizgi */}
+              <line x1={-3} y1={-2} x2={-3} y2={-22} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <line x1={3} y1={-2} x2={3} y2={-22} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              {/* Omuz çizgisi */}
+              <line x1={-3} y1={-22} x2={3} y2={-22} stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+              {/* Toque şapka */}
+              <ellipse cx={0} cy={-27} rx={4} ry={4} fill="#f3ead8" stroke="currentColor" strokeWidth="0.8" />
+              {/* Şapka altı bant */}
+              <line x1={-3.5} y1={-23.5} x2={3.5} y2={-23.5} stroke="currentColor" strokeWidth="0.6" />
+              {/* Çalışan kol — ızgaraya uzanır */}
+              <path
+                d={`M${c.facing * 3} -18 Q${c.facing * 10} -14 ${c.facing * 15} -8`}
+                stroke="currentColor"
+                strokeWidth="1.4"
+                fill="none"
+                strokeLinecap="round"
+              />
+              {/* Spatula ucu */}
+              <line x1={c.facing * 15} y1={-8} x2={c.facing * 20} y2={-11} stroke="currentColor" strokeWidth="0.8" />
+            </g>
+          ))}
+        </g>
+
+        {/* Izgara alevleri (2 lokasyon, şef altında) */}
+        <g
+          fill="#d97a3c"
+          fillOpacity={tokens.flameOpacity * 0.8}
+          stroke="currentColor"
+          strokeWidth="0.4"
+        >
+          {[-100, 100].map((x, i) => (
+            <g key={i} transform={`translate(${x} 305)`}>
+              <path d="M-12 0 q2 -6 4 -1 q2 -6 4 -1 q2 -6 4 -1 q2 -6 4 -1 q2 -6 4 -1 l0 3 l-24 0 z" />
+            </g>
+          ))}
+        </g>
+
+        {/* Izgara balıkları (alev üzerinde) */}
+        <g stroke="currentColor" strokeWidth="0.4" fill="none" opacity={0.55}>
+          {[-100, 100].map((x, i) => (
+            <g key={i} transform={`translate(${x} 300)`}>
+              <path d="M-5 0 q2 -2 5 0 q3 2 5 0 l-2 0 l2 2 l-2 0 q-3 -2 -5 0 q-3 2 -5 0 z" />
+            </g>
+          ))}
+        </g>
+
+        {/* "mutfak — ızgara" italic etiketi */}
+        <text
+          x={-190}
+          y={335}
+          fontFamily="var(--font-spectral), serif"
+          fontStyle="italic"
+          fontSize={9}
+          fill="currentColor"
+          opacity={0.55}
+        >
+          mutfak — ızgara
+        </text>
+      </g>
+    </g>
+  );
+}
+
 type Props = {
   selectedId: string | null;
   flightId: string | null;
   isDesktop: boolean;
+  isMobile: boolean;
+  /** Panel açık mı? Mobile'da viewBox'ı genişletmek için kullanılır. */
+  isPanelOpen: boolean;
   reducedMotion: boolean;
   tokens: AtmosphereTokens;
+  /** Mobile sun/moon cy lookup'ı için saat anahtarı. */
+  timeKey: TimeKey;
   onSelect: (id: string) => void;
 };
 
@@ -970,7 +1506,6 @@ function statusFor(
 ): TableStatus {
   if (TAKEN_IDS.has(id)) return 'taken';
   if (flightId === id) return 'selected';
-  if (RECOMMENDED_IDS.has(id)) return 'recommended';
   return 'free';
 }
 
@@ -978,8 +1513,11 @@ export function IsoMap({
   selectedId,
   flightId,
   isDesktop,
+  isMobile,
+  isPanelOpen,
   reducedMotion,
   tokens,
+  timeKey,
   onSelect,
 }: Props) {
   const [hover, setHover] = useState<HoverState | null>(null);
@@ -1066,8 +1604,21 @@ export function IsoMap({
       <svg
         ref={svgRef}
         className={styles.iso}
-        viewBox={`-${VB_W / 2} -${VB_H / 2} ${VB_W} ${VB_H}`}
-        preserveAspectRatio="xMidYMid meet"
+        // Desktop: mevcut viewBox sabit. Mobile: portre kompoz, panel kapalı
+        // iken NORMAL, açık iken EXPANDED (sky alanı yukarıya genişler).
+        // ViewBox attribute animation tarayıcılar arası inconsistent → anlık
+        // değişim, header fade (300ms) ile maskeleniyor.
+        viewBox={
+          isMobile
+            ? (() => {
+                const vb = isPanelOpen
+                  ? VB_MOBILE_EXPANDED
+                  : VB_MOBILE_NORMAL;
+                return `${vb.x} ${vb.y} ${vb.w} ${vb.h}`;
+              })()
+            : `-${VB_W / 2} -${VB_H / 2} ${VB_W} ${VB_H}`
+        }
+        preserveAspectRatio={isMobile ? 'xMidYMid meet' : 'xMidYMid meet'}
         role="img"
         aria-label="Çalış Balıkçısı kuşbakışı mekân haritası"
       >
@@ -1085,37 +1636,52 @@ export function IsoMap({
           fill="url(#rez-groundwash)"
         />
 
-        <SeaBackdrop tokens={tokens} reducedMotion={reducedMotion} />
+        <SeaBackdrop
+          tokens={tokens}
+          reducedMotion={reducedMotion}
+          isMobile={isMobile}
+          timeKey={timeKey}
+        />
 
         <g>
-          {orderedTables.map((t) => (
-            <FlatTable
-              key={t.id}
-              table={t}
-              index={indexMap.get(t.id) ?? 0}
-              status={statusFor(t.id, flightId)}
-              isDesktop={isDesktop}
-              reducedMotion={reducedMotion}
-              flightTarget={flightTarget}
-              onSelect={onSelect}
-              onHover={setHover}
-              onLeave={() => setHover(null)}
-            />
-          ))}
+          {orderedTables.map((t) => {
+            const pos = isMobile
+              ? getMobileTablePosition(t)
+              : { x: t.x, y: t.y };
+            return (
+              <FlatTable
+                key={t.id}
+                table={t}
+                index={indexMap.get(t.id) ?? 0}
+                status={statusFor(t.id, flightId)}
+                isDesktop={isDesktop}
+                isMobile={isMobile}
+                reducedMotion={reducedMotion}
+                flightTarget={flightTarget}
+                tableX={pos.x}
+                tableY={pos.y}
+                onSelect={onSelect}
+                onHover={setHover}
+                onLeave={() => setHover(null)}
+              />
+            );
+          })}
         </g>
 
-        <text
-          x={VB_W / 2 - 16}
-          y={VB_H / 2 - 14}
-          textAnchor="end"
-          fontFamily="var(--font-spectral), serif"
-          fontStyle="italic"
-          fontSize={11}
-          fill="currentColor"
-          opacity={0.4}
-        >
-          — ışık 18:42 civarı
-        </text>
+        {!isMobile && (
+          <text
+            x={VB_W / 2 - 16}
+            y={VB_H / 2 - 14}
+            textAnchor="end"
+            fontFamily="var(--font-spectral), serif"
+            fontStyle="italic"
+            fontSize={11}
+            fill="currentColor"
+            opacity={0.4}
+          >
+            — ışık 18:42 civarı
+          </text>
+        )}
       </svg>
 
       {hover && (

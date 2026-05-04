@@ -9,9 +9,6 @@ export function Legend() {
       <span>
         <i className={styles.swatchTaken} /> dolu
       </span>
-      <span>
-        <i className={styles.swatchRecommended} /> bizden öneri
-      </span>
     </div>
   );
 }

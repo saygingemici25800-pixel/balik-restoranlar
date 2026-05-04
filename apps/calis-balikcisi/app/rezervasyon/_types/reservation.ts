@@ -1,6 +1,6 @@
 export type Zone = 'sea' | 'indoor';
 
-export type TableStatus = 'free' | 'taken' | 'recommended' | 'selected';
+export type TableStatus = 'free' | 'taken' | 'selected';
 
 export type Table = {
   id: string;

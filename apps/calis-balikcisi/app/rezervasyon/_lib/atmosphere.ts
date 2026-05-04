@@ -280,7 +280,7 @@ export const TIME_TOKENS: Record<TimeKey, AtmosphereTokens> = {
   },
 };
 
-const FALLBACK: AtmosphereTokens = TIME_TOKENS['19:00'];
+const FALLBACK: AtmosphereTokens = TIME_TOKENS['17:30'];
 
 export function getAtmosphereTokens(time: string): AtmosphereTokens {
   return TIME_TOKENS[time as TimeKey] ?? FALLBACK;

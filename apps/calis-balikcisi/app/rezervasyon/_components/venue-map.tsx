@@ -1,9 +1,10 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
-import { TABLES_BY_ID } from '../_data/tables';
+import { ALL_TABLES, TABLES_BY_ID } from '../_data/tables';
 import { TAKEN_IDS } from '../_data/mock-reservations';
-import { getAtmosphereTokens } from '../_lib/atmosphere';
+import { getAtmosphereTokens, type TimeKey } from '../_lib/atmosphere';
 import type {
   ReservationDraft,
   SelectedTable,
@@ -34,28 +35,51 @@ function useMediaQuery(query: string, defaultValue = false): boolean {
   return matches;
 }
 
-export function VenueMap() {
+type Props = {
+  /** Mobile'da panel açıldığında üst yazıların (brand+intro) gizlenmesini
+      shell katmanına bildirir. */
+  onHeaderHiddenChange?: (hidden: boolean) => void;
+  /** Shell CTA'ından gelen counter; her artışta ilk müsait masa seçilir. */
+  autoSelectKey?: number;
+};
+
+export function VenueMap({ onHeaderHiddenChange, autoSelectKey = 0 }: Props) {
   const isDesktop = useMediaQuery(DESKTOP_QUERY, true);
   const reducedMotion = useMediaQuery(REDUCED_MOTION_QUERY, false);
+  const isMobile = !isDesktop;
 
-  // selected: z-order + panel content (kapatma sonrası 700ms grace ile kalır)
-  // flightActive: masa uçuşta mı? (panel açıkken true, kapanınca false → spring-back)
-  // panelOpen: panel UI görünür mü?
   const [selected, setSelected] = useState<SelectedTable | null>(null);
   const [flightActive, setFlightActive] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
-  // Sahne saati — panel kapalıyken bile yansır. Default 19:00 (gün batımı,
-  // mevcut estetik). Time chip'lerinden değişir.
-  const [time, setTime] = useState<string>('19:00');
+  const [time, setTime] = useState<TimeKey>('17:30');
   const closeTimerRef = useRef<number | null>(null);
 
   const tokens = getAtmosphereTokens(time);
+  const isPanelOpen = panelOpen && isMobile;
+
+  // Mobile'da panel açıldığında: header gizlenir + isoCanvas full viewport
+  // ohlur (CSS variable --canvas-offset = 0). Kapanınca 170px döner.
+  useEffect(() => {
+    onHeaderHiddenChange?.(isPanelOpen);
+    if (typeof document === 'undefined') return;
+    if (isPanelOpen) {
+      document.documentElement.style.setProperty(
+        '--canvas-offset',
+        '0px',
+      );
+    } else {
+      document.documentElement.style.removeProperty('--canvas-offset');
+    }
+  }, [isPanelOpen, onHeaderHiddenChange]);
 
   useEffect(() => {
     return () => {
       if (closeTimerRef.current) {
         window.clearTimeout(closeTimerRef.current);
+      }
+      if (typeof document !== 'undefined') {
+        document.documentElement.style.removeProperty('--canvas-offset');
       }
     };
   }, []);
@@ -80,6 +104,24 @@ export function VenueMap() {
     setPanelOpen(true);
   }
 
+  // Shell CTA'ından autoSelectKey artarsa ilk müsait masayı seç. ALL_TABLES
+  // sea-öncelikli sırada (SEA_TABLES + INDOOR_TABLES); ilk taken olmayan
+  // masa açılır. Hiç müsait yoksa toast bildirir.
+  useEffect(() => {
+    if (autoSelectKey === 0) return;
+    const first = ALL_TABLES.find((t) => !TAKEN_IDS.has(t.id));
+    if (first) {
+      handleSelect(first.id);
+    } else {
+      setToast(
+        'Şu an tüm masalar dolu. Bizi arayın: 0252 XXX XX XX',
+      );
+    }
+    // handleSelect referansı her render'da yeni; autoSelectKey değişimi
+    // tek tetikleyici, exhaustive-deps güvenli olarak skip ediliyor.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoSelectKey]);
+
   function handleClose() {
     setPanelOpen(false);
     setFlightActive(false);
@@ -103,9 +145,6 @@ export function VenueMap() {
     setToast('Rezervasyon talebiniz alındı, sizi arayacağız.');
   }
 
-  // Atmosphere wrapper'a CSS custom property'leri inline style ile geçir.
-  // @property registration sayesinde değişimler 600ms cubic-bezier ile
-  // interpolate olur (atmosphereWrapper class transition'ından).
   const atmosphereStyle = {
     '--rez-sky-top': tokens.skyTop,
     '--rez-sky-bottom': tokens.skyBottom,
@@ -115,27 +154,57 @@ export function VenueMap() {
     '--rez-table-fill': tokens.tableFill,
   } as React.CSSProperties;
 
+  // Scrim sadece desktop'ta — mobile'da yan panel masaları zaten örtüyor,
+  // scrim atmosferin (sky+güneş+ay) önüne perde çekmesin.
+  const scrimVisible = panelOpen && isDesktop;
+
   return (
     <section
       className={`${styles.mapStage} ${styles.atmosphereWrapper}`}
       style={atmosphereStyle}
     >
-      <Legend />
+      {/* Legend mobile'da panel açıkken fade-out (height auto↔0 + opacity).
+          Desktop'ta hep görünür. */}
+      <motion.div
+        animate={{
+          opacity: isPanelOpen ? 0 : 1,
+          height: isPanelOpen ? 0 : 'auto',
+        }}
+        transition={{
+          duration: reducedMotion ? 0 : 0.3,
+          ease: 'easeOut',
+        }}
+        style={{ overflow: 'hidden' }}
+        aria-hidden={isPanelOpen}
+      >
+        <Legend />
+      </motion.div>
       <div className={styles.mapFrame}>
         <IsoMap
           selectedId={selected?.id ?? null}
           flightId={flightActive ? (selected?.id ?? null) : null}
           isDesktop={isDesktop}
+          isMobile={isMobile}
+          isPanelOpen={isPanelOpen}
           reducedMotion={reducedMotion}
           tokens={tokens}
+          timeKey={time}
           onSelect={handleSelect}
         />
       </div>
+      <div
+        className={`${styles.scrim} ${panelOpen ? styles.open : ''} ${
+          scrimVisible ? styles.scrimVisible : ''
+        }`}
+        onClick={handleClose}
+        aria-hidden="true"
+      />
       <ReservationPanel
         open={panelOpen}
+        isMobile={isMobile}
         table={selected}
         time={time}
-        onTimeChange={setTime}
+        onTimeChange={(t) => setTime(t as TimeKey)}
         onClose={handleClose}
         onConfirm={handleConfirm}
       />
