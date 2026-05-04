@@ -8,6 +8,7 @@ import {
 } from 'next/font/google';
 import '@balik/design-tokens/calis-balikcisi.css';
 import './globals.css';
+import { Footer } from './_components/footer';
 import { LenisProvider } from './_components/lenis-provider';
 import { ScrollProgress } from './_components/scroll-progress';
 
@@ -60,6 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <LenisProvider>
           <ScrollProgress />
           {children}
+          <Footer />
         </LenisProvider>
       </body>
     </html>

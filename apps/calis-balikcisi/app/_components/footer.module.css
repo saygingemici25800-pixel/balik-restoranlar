@@ -1,0 +1,110 @@
+/*
+ * Footer paletini gövdeye bırakır: globals.css gövde rengini route'a göre
+ * (anasayfa: kum, /rezervasyon: mürekkep) zaten değiştiriyor; currentColor
+ * sayesinde footer otomatik adapte olur.
+ */
+.footer {
+  margin-top: 80px;
+  padding: 60px 32px 32px;
+  border-top: 1px solid;
+  border-color: color-mix(in srgb, currentColor 14%, transparent);
+  color: inherit;
+  background: transparent;
+  font-family: var(--font-body, system-ui, sans-serif);
+}
+
+.tagline {
+  font-family: var(--font-display, var(--serif, Georgia, serif));
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  line-height: 1.4;
+  text-align: center;
+  max-width: 32ch;
+  margin: 0 auto 56px;
+  opacity: 0.85;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 900px;
+  margin: 0 auto 48px;
+}
+
+.col p {
+  margin: 0 0 8px;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  opacity: 0.75;
+}
+
+.col a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: opacity 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.col a:hover {
+  opacity: 1;
+  text-decoration-color: currentColor;
+}
+
+.colTitle {
+  font-family: var(--font-body, system-ui, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 0 0 16px;
+  opacity: 0.6;
+}
+
+.hours {
+  text-align: center;
+  font-size: 0.88rem;
+  opacity: 0.7;
+  margin: 0 0 24px;
+}
+
+.copyright {
+  text-align: center;
+  font-size: 0.78rem;
+  opacity: 0.5;
+  margin: 0;
+  padding-top: 24px;
+  border-top: 1px solid;
+  border-color: color-mix(in srgb, currentColor 10%, transparent);
+}
+
+@media (max-width: 720px) {
+  .footer {
+    margin-top: 60px;
+    padding: 48px 20px 24px;
+  }
+
+  .tagline {
+    font-size: 1.05rem;
+    margin-bottom: 40px;
+    max-width: 28ch;
+  }
+
+  .columns {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 36px;
+    text-align: center;
+  }
+
+  .colTitle {
+    margin-bottom: 10px;
+  }
+
+  .hours {
+    font-size: 0.82rem;
+    line-height: 1.7;
+  }
+}
