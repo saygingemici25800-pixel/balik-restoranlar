@@ -5,7 +5,6 @@ import { DailyHarvest } from './(sections)/daily-harvest';
 import { TeamSlider } from './(sections)/team-slider';
 import { MenuPreview } from './(sections)/menu-preview';
 import { ReserveCta } from './(sections)/reserve-cta';
-import { SiteFooter } from './(sections)/footer';
 import { KardesTab } from './_components/kardes-tab';
 
 export default function HomePage() {
@@ -20,7 +19,6 @@ export default function HomePage() {
         <MenuPreview />
         <ReserveCta />
       </main>
-      <SiteFooter />
       <KardesTab />
     </>
   );

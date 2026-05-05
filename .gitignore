@@ -41,3 +41,6 @@ coverage/
 
 # Stitch tasarım referansları (local only)
 **/public/images/stitch/
+
+# Büyük medya (local only — Vercel Blob / R2 üzerinden serve)
+apps/calis-balikcisi/public/menu-loop.mov
