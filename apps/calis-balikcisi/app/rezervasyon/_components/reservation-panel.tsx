@@ -79,6 +79,8 @@ export function ReservationPanel({
   );
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [hasAllergy, setHasAllergy] = useState(false);
+  const [allergyNote, setAllergyNote] = useState('');
 
   // ESC closes
   useEffect(() => {
@@ -95,6 +97,7 @@ export function ReservationPanel({
 
   function handleSubmit() {
     if (!can || !table) return;
+    const trimmedAllergy = hasAllergy ? allergyNote.trim() : '';
     onConfirm({
       tableId: table.id,
       date,
@@ -102,6 +105,7 @@ export function ReservationPanel({
       partySize: people,
       guestName: name.trim(),
       guestPhone: phone.trim(),
+      ...(trimmedAllergy ? { allergyNote: trimmedAllergy } : {}),
     });
   }
 
@@ -212,6 +216,29 @@ export function ReservationPanel({
                   </button>
                 ))}
               </div>
+            </div>
+
+            <div className={styles.fieldGroup}>
+              <label className={styles.checkboxRow}>
+                <input
+                  type="checkbox"
+                  checked={hasAllergy}
+                  onChange={(e) => setHasAllergy(e.target.checked)}
+                />
+                <span>Alerjim var, mutfağa not düşülsün</span>
+              </label>
+
+              {hasAllergy && (
+                <input
+                  type="text"
+                  className={styles.input}
+                  placeholder="Hangi alerjiniz var? (örn. fıstık, kabuklu deniz ürünleri)"
+                  value={allergyNote}
+                  onChange={(e) => setAllergyNote(e.target.value)}
+                  maxLength={120}
+                  aria-label="Alerji notu"
+                />
+              )}
             </div>
           </div>
 
@@ -357,6 +384,29 @@ export function ReservationPanel({
               </button>
             ))}
           </div>
+        </div>
+
+        <div className={styles.fieldGroup}>
+          <label className={styles.checkboxRow}>
+            <input
+              type="checkbox"
+              checked={hasAllergy}
+              onChange={(e) => setHasAllergy(e.target.checked)}
+            />
+            <span>Alerjim var, mutfağa not düşülsün</span>
+          </label>
+
+          {hasAllergy && (
+            <input
+              type="text"
+              className={styles.input}
+              placeholder="Hangi alerjiniz var? (örn. fıstık, kabuklu deniz ürünleri)"
+              value={allergyNote}
+              onChange={(e) => setAllergyNote(e.target.value)}
+              maxLength={120}
+              aria-label="Alerji notu"
+            />
+          )}
         </div>
 
         <div className={styles.summaryRow}>

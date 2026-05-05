@@ -23,4 +23,5 @@ export type ReservationDraft = {
   partySize: number;
   guestName: string;
   guestPhone: string;
+  allergyNote?: string;
 };

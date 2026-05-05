@@ -144,6 +144,9 @@ export function VenueMap({ onHeaderHiddenChange, autoSelectKey = 0 }: Props) {
       people: String(draft.partySize),
       name: draft.guestName,
     });
+    if (draft.allergyNote) {
+      params.set('allergy', draft.allergyNote);
+    }
     router.push(`/rezervasyon/onay?${params.toString()}`);
   }
 

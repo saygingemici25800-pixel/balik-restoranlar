@@ -127,7 +127,7 @@ export function KardesModal({ isOpen, onClose }: Props) {
               <span className={styles.videoLabel}>video gelecek</span>
             </div>
 
-            <p className={styles.tagline}>Aynı sahil, başka bir tat.</p>
+            <p className={styles.tagline}>Başka bir sahil, başka bir tat.</p>
             <p className={styles.taglineSoft}>Alkolsüz keyfin merkezi.</p>
             <p className={styles.detail}>
               Bugün en sevilen: Çalış Sunset (taze nar, portakal, tarçın)

@@ -31,7 +31,7 @@ export function MenuPreview() {
                 href={`/menu#${cat.slug}`}
                 className="inline-block mt-4 text-xs uppercase tracking-[0.3em] text-accent hover:text-fg transition-colors"
               >
-                Explore →
+                Sofrayı görmek için tıkla →
               </Link>
             </div>
           ))}

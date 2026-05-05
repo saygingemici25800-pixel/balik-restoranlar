@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -77,14 +76,9 @@ export function SiteTopBar({ className = '' }: Props) {
           aria-label="Çalış Balıkçısı — Anasayfa"
           className="justify-self-center"
         >
-          <Image
-            src="/images/calis-logo.png"
-            alt="Çalış Balıkçısı Akif Usta"
-            width={420}
-            height={594}
-            className="h-auto w-32 md:w-40 max-h-12 md:max-h-14"
-            priority
-          />
+          <h1 className="m-0 font-display italic font-normal text-fg text-[1.1rem] md:text-[1.4rem] tracking-[0.02em]">
+            Çalış Balıkçısı
+          </h1>
         </Link>
 
         <Link
