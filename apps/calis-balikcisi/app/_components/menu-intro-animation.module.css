@@ -13,28 +13,64 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 40px;
   align-items: flex-start;
 }
 
 .item {
+  position: relative;
   font-family: var(--font-display);
   font-weight: 400;
   font-size: 1.125rem;
   color: var(--color-fg);
   letter-spacing: -0.01em;
   line-height: 1.1;
-  transform-origin: top left;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  transform-origin: center center;
+}
+
+.itemText {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  transition: filter 0.5s ease-out, color 0.5s ease-out;
+}
+
+.itemGlow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(217, 122, 60, 0.55) 0%,
+    rgba(243, 234, 216, 0.25) 40%,
+    rgba(243, 234, 216, 0) 70%
+  );
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  filter: blur(4px);
+  transition: opacity 0.4s ease-in;
+}
+
+.item[data-phase='morphing'] .itemGlow,
+.item[data-phase='flying'] .itemGlow {
+  opacity: 1;
+}
+
+.item[data-phase='morphing'] .itemText,
+.item[data-phase='flying'] .itemText {
+  filter: blur(2px);
+  color: rgba(217, 122, 60, 0.5);
 }
 
 @media (min-width: 768px) {
   .overlay {
     padding: 7rem 2rem 0;
-  }
-
-  .itemList {
-    gap: 1rem;
   }
 
   .item {
@@ -49,6 +85,17 @@
 
   .item {
     font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .itemList {
+    gap: 28px;
+  }
+
+  .itemGlow {
+    width: 18px;
+    height: 18px;
   }
 }
 

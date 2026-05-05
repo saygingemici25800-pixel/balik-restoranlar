@@ -39,6 +39,7 @@ export function SiteTopBar({ className = '' }: Props) {
         className={`px-4 md:px-8 py-2 md:py-3 grid grid-cols-3 items-center ${className}`}
       >
         <button
+          id="hamburger-icon"
           type="button"
           onClick={() => setIsOpen((o) => !o)}
           aria-expanded={isOpen}
