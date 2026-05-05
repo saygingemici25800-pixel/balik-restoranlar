@@ -224,6 +224,12 @@ function Panel({ section, onItemClick }: PanelProps) {
 
   return (
     <div className="px-2 pb-14 pt-4">
+      {section.priceNote ? (
+        <p className="font-display italic text-center text-fg/55 text-sm md:text-[0.95rem] tracking-[0.02em] mt-2 mb-8">
+          {section.priceNote}
+        </p>
+      ) : null}
+
       <div className={`grid grid-cols-1 ${spotlightCols} gap-y-10 gap-x-8`}>
         {section.spotlight.map((item) => (
           <div key={item.name} className="text-center">
@@ -237,6 +243,11 @@ function Panel({ section, onItemClick }: PanelProps) {
             {item.description ? (
               <p className="mt-3 max-w-xs mx-auto text-sm text-fg/55 leading-relaxed">
                 {item.description}
+              </p>
+            ) : null}
+            {item.priceRange ? (
+              <p className="mt-2 text-sm tracking-[0.02em] text-accent/85">
+                {item.priceRange}
               </p>
             ) : null}
           </div>
@@ -260,6 +271,11 @@ function Panel({ section, onItemClick }: PanelProps) {
                   className={`inline-block mx-2 text-fg/85 hover:text-accent border-b border-transparent hover:border-accent transition-colors ${FLOW_SIZES[i % FLOW_SIZES.length]}`}
                 >
                   {item.name}
+                  {item.priceRange ? (
+                    <span className="ml-2 text-xs not-italic text-accent/70 tracking-[0.02em] align-middle">
+                      {item.priceRange}
+                    </span>
+                  ) : null}
                 </button>
                 {i < section.fullList.length - 1 ? (
                   <span

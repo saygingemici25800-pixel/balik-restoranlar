@@ -3,6 +3,7 @@ export type MenuItem = {
   description?: string;
   photoUrl?: string;
   longDescription?: string;
+  priceRange?: string;
 };
 
 export type MenuSection = {
@@ -12,6 +13,7 @@ export type MenuSection = {
   listLabel: string;
   spotlight: MenuItem[];
   fullList: MenuItem[];
+  priceNote?: string;
 };
 
 function spotlightItem(
@@ -19,12 +21,17 @@ function spotlightItem(
   description: string,
   longDescription: string,
   photoUrl?: string,
+  priceRange?: string,
 ): MenuItem {
-  return { name, description, longDescription, photoUrl };
+  return { name, description, longDescription, photoUrl, priceRange };
 }
 
-function listItem(name: string, longDescription: string): MenuItem {
-  return { name, longDescription };
+function listItem(
+  name: string,
+  longDescription: string,
+  priceRange?: string,
+): MenuItem {
+  return { name, longDescription, priceRange };
 }
 
 const LONG = {
@@ -357,30 +364,37 @@ export const PORSIYON_BALIK: MenuSection = {
   eyebrow: 'PORSİYON BALIK',
   title: 'Porsiyon Balık',
   listLabel: '— Tüm Porsiyon Balıklar —',
+  priceNote: 'Fiyat aralığımız her sabah mezattan sonra güncellenir.',
   spotlight: [
     spotlightItem(
       'Levrek Izgara',
       'Bütün levrek, mangalda. Limon-ot eşliğinde.',
       LONG.porsiyonSpot,
+      undefined,
+      '600 — 650 ₺',
     ),
     spotlightItem(
       'Çipura Izgara',
       'Bütün çipura, kömür ateşinde.',
       LONG.porsiyonSpot,
+      undefined,
+      '550 — 600 ₺',
     ),
     spotlightItem(
       'Somon Izgara',
       'İri somon dilimi, ızgarada hafif pişirilir.',
       LONG.porsiyonSpot,
+      undefined,
+      '700 — 800 ₺',
     ),
   ],
   fullList: [
-    listItem('Dil Şiş', LONG.porsiyonList),
-    listItem('Lagos Şiş', LONG.porsiyonList),
-    listItem('Somon Şiş', LONG.porsiyonList),
-    listItem('Barbun Tava / Izgara', LONG.porsiyonList),
-    listItem('Balık Şaşlık', LONG.porsiyonList),
-    listItem('Balık Kavurma', LONG.porsiyonList),
+    listItem('Dil Şiş', LONG.porsiyonList, '650 — 750 ₺'),
+    listItem('Lagos Şiş', LONG.porsiyonList, '750 — 900 ₺'),
+    listItem('Somon Şiş', LONG.porsiyonList, '700 — 800 ₺'),
+    listItem('Barbun Tava / Izgara', LONG.porsiyonList, '400 — 500 ₺'),
+    listItem('Balık Şaşlık', LONG.porsiyonList, '550 — 650 ₺'),
+    listItem('Balık Kavurma', LONG.porsiyonList, '500 — 600 ₺'),
   ],
 };
 
@@ -389,34 +403,41 @@ export const SEZON_BALIK: MenuSection = {
   eyebrow: 'SEZON BALIK ÇEŞİTLERİ',
   title: 'Sezon Balık Çeşitleri',
   listLabel: '— Tüm Sezon Balıkları —',
+  priceNote: 'Fiyat aralığımız her sabah mezattan sonra güncellenir.',
   spotlight: [
     spotlightItem(
       'Levrek',
       'Sezonun klasik balığı. Pişirme tercihiniz şefe iletilir.',
       LONG.sezonSpot,
+      undefined,
+      '600 — 650 ₺',
     ),
     spotlightItem(
       'Çipura',
       'Tezgâhın sevileni. Izgara ya da tava.',
       LONG.sezonSpot,
+      undefined,
+      '550 — 600 ₺',
     ),
     spotlightItem(
       'Lagos',
       'Beyaz etli, doyurucu. Sezonun değerlilerinden.',
       LONG.sezonSpot,
+      undefined,
+      '750 — 900 ₺',
     ),
   ],
   fullList: [
-    listItem('Lüfer', LONG.sezonList),
-    listItem('Minekop', LONG.sezonList),
-    listItem('Fangri', LONG.sezonList),
-    listItem('Akya', LONG.sezonList),
-    listItem('Mercan', LONG.sezonList),
-    listItem('Dülger', LONG.sezonList),
-    listItem('Barbun', LONG.sezonList),
-    listItem('Kılıç', LONG.sezonList),
-    listItem('Kaya Levreği', LONG.sezonList),
-    listItem('Mezgit', LONG.sezonList),
+    listItem('Lüfer', LONG.sezonList, '700 — 850 ₺'),
+    listItem('Minekop', LONG.sezonList, '600 — 750 ₺'),
+    listItem('Fangri', LONG.sezonList, '700 — 850 ₺'),
+    listItem('Akya', LONG.sezonList, '650 — 800 ₺'),
+    listItem('Mercan', LONG.sezonList, '650 — 750 ₺'),
+    listItem('Dülger', LONG.sezonList, '700 — 850 ₺'),
+    listItem('Barbun', LONG.sezonList, '400 — 500 ₺'),
+    listItem('Kılıç', LONG.sezonList, '800 — 950 ₺'),
+    listItem('Kaya Levreği', LONG.sezonList, '600 — 700 ₺'),
+    listItem('Mezgit', LONG.sezonList, '350 — 450 ₺'),
   ],
 };
 

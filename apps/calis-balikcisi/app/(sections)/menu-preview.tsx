@@ -36,6 +36,12 @@ export function MenuPreview() {
             </div>
           ))}
         </div>
+
+        <div className="mt-12 md:mt-16 w-full aspect-video flex items-center justify-center rounded-sm border border-dashed border-fg/20 bg-fg/[0.04]">
+          <span className="font-display italic text-base md:text-lg text-fg/35 tracking-[0.02em]">
+            video gelecek
+          </span>
+        </div>
       </div>
     </section>
   );

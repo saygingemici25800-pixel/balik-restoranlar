@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 type Catch = {
   name: string;
   latin: string;
@@ -7,6 +9,11 @@ type Catch = {
 const CATCHES: Catch[] = [
   { name: 'Levrek', latin: 'Dicentrarchus labrax', tag: 'Köz Üzerinde' },
   { name: 'Barbun', latin: 'Mullus barbatus', tag: 'Çiğ' },
+];
+
+const TEZGAH_PHOTOS = [
+  { src: '/images/tezgah-1.jpg', alt: 'Bugün tezgâhta — taze balık' },
+  { src: '/images/tezgah-2.jpg', alt: 'Bugün tezgâhta — mezat sonrası' },
 ];
 
 export function DailyHarvest() {
@@ -49,6 +56,23 @@ export function DailyHarvest() {
                 </span>
               </div>
             </article>
+          ))}
+        </div>
+
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+          {TEZGAH_PHOTOS.map((photo) => (
+            <div
+              key={photo.src}
+              className="group relative aspect-[4/3] overflow-hidden rounded-sm bg-fg/5"
+            >
+              <Image
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+              />
+            </div>
           ))}
         </div>
       </div>
