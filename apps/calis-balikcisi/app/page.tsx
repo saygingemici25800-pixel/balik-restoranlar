@@ -6,6 +6,7 @@ import { TeamSlider } from './(sections)/team-slider';
 import { MenuPreview } from './(sections)/menu-preview';
 import { ReserveCta } from './(sections)/reserve-cta';
 import { SiteFooter } from './(sections)/footer';
+import { KardesTab } from './_components/kardes-tab';
 
 export default function HomePage() {
   return (
@@ -20,6 +21,7 @@ export default function HomePage() {
         <ReserveCta />
       </main>
       <SiteFooter />
+      <KardesTab />
     </>
   );
 }
