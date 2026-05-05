@@ -7,10 +7,12 @@ import { MenuPreview } from './(sections)/menu-preview';
 import { Reviews } from './(sections)/reviews';
 import { ReserveCta } from './(sections)/reserve-cta';
 import { KardesTab } from './_components/kardes-tab';
+import { MenuIntroAnimation } from './_components/menu-intro-animation';
 
 export default function HomePage() {
   return (
     <>
+      <MenuIntroAnimation />
       <main>
         <CalisHero />
         <Concept />
