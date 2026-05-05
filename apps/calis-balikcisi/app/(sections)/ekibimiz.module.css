@@ -39,11 +39,11 @@
 
 .ekipShowcase {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 56px;
-  max-width: 1200px;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 80px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 32px;
+  padding: 0 48px;
   align-items: start;
 }
 
@@ -70,7 +70,7 @@
 .photoCard {
   width: 100%;
   aspect-ratio: 0.92;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
   transition: opacity 0.4s ease-out;
@@ -97,8 +97,9 @@
 .nameList {
   display: flex;
   flex-direction: column;
-  gap: 22px;
-  padding-top: 8px;
+  gap: 28px;
+  padding-top: 16px;
+  padding-right: 24px;
 }
 
 .nameRow {
@@ -132,7 +133,7 @@
 
 .nameText {
   font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: 500;
   line-height: 1;
   color: rgba(243, 234, 216, 0.8);
@@ -145,14 +146,22 @@
 }
 
 .roleText {
-  margin: 6px 0 0;
+  margin: 8px 0 0;
   padding-left: 26px;
   font-family: var(--font-body, system-ui, sans-serif);
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.2em;
   color: rgba(243, 234, 216, 0.5);
+}
+
+@media (max-width: 1100px) {
+  .ekipShowcase {
+    grid-template-columns: 1.2fr 1fr;
+    gap: 56px;
+    padding: 0 32px;
+  }
 }
 
 @media (max-width: 900px) {
@@ -175,5 +184,108 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 18px;
+    padding-right: 0;
+  }
+}
+
+/* Modal */
+.modalScrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+.modalCard {
+  position: relative;
+  max-width: 720px;
+  width: 100%;
+  max-height: 90vh;
+  background: var(--ink-deep, #0e1a23);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px -10px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+}
+
+.modalMedia {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #000;
+  position: relative;
+}
+
+.modalMedia img,
+.modalMedia video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.modalInfo {
+  padding: 28px 32px 32px;
+  color: var(--paper, #f3ead8);
+}
+
+.modalRole {
+  font-family: var(--font-body, system-ui, sans-serif);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--sun, #d97a3c);
+  opacity: 0.9;
+}
+
+.modalName {
+  font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
+  font-style: italic;
+  font-size: 2.2rem;
+  margin: 8px 0 0;
+  color: var(--paper, #f3ead8);
+}
+
+.modalClose {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--paper, #f3ead8);
+  border: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0 0 4px;
+  transition: background 0.2s;
+}
+
+.modalClose:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+@media (max-width: 720px) {
+  .modalScrim {
+    padding: 16px;
+  }
+  .modalInfo {
+    padding: 20px 22px 24px;
+  }
+  .modalName {
+    font-size: 1.6rem;
   }
 }
