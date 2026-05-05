@@ -1,0 +1,139 @@
+.section {
+  background-color: var(--color-bg);
+  padding: 120px 32px;
+}
+
+.header {
+  max-width: 1280px;
+  margin: 0 auto 80px;
+  text-align: center;
+}
+
+.eyebrow {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  opacity: 0.85;
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  color: var(--color-fg);
+  line-height: 1.1;
+  margin: 12px 0 0;
+}
+
+.vakitler {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 120px;
+}
+
+.vakitRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.kart {
+  color: var(--color-fg);
+}
+
+.cardLeft {
+  order: 1;
+}
+
+.cardRight {
+  order: 2;
+}
+
+.medya {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.medyaLeft {
+  order: 1;
+}
+
+.medyaRight {
+  order: 2;
+}
+
+.time {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  color: var(--color-accent);
+  opacity: 0.85;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  line-height: 1.1;
+  color: var(--color-fg);
+  margin: 12px 0 20px;
+}
+
+.description {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: var(--color-fg);
+  opacity: 0.78;
+  max-width: 38ch;
+}
+
+.media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .section {
+    padding: 80px 24px;
+  }
+
+  .header {
+    margin-bottom: 56px;
+  }
+
+  .vakitler {
+    gap: 80px;
+  }
+
+  .vakitRow {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .cardLeft,
+  .cardRight,
+  .medyaLeft,
+  .medyaRight {
+    order: unset;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+}

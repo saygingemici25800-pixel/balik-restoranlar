@@ -1,71 +1,142 @@
-import type { CSSProperties } from 'react';
+'use client';
 
-type Schedule = {
+import { useRef } from 'react';
+import Image from 'next/image';
+import {
+  motion,
+  useInView,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from 'framer-motion';
+import styles from './principles.module.css';
+
+type Vakit = {
   time: string;
   title: string;
-  body: string;
+  description: string;
+  mediaType: 'image' | 'video';
+  mediaSrc: string;
+  alt: string;
+  direction: 'card-left' | 'card-right';
+  scrollZoom?: boolean;
 };
 
-const SCHEDULE: Schedule[] = [
+const VAKITLER: Vakit[] = [
   {
     time: '05:30',
     title: 'Taze Tutma',
-    body: 'Akif Usta, her sabah şafakla birlikte Çalış koyunda tezgâhını kurar. O gün için en taze levrek, çipura ve mevsim balıkları seçilir. Buz üzerinde, güneş vurmadan tezgâha konur. Tazelik, ilk ve tek kriterimizdir.',
+    description:
+      'Mezattan masaya, hiç soğumadan. Sabahın ilk ışığında balık seçilir, buz tabletlerinde tezgâha yerleşir.',
+    mediaType: 'image',
+    mediaSrc:
+      'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1200',
+    alt: 'Sabah balık mezadı',
+    direction: 'card-left',
   },
   {
     time: '12:00',
     title: 'Az Müdahale',
-    body: 'Balığın kendi lezzetini ön plana çıkarmak için fazla baharata, ağır soslara yer yok. Zeytinyağı, limon, deniz tuzu. Hepsi bu. Mutfakta iki saat bekleyen yemek değil, tezgâhtan direkt ateşe giden balık.',
+    description:
+      'Balık zaten balık. Tuz, limon, ateş — fazlası gerekmez. Mutfakta sade bir el, çok ihtimam.',
+    mediaType: 'image',
+    mediaSrc:
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1200',
+    alt: 'Mutfakta sade hazırlık',
+    direction: 'card-right',
   },
   {
     time: '19:00',
     title: 'Doğal Ateş',
-    body: 'Mangalın üzerinde odun közü. Balık derisini koruyarak, yavaş ve emin ateşle pişer. Servis akşamla başlar, gün batımıyla yükselir. Sofranızdaki son nokta, denizin başlangıcı.',
+    description:
+      'Akşam üstü, kömür kor olduğunda balık ateşle tanışır. Ne fazla, ne eksik — saygıyla.',
+    mediaType: 'video',
+    mediaSrc:
+      'https://videos.pexels.com/video-files/3997798/3997798-uhd_2560_1440_25fps.mp4',
+    alt: 'Ateşte pişen balık',
+    direction: 'card-left',
+    scrollZoom: true,
   },
 ];
 
-const sectionVars = {
-  '--color-bg': '#FBFAF6',
-  '--color-fg': '#1A2F3A',
-} as CSSProperties;
+function VakitRow({ vakit }: { vakit: Vakit }) {
+  const rowRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(rowRef, { once: true, margin: '-100px' });
+  const prefersReducedMotion = useReducedMotion();
+
+  const isCardLeft = vakit.direction === 'card-left';
+
+  const { scrollYProgress } = useScroll({
+    target: rowRef,
+    offset: ['start end', 'center start'],
+  });
+  const scaleValue = useTransform(scrollYProgress, [0.3, 0.7], [1, 1.4], {
+    clamp: true,
+  });
+  const scale =
+    vakit.scrollZoom && !prefersReducedMotion ? scaleValue : undefined;
+
+  const slide = prefersReducedMotion ? 0 : 100;
+
+  return (
+    <div ref={rowRef} className={styles.vakitRow}>
+      <motion.div
+        className={`${styles.kart} ${
+          isCardLeft ? styles.cardLeft : styles.cardRight
+        }`}
+        initial={{ x: isCardLeft ? -slide : slide, opacity: 0 }}
+        animate={isInView ? { x: 0, opacity: 1 } : undefined}
+        transition={{ duration: 0.8, ease: [0.22, 0.9, 0.3, 1] }}
+      >
+        <span className={styles.time}>{vakit.time}</span>
+        <h3 className={styles.title}>{vakit.title}</h3>
+        <p className={styles.description}>{vakit.description}</p>
+      </motion.div>
+
+      <motion.div
+        className={`${styles.medya} ${
+          isCardLeft ? styles.medyaRight : styles.medyaLeft
+        }`}
+        initial={{ x: isCardLeft ? slide : -slide, opacity: 0 }}
+        animate={isInView ? { x: 0, opacity: 1 } : undefined}
+        transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 0.9, 0.3, 1] }}
+        style={scale ? { scale } : undefined}
+      >
+        {vakit.mediaType === 'video' ? (
+          <video
+            src={vakit.mediaSrc}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className={styles.media}
+          />
+        ) : (
+          <Image
+            src={vakit.mediaSrc}
+            alt={vakit.alt}
+            fill
+            sizes="(max-width: 900px) 100vw, 50vw"
+            className={styles.media}
+          />
+        )}
+      </motion.div>
+    </div>
+  );
+}
 
 export function Principles() {
   return (
-    <section
-      style={sectionVars}
-      className="bg-bg text-fg py-32 md:py-48 px-6 md:px-10"
-    >
-      <div className="mx-auto" style={{ maxWidth: '900px' }}>
-        <header className="text-center mb-20 md:mb-24">
-          <p className="text-[11px] uppercase tracking-[0.5em] text-fg/45 mb-6">
-            Az müdahale, çok ihtimam
-          </p>
-          <h2
-            className="font-display italic text-fg leading-[1.1]"
-            style={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)' }}
-          >
-            Bir günün üç vakti
-          </h2>
-        </header>
+    <section className={styles.section}>
+      <header className={styles.header}>
+        <span className={styles.eyebrow}>Bir günün üç vakti</span>
+        <h2 className={styles.heading}>Az müdahale, çok ihtimam</h2>
+      </header>
 
-        <div className="divide-y divide-fg/15">
-          {SCHEDULE.map((item) => (
-            <div
-              key={item.time}
-              className="py-12 first:pt-0 last:pb-0 text-center"
-            >
-              <p className="text-sm tracking-[0.2em] text-fg/50">
-                {item.time}
-              </p>
-              <h3 className="mt-2 font-display italic text-3xl md:text-4xl text-fg">
-                {item.title}
-              </h3>
-              <p className="mt-4 mx-auto max-w-xl text-fg/70 leading-relaxed">
-                {item.body}
-              </p>
-            </div>
-          ))}
-        </div>
+      <div className={styles.vakitler}>
+        {VAKITLER.map((v) => (
+          <VakitRow key={v.time} vakit={v} />
+        ))}
       </div>
     </section>
   );
