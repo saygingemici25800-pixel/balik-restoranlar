@@ -4,6 +4,7 @@ import { Principles } from './(sections)/principles';
 import { DailyHarvest } from './(sections)/daily-harvest';
 import { TeamSlider } from './(sections)/team-slider';
 import { MenuPreview } from './(sections)/menu-preview';
+import { Reviews } from './(sections)/reviews';
 import { ReserveCta } from './(sections)/reserve-cta';
 import { KardesTab } from './_components/kardes-tab';
 
@@ -17,6 +18,7 @@ export default function HomePage() {
         <DailyHarvest />
         <TeamSlider />
         <MenuPreview />
+        <Reviews />
         <ReserveCta />
       </main>
       <KardesTab />
