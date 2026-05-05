@@ -30,7 +30,7 @@ export function Concept() {
               href="/menu"
               className="inline-block mt-10 text-xs uppercase tracking-[0.3em] text-accent hover:text-fg transition-colors"
             >
-              Menüyü Keşfet →
+              Sofrayı Gör →
             </Link>
           </div>
         </div>

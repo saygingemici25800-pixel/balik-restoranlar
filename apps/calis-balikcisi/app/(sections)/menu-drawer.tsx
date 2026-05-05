@@ -8,9 +8,10 @@ type Props = {
 };
 
 const links = [
-  { href: '/menu', label: 'Menü' },
+  { href: '/#bugun-tezgahta', label: 'Taze Taze' },
+  { href: '/menu', label: 'Sofra' },
   { href: '/rezervasyon', label: 'Rezervasyon' },
-  { href: '/iletisim', label: 'İletişim' },
+  { href: '/iletisim', label: 'Konuşalım' },
 ];
 
 export function MenuDrawer({ isOpen }: Props) {
