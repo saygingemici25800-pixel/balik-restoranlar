@@ -262,11 +262,11 @@
 .compactFooter .twoCol {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px 32px;
+  gap: 12px 80px;
   font-family: var(--sans);
   font-size: 0.78rem;
   opacity: 0.78;
-  max-width: 460px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
@@ -291,6 +291,27 @@
 
 .compactFooter a:hover {
   border-bottom-color: currentColor;
+}
+
+.socialBtn {
+  display: inline-block;
+  padding: 3px 10px;
+  border: 1px solid var(--rule) !important;
+  border-bottom: 1px solid var(--rule) !important;
+  border-radius: 2px;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.socialBtn:hover {
+  background: rgba(31, 26, 18, 0.06);
+  border-bottom-color: var(--rule) !important;
+  color: var(--ink-soft);
 }
 
 .compactFooter .copyright {

@@ -17,6 +17,60 @@ const VB_H = 380;
 const VB_X_MIN = -VB_W / 2; // -380
 const VB_Y_MIN = -VB_H / 2; // -190
 
+// Sky'da yer alan deterministik 6 martı slot. tokens.seagullCount ilk N
+// tanesinin opacity'sini açar; geri kalan slot'lar opacity 0 ile durur
+// (smooth fade, AnimatePresence yerine). Desktop sky y range -190..-170
+// (üst kenar), mobile sky y range -340..-300 (deniz daha aşağı).
+const DESKTOP_SEAGULL_POSITIONS = [
+  { x: -150, y: -180 },
+  { x: -60, y: -185 },
+  { x: -30, y: -175 },
+  { x: 40, y: -188 },
+  { x: 110, y: -178 },
+  { x: 200, y: -185 },
+];
+
+const MOBILE_SEAGULL_POSITIONS = [
+  { x: -50, y: -320 },
+  { x: 20, y: -300 },
+  { x: 80, y: -340 },
+  { x: -130, y: -315 },
+  { x: 110, y: -325 },
+  { x: 150, y: -310 },
+];
+
+// Mobile tekne x/y lookup — desktop tokens.boatX/Y mobil viewBox'a
+// (-200..+200, sky y=-350..-260) düşmediği için saat-bazlı ayrı tablo.
+// Erken saatlerde tekne sol-orta sky'da (~-280), geç saatte sağa kayar
+// + ufuk yakını (-308'e doğru) + opacity sıfırlanır (ortak token).
+const MOBILE_BOAT_X: Record<TimeKey, number> = {
+  '17:30': 70,
+  '18:00': 90,
+  '18:30': 120,
+  '19:00': 145,
+  '19:30': 165,
+  '20:00': 185,
+  '20:30': 200,
+  '21:00': 215,
+  '21:30': 220,
+  '22:00': 225,
+  '22:30': 230,
+};
+
+const MOBILE_BOAT_Y: Record<TimeKey, number> = {
+  '17:30': -270,
+  '18:00': -278,
+  '18:30': -286,
+  '19:00': -293,
+  '19:30': -298,
+  '20:00': -302,
+  '20:30': -305,
+  '21:00': -307,
+  '21:30': -308,
+  '22:00': -308,
+  '22:30': -308,
+};
+
 // Mobile portre viewBox — sahne dikey kompoz, sky üstte / masalar+mutfak altta.
 // NORMAL: header görünür iken (panel kapalı). h=720 → bottom y=370 → mutfak
 // rect (y=240..340), şefler (y=290..320), "mutfak — ızgara" etiketi (y=335)
@@ -985,17 +1039,34 @@ function DesktopSeaBackdrop({ tokens, reducedMotion }: SubBackdropProps) {
         Çalış sahili
       </text>
 
-      <g
-        transform="translate(120 -136)"
-        stroke="currentColor"
-        strokeWidth="0.8"
-        fill="none"
-        opacity={0.55}
+      {/* Tekne — sun/moon ile aynı tek-katman motion.g pattern (kanıtlanmış
+          animasyon davranışı). Scale (0,0) etrafında — tekne path'leri
+          orijin civarı çizildiği için kabul edilebilir. boatY desktop
+          viewBox y=-190..190 içinde tutuldu (sky/wave horizon bandı). */}
+      <motion.g
+        animate={{
+          x: tokens.boatX,
+          y: tokens.boatY,
+          scale: tokens.boatScale,
+          opacity: tokens.boatOpacity,
+        }}
+        transition={{
+          duration: reducedMotion ? 0 : 1,
+          ease: [0.4, 0, 0.2, 1],
+        }}
+        aria-hidden="true"
       >
-        <path d="M-10 0 q10 4 20 0 l-2 -4 l-16 0 z" />
-        <line x1={0} y1={0} x2={0} y2={-14} />
-        <path d="M0 -14 l8 12 l-8 0 z" />
-      </g>
+        <g
+          stroke="currentColor"
+          strokeWidth="0.8"
+          fill="none"
+          opacity={0.55}
+        >
+          <path d="M-10 0 q10 4 20 0 l-2 -4 l-16 0 z" />
+          <line x1={0} y1={0} x2={0} y2={-14} />
+          <path d="M0 -14 l8 12 l-8 0 z" />
+        </g>
+      </motion.g>
       <g
         transform="translate(280 -109)"
         stroke="currentColor"
@@ -1008,10 +1079,42 @@ function DesktopSeaBackdrop({ tokens, reducedMotion }: SubBackdropProps) {
         <path d="M0 -10 l5 8 l-5 0 z" />
       </g>
 
-      <g stroke="currentColor" strokeWidth="0.5" fill="none" opacity={0.5}>
-        <path d="M-60 -185 q3 -3 6 0 q3 -3 6 0" />
-        <path d="M-30 -175 q2 -2 4 0 q2 -2 4 0" />
-        <path d="M40 -188 q3 -3 6 0 q3 -3 6 0" />
+      {/* Martılar — 6 deterministik slot. tokens.seagullCount ilk N'in
+          opacity'sini açar (smooth fade), her bir martı sürekli sağa
+          doğru yatay uçar (linear loop, 30-55s aralığı, stagger delay).
+          Y'de hafif dalgalanma uçuş hissi. Reduced-motion'da statik. */}
+      <g stroke="currentColor" strokeWidth="0.5" fill="none">
+        {DESKTOP_SEAGULL_POSITIONS.map((pos, i) => (
+          <motion.path
+            key={i}
+            d={`M${pos.x} ${pos.y} q3 -3 6 0 q3 -3 6 0`}
+            initial={{ opacity: 0, x: 0, y: 0 }}
+            animate={{
+              opacity: i < tokens.seagullCount ? 0.5 : 0,
+              x: reducedMotion ? 0 : [0, 80, 160, 240, 320, 0],
+              y: reducedMotion ? 0 : [0, -8, 4, -6, 2, 0],
+            }}
+            transition={{
+              opacity: {
+                duration: reducedMotion ? 0 : 0.8,
+                ease: 'easeOut',
+              },
+              x: {
+                duration: reducedMotion ? 0 : 30 + i * 5,
+                repeat: reducedMotion ? 0 : Infinity,
+                ease: 'linear',
+                delay: reducedMotion ? 0 : i * 2,
+              },
+              y: {
+                duration: reducedMotion ? 0 : 30 + i * 5,
+                repeat: reducedMotion ? 0 : Infinity,
+                ease: 'linear',
+                delay: reducedMotion ? 0 : i * 2,
+              },
+            }}
+            aria-hidden="true"
+          />
+        ))}
       </g>
     </g>
   );
@@ -1331,24 +1434,70 @@ function MobileSeaBackdrop({
         iç salon
       </text>
 
-      {/* Tekne — sky orta-üst, deniz/sun yukarı kayınca */}
-      <g
-        transform="translate(70 -280)"
-        stroke="currentColor"
-        strokeWidth="0.7"
-        fill="none"
-        opacity={0.5}
+      {/* Tekne — sun/moon ile aynı tek-katman motion.g pattern. Mobile X/Y
+          ayrı lookup tablosundan (mobil viewBox -200..+200, sky deniz
+          üstünde -350..-260). Scale/opacity ortak token. */}
+      <motion.g
+        animate={{
+          x: MOBILE_BOAT_X[timeKey],
+          y: MOBILE_BOAT_Y[timeKey],
+          scale: tokens.boatScale,
+          opacity: tokens.boatOpacity,
+        }}
+        transition={{
+          duration: reducedMotion ? 0 : 1,
+          ease: [0.4, 0, 0.2, 1],
+        }}
+        aria-hidden="true"
       >
-        <path d="M-9 0 q9 4 18 0 l-2 -4 l-14 0 z" />
-        <line x1={0} y1={0} x2={0} y2={-12} />
-        <path d="M0 -12 l7 10 l-7 0 z" />
-      </g>
+        <g
+          stroke="currentColor"
+          strokeWidth="0.7"
+          fill="none"
+          opacity={0.5}
+        >
+          <path d="M-9 0 q9 4 18 0 l-2 -4 l-14 0 z" />
+          <line x1={0} y1={0} x2={0} y2={-12} />
+          <path d="M0 -12 l7 10 l-7 0 z" />
+        </g>
+      </motion.g>
 
-      {/* Martılar — sky'ın tepesinde, y=-340..-300 dağılmış */}
-      <g stroke="currentColor" strokeWidth="0.5" fill="none" opacity={0.5}>
-        <path d="M-50 -320 q3 -3 6 0 q3 -3 6 0" />
-        <path d="M20 -300 q2 -2 4 0 q2 -2 4 0" />
-        <path d="M80 -340 q3 -3 6 0 q3 -3 6 0" />
+      {/* Martılar — 6 deterministik slot (sky tepesinde, y=-340..-300).
+          tokens.seagullCount ilk N'in opacity'sini açar; her martı sağa
+          doğru yatay loop'ta uçar (mobil viewBox 400 geniş → x range 0..200).
+          Y'de hafif dalga, stagger delay ile bağımsız hareket. */}
+      <g stroke="currentColor" strokeWidth="0.5" fill="none">
+        {MOBILE_SEAGULL_POSITIONS.map((pos, i) => (
+          <motion.path
+            key={i}
+            d={`M${pos.x} ${pos.y} q3 -3 6 0 q3 -3 6 0`}
+            initial={{ opacity: 0, x: 0, y: 0 }}
+            animate={{
+              opacity: i < tokens.seagullCount ? 0.5 : 0,
+              x: reducedMotion ? 0 : [0, 50, 100, 150, 200, 0],
+              y: reducedMotion ? 0 : [0, -6, 3, -4, 2, 0],
+            }}
+            transition={{
+              opacity: {
+                duration: reducedMotion ? 0 : 0.8,
+                ease: 'easeOut',
+              },
+              x: {
+                duration: reducedMotion ? 0 : 30 + i * 5,
+                repeat: reducedMotion ? 0 : Infinity,
+                ease: 'linear',
+                delay: reducedMotion ? 0 : i * 2,
+              },
+              y: {
+                duration: reducedMotion ? 0 : 30 + i * 5,
+                repeat: reducedMotion ? 0 : Infinity,
+                ease: 'linear',
+                delay: reducedMotion ? 0 : i * 2,
+              },
+            }}
+            aria-hidden="true"
+          />
+        ))}
       </g>
 
       {/* Mutfak şeridi — alt boşluğu doldurur (y=240..340), kompakt versiyon.

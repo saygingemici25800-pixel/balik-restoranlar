@@ -55,6 +55,16 @@ export type AtmosphereTokens = {
   sunGlitterOpacity: number;
   /** Moon glitter (krem ay yansıması) opacity. */
   moonGlitterOpacity: number;
+  /** Tekne x pozisyonu (viewBox user units, pozitif = sağa kayar). */
+  boatX: number;
+  /** Tekne y pozisyonu (negatif = ufka yakın / yukarıda). */
+  boatY: number;
+  /** Tekne ölçeği (1 = yakın, 0.3 = uzak ufuk). */
+  boatScale: number;
+  /** Tekne opacity (1 → 0 ufukta kaybolur). */
+  boatOpacity: number;
+  /** Sky'da görünür martı sayısı (0–6, deterministik). */
+  seagullCount: number;
 };
 
 /** Güneşin başlangıç x pozisyonu (17:30'da sol uçta). Glitter offset
@@ -63,9 +73,10 @@ export const SUN_BASE_CX = -310;
 const DEFAULT_MOON_CX = -80;
 
 /**
- * 11 saat × 16 alan token tablosu. Renkler kademeli kayar.
+ * 11 saat × 21 alan token tablosu. Renkler kademeli kayar.
  * Sky %15-20 koyulaşır her 30dk. Sand 19:30'dan grileşir. Ink 20:00-21:00
- * arası kritik geçişte koyu→krem'e döner.
+ * arası kritik geçişte koyu→krem'e döner. Tekne saat ilerledikçe ufka
+ * doğru kayar + küçülür + kaybolur. Martı sayısı akşam azalır.
  */
 export const TIME_TOKENS: Record<TimeKey, AtmosphereTokens> = {
   '17:30': {
@@ -86,6 +97,11 @@ export const TIME_TOKENS: Record<TimeKey, AtmosphereTokens> = {
     flameOpacity: 0.5,
     sunGlitterOpacity: 0.6,
     moonGlitterOpacity: 0,
+    boatX: 60,
+    boatY: -130,
+    boatScale: 1.0,
+    boatOpacity: 1,
+    seagullCount: 4,
   },
   '18:00': {
     skyTop: '#f5d4a8',
@@ -105,6 +121,11 @@ export const TIME_TOKENS: Record<TimeKey, AtmosphereTokens> = {
     flameOpacity: 0.52,
     sunGlitterOpacity: 0.55,
     moonGlitterOpacity: 0,
+    boatX: 80,
+    boatY: -138,
+    boatScale: 0.95,
+    boatOpacity: 1,
+    seagullCount: 5,
   },
   '18:30': {
     skyTop: '#f5c290',
@@ -124,6 +145,11 @@ export const TIME_TOKENS: Record<TimeKey, AtmosphereTokens> = {
     flameOpacity: 0.55,
     sunGlitterOpacity: 0.55,
     moonGlitterOpacity: 0,
+    boatX: 110,
+    boatY: -146,
+    boatScale: 0.85,
+    boatOpacity: 0.95,
+    seagullCount: 4,
   },
   // 19:00 — eski faz 2 (mevcut default estetik). Regresyon olmasın.
   '19:00': {
@@ -144,6 +170,11 @@ export const TIME_TOKENS: Record<TimeKey, AtmosphereTokens> = {
     flameOpacity: 0.58,
     sunGlitterOpacity: 0.5,
     moonGlitterOpacity: 0,
+    boatX: 140,
+    boatY: -154,
+    boatScale: 0.75,
+    boatOpacity: 0.85,
+    seagullCount: 3,
   },
   '19:30': {
     skyTop: '#e09870',
@@ -163,6 +194,11 @@ export const TIME_TOKENS: Record<TimeKey, AtmosphereTokens> = {
     flameOpacity: 0.62,
     sunGlitterOpacity: 0.4,
     moonGlitterOpacity: 0.15,
+    boatX: 170,
+    boatY: -161,
+    boatScale: 0.65,
+    boatOpacity: 0.7,
+    seagullCount: 3,
   },
   '20:00': {
     skyTop: '#b8997b',
@@ -182,6 +218,11 @@ export const TIME_TOKENS: Record<TimeKey, AtmosphereTokens> = {
     flameOpacity: 0.65,
     sunGlitterOpacity: 0.2,
     moonGlitterOpacity: 0.3,
+    boatX: 200,
+    boatY: -167,
+    boatScale: 0.55,
+    boatOpacity: 0.55,
+    seagullCount: 2,
   },
   '20:30': {
     skyTop: '#8a7585',
@@ -201,6 +242,11 @@ export const TIME_TOKENS: Record<TimeKey, AtmosphereTokens> = {
     flameOpacity: 0.72,
     sunGlitterOpacity: 0,
     moonGlitterOpacity: 0.45,
+    boatX: 220,
+    boatY: -172,
+    boatScale: 0.45,
+    boatOpacity: 0.4,
+    seagullCount: 2,
   },
   '21:00': {
     skyTop: '#5a5878',
@@ -220,6 +266,11 @@ export const TIME_TOKENS: Record<TimeKey, AtmosphereTokens> = {
     flameOpacity: 0.8,
     sunGlitterOpacity: 0,
     moonGlitterOpacity: 0.6,
+    boatX: 240,
+    boatY: -177,
+    boatScale: 0.4,
+    boatOpacity: 0.25,
+    seagullCount: 1,
   },
   '21:30': {
     skyTop: '#3a4560',
@@ -239,6 +290,11 @@ export const TIME_TOKENS: Record<TimeKey, AtmosphereTokens> = {
     flameOpacity: 0.85,
     sunGlitterOpacity: 0,
     moonGlitterOpacity: 0.7,
+    boatX: 250,
+    boatY: -181,
+    boatScale: 0.35,
+    boatOpacity: 0.15,
+    seagullCount: 1,
   },
   '22:00': {
     skyTop: '#1a2540',
@@ -258,6 +314,11 @@ export const TIME_TOKENS: Record<TimeKey, AtmosphereTokens> = {
     flameOpacity: 0.85,
     sunGlitterOpacity: 0,
     moonGlitterOpacity: 0.8,
+    boatX: 260,
+    boatY: -184,
+    boatScale: 0.3,
+    boatOpacity: 0.08,
+    seagullCount: 0,
   },
   '22:30': {
     skyTop: '#0d1830',
@@ -277,6 +338,11 @@ export const TIME_TOKENS: Record<TimeKey, AtmosphereTokens> = {
     flameOpacity: 0.85,
     sunGlitterOpacity: 0,
     moonGlitterOpacity: 0.85,
+    boatX: 270,
+    boatY: -186,
+    boatScale: 0.3,
+    boatOpacity: 0,
+    seagullCount: 0,
   },
 };
 

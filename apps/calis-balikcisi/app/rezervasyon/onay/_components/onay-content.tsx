@@ -95,15 +95,12 @@ export function OnayContent({
       </div>
 
       <footer className={styles.compactFooter}>
-        <p className={styles.tagline}>
-          Özellikle akşamüstü melteminde rezervasyon iyi olur.
-        </p>
-
         <div className={styles.twoCol}>
           <div className={styles.colLeft}>
             <p>Çalış Plajı, Fethiye</p>
             <p>
               <a
+                className={styles.socialBtn}
                 href="https://instagram.com/calisbalikcisi"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -113,6 +110,7 @@ export function OnayContent({
             </p>
             <p>
               <a
+                className={styles.socialBtn}
                 href="https://maps.google.com/?q=%C3%87al%C4%B1%C5%9F+Bal%C4%B1k%C3%A7%C4%B1s%C4%B1+Fethiye"
                 target="_blank"
                 rel="noopener noreferrer"
