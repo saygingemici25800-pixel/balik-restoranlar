@@ -60,10 +60,10 @@ export function TeamSlider() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16 md:mb-20">
           <p className="text-xs uppercase tracking-[0.4em] text-accent">
-            The People Behind
+            Mutfağın Ardındakiler
           </p>
           <h2 className="mt-6 font-display text-5xl md:text-6xl leading-tight text-fg">
-            Our Team
+            Ekibimiz
           </h2>
           <div className="w-12 h-px bg-accent mx-auto mt-6" aria-hidden="true" />
         </div>
@@ -83,7 +83,7 @@ export function TeamSlider() {
               className="hidden md:block text-xs uppercase tracking-[0.4em] text-fg/60"
               style={{ writingMode: 'vertical-rl' }}
             >
-              Our Team
+              Ekibimiz
             </p>
 
             <ul className="flex md:flex-col gap-3 md:gap-4">

@@ -16,21 +16,21 @@ export function Concept() {
           <div className="aspect-[4/5] bg-fg/5" aria-hidden="true" />
           <div>
             <h2 className="font-display text-4xl md:text-5xl leading-tight text-fg">
-              The Purest Expression of the Sea
+              Denizin En Yalın Hâli
             </h2>
             <div className="mt-16 space-y-6 text-fg/80 leading-relaxed">
               <p>
-                At Çalış Balıkçısı, we believe the ocean speaks for itself. Our culinary philosophy is one of luxurious restraint—removing the unnecessary to reveal the essential character of the wild catch.
+                Çalış Balıkçısı&apos;nda denizin kendi sesini dinliyoruz. Mutfağımızın felsefesi sade bir saygıdan ibaret: gereksizi çıkarıp balığın asıl karakterini ortaya koymak.
               </p>
               <p>
-                Sourced daily from local Fethiye fishermen, each ingredient dictates its own preparation. Cooked over open embers, seasoned with indigenous sea salt, and served on dark, elemental ceramics.
+                Her sabah Fethiyeli balıkçılardan gelen ürün, kendi pişme yolunu kendi söyler. Köz üzerinde, yöre tuzuyla, koyu seramik üzerinde sofraya gelir.
               </p>
             </div>
             <Link
               href="/menu"
               className="inline-block mt-10 text-xs uppercase tracking-[0.3em] text-accent hover:text-fg transition-colors"
             >
-              Discover the Menu →
+              Menüyü Keşfet →
             </Link>
           </div>
         </div>

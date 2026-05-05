@@ -86,7 +86,7 @@ export function SiteTopBar({ className = '' }: Props) {
           className="relative inline-block justify-self-end pb-1"
         >
           <span className="text-xs uppercase tracking-[0.3em] text-accent">
-            Reservation
+            Rezervasyon
           </span>
           <span
             aria-hidden="true"

@@ -1,12 +1,17 @@
+.tabWrapper {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+}
+
 .kardesTab {
   --ink: #1f1a12;
   --paper: #f3ead8;
   --serif: var(--font-fraunces, var(--font-display));
   --sans: var(--font-body);
 
-  position: fixed;
-  right: 0;
-  top: 50%;
   width: 44px;
   padding: 18px 6px;
   background: rgba(243, 234, 216, 0.92);
@@ -21,7 +26,6 @@
   align-items: center;
   gap: 14px;
   cursor: pointer;
-  z-index: 50;
   font-family: var(--serif);
   color: var(--ink);
   transition: background 0.2s ease;

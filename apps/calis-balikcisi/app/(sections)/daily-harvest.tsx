@@ -5,8 +5,8 @@ type Catch = {
 };
 
 const CATCHES: Catch[] = [
-  { name: 'Wild Seabass', latin: 'Dicentrarchus labrax', tag: 'Wood Fired' },
-  { name: 'Red Mullet', latin: 'Mullus barbatus', tag: 'Crudo' },
+  { name: 'Levrek', latin: 'Dicentrarchus labrax', tag: 'Köz Üzerinde' },
+  { name: 'Barbun', latin: 'Mullus barbatus', tag: 'Çiğ' },
 ];
 
 export function DailyHarvest() {
@@ -16,14 +16,14 @@ export function DailyHarvest() {
         <div className="grid md:grid-cols-2 md:items-end gap-6 md:gap-12 mb-12 md:mb-16">
           <div>
             <p className="text-xs uppercase tracking-[0.4em] text-accent mb-4">
-              Daily Harvest
+              Günün Mezadı
             </p>
             <h2 className="font-display text-5xl md:text-6xl leading-tight text-fg">
-              {"Today's Catch"}
+              Bugün Tezgâhta
             </h2>
           </div>
           <p className="text-fg/70 leading-relaxed md:text-right md:max-w-sm md:justify-self-end">
-            Subject to the whims of the Mediterranean tides. Market price.
+            Akdeniz&apos;in keyfine bağlı. Günün fiyatı.
           </p>
         </div>
 

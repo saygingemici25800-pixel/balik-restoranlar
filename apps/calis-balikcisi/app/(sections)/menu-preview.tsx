@@ -6,9 +6,9 @@ type Category = {
 };
 
 const CATEGORIES: Category[] = [
-  { slug: 'raw-cured', title: 'Raw & Cured' },
-  { slug: 'embers', title: 'From the Embers' },
-  { slug: 'final-act', title: 'Final Act' },
+  { slug: 'raw-cured', title: 'Çiğ ve Tuzlamalar' },
+  { slug: 'embers', title: 'Köz Üzerinde' },
+  { slug: 'final-act', title: 'Tatlı Vakti' },
 ];
 
 export function MenuPreview() {
@@ -16,7 +16,7 @@ export function MenuPreview() {
     <section className="py-24 md:py-32 px-6 md:px-10">
       <div className="max-w-6xl mx-auto">
         <div className="text-center">
-          <h2 className="font-display text-5xl md:text-6xl text-fg">The Menu</h2>
+          <h2 className="font-display text-5xl md:text-6xl text-fg">Sofra</h2>
           <div className="w-12 h-px bg-accent mx-auto mt-6" aria-hidden="true" />
         </div>
 

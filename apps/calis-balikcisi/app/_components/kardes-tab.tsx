@@ -35,21 +35,23 @@ export function KardesTab() {
 
   return (
     <>
-      <motion.button
-        type="button"
-        className={styles.kardesTab}
-        style={{ x, y: '-50%', opacity, pointerEvents }}
-        onClick={() => setIsOpen(true)}
-        aria-label="Kardeş mekan: Fethiye Alkolsüz"
-        aria-haspopup="dialog"
-        aria-expanded={isOpen}
-      >
-        <VerticalText text="KARDEŞ MEKAN" className={styles.eyebrow} />
-        <VerticalText text="Fethiye Alkolsüz" className={styles.label} />
-        <span className={styles.arrow} aria-hidden="true">
-          ←
-        </span>
-      </motion.button>
+      <div className={styles.tabWrapper}>
+        <motion.button
+          type="button"
+          className={styles.kardesTab}
+          style={{ x, opacity, pointerEvents }}
+          onClick={() => setIsOpen(true)}
+          aria-label="Kardeş mekan: Fethiye Alkolsüz"
+          aria-haspopup="dialog"
+          aria-expanded={isOpen}
+        >
+          <VerticalText text="KARDEŞ MEKAN" className={styles.eyebrow} />
+          <VerticalText text="Fethiye Alkolsüz" className={styles.label} />
+          <span className={styles.arrow} aria-hidden="true">
+            ←
+          </span>
+        </motion.button>
+      </div>
       <KardesModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );
