@@ -1,0 +1,364 @@
+.section {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 96px 32px;
+}
+
+.headerRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 40px;
+}
+
+.headerText {
+  text-align: left;
+  max-width: 720px;
+}
+
+.eyebrow {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  color: var(--color-fg);
+  margin: 12px 0 0;
+  line-height: 1.05;
+}
+
+.navButtons {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.navBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #4b3f33;
+  color: #f3ead8;
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    opacity 0.2s,
+    background 0.2s,
+    transform 0.2s;
+}
+
+.navBtn:disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+}
+
+.navBtn:hover:not(:disabled) {
+  background: #5b4d3f;
+  transform: translateY(-1px);
+}
+
+.navBtn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  gap: 18px;
+  padding: 24px 32px;
+  margin: 0 -32px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.card {
+  flex: 0 0 320px;
+  height: 440px;
+  scroll-snap-align: start;
+  background: linear-gradient(180deg, #f3ead8 0%, #ead9b8 100%);
+  border-radius: 24px;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.35);
+  color: #1f1a12;
+  position: relative;
+  border: 0;
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+.profileImage {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(31, 26, 18, 0.35);
+  filter: saturate(0.45) sepia(0.32);
+  margin-bottom: 18px;
+}
+
+.description {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-style: italic;
+  line-height: 1.45;
+  text-transform: lowercase;
+  color: rgba(31, 26, 18, 0.78);
+  margin: 0 0 20px;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.15rem;
+  text-transform: lowercase;
+  color: rgba(31, 26, 18, 0.92);
+  margin: 0;
+}
+
+.designation {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.78rem;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 0.5px;
+  color: rgba(31, 26, 18, 0.6);
+  margin-top: 6px;
+  text-transform: lowercase;
+}
+
+/* Modal */
+.modalRoot {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  cursor: pointer;
+}
+
+.modalScrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 18, 25, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  pointer-events: none;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 1024px;
+  max-height: calc(100vh - 80px);
+  background: linear-gradient(180deg, #f3ead8 0%, #fff9eb 100%);
+  border-radius: 24px;
+  padding: 56px;
+  color: #1f1a12;
+  overflow-y: auto;
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.6);
+  cursor: default;
+}
+
+.modalClose {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(31, 26, 18, 0.08);
+  color: #1f1a12;
+  border: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.modalClose:hover {
+  background: rgba(31, 26, 18, 0.18);
+}
+
+.modalClose:focus-visible {
+  outline: 2px solid #4b3f33;
+  outline-offset: 2px;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 32px;
+  padding-right: 56px;
+}
+
+.modalImage {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(31, 26, 18, 0.35);
+  filter: saturate(0.45) sepia(0.32);
+  flex-shrink: 0;
+}
+
+.modalIdentity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.modalName {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  text-transform: lowercase;
+  color: rgba(31, 26, 18, 0.95);
+  margin: 0;
+  line-height: 1.05;
+}
+
+.modalDesignation {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.92rem;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 0.5px;
+  color: rgba(31, 26, 18, 0.6);
+  text-transform: lowercase;
+  margin-top: 8px;
+}
+
+.modalBody {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.modalQuote {
+  color: rgba(31, 26, 18, 0.32);
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.modalDescription {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+  line-height: 1.55;
+  color: rgba(31, 26, 18, 0.85);
+  text-transform: lowercase;
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .section {
+    padding: 64px 20px;
+  }
+
+  .headerRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .navButtons {
+    align-self: flex-end;
+  }
+
+  .carousel {
+    padding: 20px;
+    margin: 0 -20px;
+    gap: 14px;
+  }
+
+  .card {
+    flex: 0 0 280px;
+    height: 380px;
+    padding: 28px 20px;
+  }
+
+  .profileImage {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 14px;
+  }
+
+  .description {
+    font-size: 0.95rem;
+  }
+
+  .name {
+    font-size: 1.05rem;
+  }
+
+  .modalRoot {
+    padding: 16px;
+  }
+
+  .modal {
+    padding: 32px 22px 28px;
+    max-height: calc(100vh - 32px);
+  }
+
+  .modalClose {
+    top: 12px;
+    right: 12px;
+  }
+
+  .modalHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding-right: 44px;
+    margin-bottom: 24px;
+  }
+
+  .modalImage {
+    width: 72px;
+    height: 72px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .navBtn,
+  .modalClose {
+    transition: none;
+  }
+}
