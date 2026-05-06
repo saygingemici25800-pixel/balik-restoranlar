@@ -1,5 +1,6 @@
 import { CalisHero } from './(sections)/hero';
 import { Concept } from './(sections)/concept';
+import { ContactSummary } from './(sections)/contact-summary';
 import { Principles } from './(sections)/principles';
 import { DailyHarvest } from './(sections)/daily-harvest';
 import { Ekibimiz } from './(sections)/ekibimiz';
@@ -17,11 +18,12 @@ export default function HomePage() {
         <CalisHero />
         <Concept />
         <Principles />
+        <MenuPreview />
         <DailyHarvest />
         <Ekibimiz />
-        <MenuPreview />
         <Testimonials />
         <ReserveCta />
+        <ContactSummary />
       </main>
       <KardesTab />
     </>

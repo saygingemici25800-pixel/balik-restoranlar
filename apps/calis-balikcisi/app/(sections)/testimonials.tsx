@@ -20,63 +20,63 @@ type Testimonial = {
 const TESTIMONIALS: Testimonial[] = [
   {
     id: '1',
-    platform: 'google',
-    name: 'Mehmet Kara',
-    designation: 'Google · 2 ay önce',
+    platform: 'tripadvisor',
+    name: 'tartangal',
+    designation: 'Tripadvisor',
     description:
-      "Akif Usta'nın elinden çıkan levrek başka oluyor. 3. kez geliyoruz, her seferinde aynı tat. Sahil kenarında, akşamüstü meltemiyle yenen bir yemek başka bir şey.",
+      "Authentic Fish restaurant with fresh ingredients. The grouper kebab was something we'd never tasted before — meaty, moist, melting in the mouth. The waiter's recommendation was perfect. We came back the next night for the same.",
+    profileImage:
+      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300',
+  },
+  {
+    id: '2',
+    platform: 'google',
+    name: 'Mehmet K.',
+    designation: 'Google',
+    description:
+      "Fethiye'ye her gittiğimde mutlaka uğradığım yer. Levrek lokum bir başka. Akif Usta'nın elinden çıkan iş belli oluyor — sade, doğru, dürüst.",
     profileImage:
       'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300',
   },
   {
-    id: '2',
+    id: '3',
     platform: 'tripadvisor',
-    name: 'Ayşe Topkaya',
-    designation: 'Tripadvisor · 3 hafta önce',
+    name: 'SYBEL E.',
+    designation: 'Tripadvisor',
     description:
-      "Sahil kenarında akşam yemeği için en doğru adres. Masamız 1 saat boş kalmadı diye stres olmadık, ekip rahat. Levrek ızgara mükemmeldi, mezeler taze. Fethiye'ye gelirseniz mutlaka uğrayın.",
+      "4 aydır Fethiye'deyiz, bu mekanı keşfettiğimizden beri sadece burada yiyoruz. Çok temiz, personel çok güleryüzlü, yemekler çok lezzetli. Kışın da yazın da gönül rahatlığıyla gidebilirsiniz.",
     profileImage:
       'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300',
   },
   {
-    id: '3',
+    id: '4',
     platform: 'instagram',
-    name: 'Hasan Bayar',
-    designation: 'Instagram · 1 ay önce',
+    name: '@yemeustasi',
+    designation: 'Instagram',
     description:
-      "1987'den beri bu mekan Fethiye'nin gizli incisi. Akif Usta'yla balık üzerine sohbet etmek de ayrı bir keyif. Eski tarz, samimi, manyağına gerçek balıkçı havası.",
+      "Sahil kenarında, gün batımında, taze balıkla — Fethiye'nin en iyi akşam yemeği adresi. Akif Usta'yla balık üzerine sohbet etmek de ayrı bir keyif.",
     profileImage:
       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300',
   },
   {
-    id: '4',
+    id: '5',
     platform: 'google',
-    name: 'Selin Yılmaz',
-    designation: 'Google · 1 hafta önce',
+    name: 'Ayşe T.',
+    designation: 'Google',
     description:
-      'Çalış sahilinde akşam batımında oturmak başlı başına bir deneyim. Mezeler özellikle çok başarılı, semizotu salatasını unutamıyorum. Servis hızlı ve güleryüzlü.',
+      "Çupra ızgara mükemmeldi, mezeler birbirinden taze. Sahile bakan bahçede oturmak, akşamüstü meltemiyle birlikte yenen bir yemek — Fethiye'de buradan iyisi yok.",
     profileImage:
       'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
   },
   {
-    id: '5',
+    id: '6',
     platform: 'tripadvisor',
-    name: 'James Wilson',
-    designation: 'Tripadvisor · 2 ay önce',
+    name: 'Jason B.',
+    designation: 'Tripadvisor',
     description:
-      'Best fish restaurant in Fethiye. Fresh catch of the day, beautiful sunset view, attentive staff. We came back three times during our stay. Highly recommended.',
+      'Fish was beautifully cooked, the prawns were huge and meaty with a roasted garlic dip. The team was very helpful explaining the dishes. We booked again before we even left.',
     profileImage:
       'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300',
-  },
-  {
-    id: '6',
-    platform: 'instagram',
-    name: 'Defne Aydın',
-    designation: 'Instagram · 5 gün önce',
-    description:
-      'Çupra ızgaranın yanında gelen pilavlı pancar yaprağı dolması bambaşka. Akif Usta gerçek bir balık ustası. Bir akşam yemeği için yeterli sebep.',
-    profileImage:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300',
   },
 ];
 

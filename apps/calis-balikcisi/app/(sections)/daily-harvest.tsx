@@ -29,8 +29,11 @@ export function DailyHarvest() {
               Bugün Tezgâhta
             </h2>
           </div>
-          <p className="text-fg/70 leading-relaxed md:text-right md:max-w-sm md:justify-self-end">
-            Akdeniz&apos;in keyfine bağlı. Günün fiyatı.
+          <p
+            className="font-display text-fg/75 leading-relaxed md:text-right md:max-w-sm md:justify-self-end"
+            style={{ fontFamily: 'var(--serif)' }}
+          >
+            Tezgâh, denizin getirdiğine göre değişir. O yüzden fiyat da, günün ne tuttuğuna göre.
           </p>
         </div>
 

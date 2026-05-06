@@ -35,6 +35,11 @@
   --font-fraunces: 'Kalam', cursive !important;
   --font-newsreader: 'Kalam', cursive !important;
   --serif: 'Kalam', cursive !important;
+  --font-body: 'Kalam', cursive !important;
+  --sans: 'Kalam', cursive !important;
+  --font-inter-tight: 'Kalam', cursive !important;
+  --font-dm-mono: 'Kalam', cursive !important;
+  --font-spectral: 'Kalam', cursive !important;
 }
 
 /* Kalam zaten el yazısı hissi; italic gereksiz — global olarak nötrle. */

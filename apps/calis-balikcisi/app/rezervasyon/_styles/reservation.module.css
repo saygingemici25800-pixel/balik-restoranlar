@@ -67,8 +67,8 @@
   --sea-deep: #2c4a55;
   --rule: rgba(31, 26, 18, 0.18);
   --rule-soft: rgba(31, 26, 18, 0.08);
-  --serif: var(--font-spectral), 'EB Garamond', Georgia, serif;
-  --sans: var(--font-inter-tight), system-ui, -apple-system, sans-serif;
+  --serif: 'Kalam', cursive;
+  --sans: 'Kalam', cursive;
 
   position: relative;
   min-height: 100vh;

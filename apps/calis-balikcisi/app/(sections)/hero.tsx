@@ -23,32 +23,43 @@ export function CalisHero() {
 
       <SiteTopBar className="absolute top-0 left-0 right-0 z-20" />
 
-      <div className="relative z-10 h-full flex flex-col items-center justify-center px-6">
-        <div className="max-w-2xl mx-auto bg-bg/40 backdrop-blur-md border border-fg/10 p-8 md:p-12 text-center">
-          <p className="text-xs uppercase tracking-[0.4em] text-accent mb-8 font-light">
-            Çalış Plajı, Fethiye
-          </p>
-          <h1
-            className="font-display font-bold tracking-[-0.01em] text-fg leading-[1.05]"
-            style={{ fontSize: 'clamp(3.5rem, 8vw, 6rem)' }}
-          >
-            <span className="block">Tezgâhtan</span>
-            <span className="block text-accent">Sofraya</span>
-          </h1>
-          <div className="mt-8 space-y-1 text-fg/70 leading-relaxed text-base md:text-lg">
-            <p>Her sabah denizden, her akşam sofranıza.</p>
-            <p>Akif Usta&apos;nın elinden, 1987&apos;den beri.</p>
-          </div>
-          <Link href="/menu" className="relative inline-block pb-1 mt-10">
-            <span className="text-xs uppercase tracking-[0.3em] text-accent">
-              Sofraya Göz At
-            </span>
-            <span
-              aria-hidden="true"
-              className="absolute left-0 bottom-0 h-px w-full bg-accent"
-            />
-          </Link>
+      <div className="relative z-10 h-full flex flex-col items-center justify-center px-6 text-center">
+        <p
+          className="text-xs uppercase tracking-[0.4em] text-accent mb-8 font-light"
+          style={{ textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}
+        >
+          Çalış Plajı, Fethiye
+        </p>
+        <h1
+          className="font-display font-bold tracking-[-0.01em] text-fg leading-[1.05]"
+          style={{
+            fontSize: 'clamp(3.5rem, 8vw, 6rem)',
+            textShadow: '0 4px 24px rgba(0,0,0,0.5)',
+          }}
+        >
+          <span className="block">Tezgâhtan</span>
+          <span className="block text-accent">Sofraya</span>
+        </h1>
+        <div
+          className="mt-8 space-y-1 text-fg/85 leading-relaxed text-base md:text-lg"
+          style={{ textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}
+        >
+          <p>Her sabah denizden, her akşam sofranıza.</p>
+          <p>Akif Usta&apos;nın elinden, 1987&apos;den beri.</p>
         </div>
+        <Link
+          href="/menu"
+          className="relative inline-block pb-1 mt-10"
+          style={{ textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}
+        >
+          <span className="text-xs uppercase tracking-[0.3em] text-accent">
+            Sofraya Göz At
+          </span>
+          <span
+            aria-hidden="true"
+            className="absolute left-0 bottom-0 h-px w-full bg-accent"
+          />
+        </Link>
       </div>
 
       <div

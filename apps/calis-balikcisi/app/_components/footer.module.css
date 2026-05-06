@@ -10,7 +10,14 @@
   border-color: color-mix(in srgb, currentColor 14%, transparent);
   color: inherit;
   background: transparent;
-  font-family: var(--font-body, system-ui, sans-serif);
+  font-family: var(--font-handwritten);
+}
+
+.col p,
+.col a {
+  font-family: var(--font-handwritten);
+  font-weight: 300;
+  letter-spacing: 0.02em;
 }
 
 .tagline {

@@ -133,7 +133,7 @@
 }
 
 .nameText {
-  font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
+  font-family: var(--font-display, 'Kalam', cursive);
   font-size: 1.3rem;
   font-weight: 500;
   line-height: 1;

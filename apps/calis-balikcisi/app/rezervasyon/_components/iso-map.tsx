@@ -402,7 +402,7 @@ function FlatTable({
         y={y + 1}
         textAnchor="middle"
         dominantBaseline="middle"
-        fontFamily="var(--font-spectral), Spectral, Georgia, serif"
+        fontFamily="var(--font-spectral), 'Kalam', cursive"
         fontStyle="italic"
         fontSize={isMobile ? 12 : 9}
         fill="currentColor"
