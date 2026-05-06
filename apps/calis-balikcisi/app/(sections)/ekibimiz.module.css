@@ -13,9 +13,9 @@
 
 .eyebrow {
   display: block;
-  font-family: var(--font-body, system-ui, sans-serif);
+  font-family: var(--font-handwritten);
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 300;
   letter-spacing: 0.4em;
   text-transform: uppercase;
   color: var(--color-accent, #d4a259);
@@ -23,10 +23,11 @@
 
 .title {
   margin: 24px 0 0;
-  font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
+  font-family: var(--font-display, 'Kalam', cursive);
   font-size: clamp(2.5rem, 5vw, 3.75rem);
   line-height: 1.05;
-  font-weight: 400;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   color: var(--paper, #f3ead8);
 }
 
@@ -237,7 +238,8 @@
 }
 
 .modalRole {
-  font-family: var(--font-body, system-ui, sans-serif);
+  font-family: var(--font-handwritten);
+  font-weight: 300;
   font-size: 0.72rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -246,8 +248,10 @@
 }
 
 .modalName {
-  font-family: var(--font-display, 'Cormorant Garamond', Georgia, serif);
-  font-style: italic;
+  font-family: var(--font-display, 'Kalam', cursive);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.01em;
   font-size: 2.2rem;
   margin: 8px 0 0;
   color: var(--paper, #f3ead8);

@@ -20,7 +20,7 @@ const INPUT_CLASS =
   'w-full bg-transparent border-0 border-b border-fg/30 focus:border-accent focus:outline-none py-2 text-fg placeholder:text-fg/40';
 
 const LABEL_CLASS =
-  'block text-[11px] md:text-xs uppercase tracking-wider text-fg/70 mb-1.5 md:mb-2';
+  'block text-[11px] md:text-xs uppercase tracking-wider text-fg/70 mb-1.5 md:mb-2 font-light';
 
 export function ContactForm() {
   const [formData, setFormData] = useState<FormData>(INITIAL);
@@ -43,10 +43,10 @@ export function ContactForm() {
   return (
     <section className="border-t border-fg/10 py-24 md:py-32 px-6">
       <div className="max-w-2xl mx-auto">
-        <p className="text-xs uppercase tracking-[0.3em] text-accent text-center mb-6">
+        <p className="text-xs uppercase tracking-[0.3em] text-accent text-center mb-6 font-light">
           Inquiries
         </p>
-        <h2 className="font-display italic text-3xl md:text-4xl text-fg text-center mb-12">
+        <h2 className="font-display font-bold tracking-[-0.01em] text-3xl md:text-4xl text-fg text-center mb-12">
           Inquiries
         </h2>
 
@@ -116,7 +116,7 @@ export function ContactForm() {
           <button
             type="submit"
             disabled={!isValid}
-            className="w-full border border-accent text-accent py-3 md:py-4 px-6 text-xs md:text-sm uppercase tracking-wider md:tracking-[0.3em] transition-colors hover:bg-accent hover:text-bg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-accent"
+            className="w-full border border-accent text-accent py-3 md:py-4 px-6 text-xs md:text-sm uppercase tracking-wider md:tracking-[0.3em] font-bold transition-colors hover:bg-accent hover:text-bg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-accent"
           >
             Send Message
           </button>

@@ -86,7 +86,7 @@ export function SiteTopBar({ className = '' }: Props) {
           href="/rezervasyon"
           className="relative inline-block justify-self-end pb-1"
         >
-          <span className="text-[0.6rem] md:text-xs uppercase tracking-[0.15em] md:tracking-[0.3em] text-accent whitespace-nowrap">
+          <span className="text-[0.6rem] md:text-xs uppercase tracking-[0.15em] md:tracking-[0.3em] text-accent whitespace-nowrap font-light">
             Rezervasyon
           </span>
           <span

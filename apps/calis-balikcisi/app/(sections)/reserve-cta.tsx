@@ -21,7 +21,7 @@ export function ReserveCta() {
           <path d="M12 15v6" />
           <path d="M9 21h6" />
         </svg>
-        <h2 className="mt-8 font-display text-4xl md:text-6xl leading-tight text-fg">
+        <h2 className="mt-8 font-display font-bold tracking-[-0.01em] text-4xl md:text-6xl leading-tight text-fg">
           Sahil Akşamınızı Ayırt
         </h2>
         <p className="mt-8 text-fg/70 leading-relaxed max-w-md mx-auto">
@@ -29,7 +29,7 @@ export function ReserveCta() {
         </p>
         <Link
           href="/rezervasyon"
-          className="inline-block mt-10 border border-fg/80 text-fg hover:bg-fg hover:text-bg transition-colors px-10 py-4 text-xs uppercase tracking-[0.3em]"
+          className="inline-block mt-10 border border-fg/80 text-fg hover:bg-fg hover:text-bg transition-colors px-10 py-4 text-xs uppercase tracking-[0.3em] font-bold"
         >
           Masa Ayırt
         </Link>

@@ -12,7 +12,8 @@
 
 .eyebrow {
   display: block;
-  font-family: var(--font-body);
+  font-family: var(--font-handwritten);
+  font-weight: 300;
   font-size: 0.72rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -22,7 +23,9 @@
 
 .heading {
   font-family: var(--font-display);
-  font-style: italic;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.01em;
   font-size: clamp(2rem, 4vw, 2.8rem);
   color: var(--color-fg);
   line-height: 1.1;
@@ -88,7 +91,8 @@
 
 .time {
   display: block;
-  font-family: var(--font-body);
+  font-family: var(--font-handwritten);
+  font-weight: 300;
   font-size: 0.85rem;
   letter-spacing: 0.2em;
   color: var(--color-accent);
@@ -97,7 +101,9 @@
 
 .title {
   font-family: var(--font-display);
-  font-style: italic;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.01em;
   font-size: clamp(2.2rem, 4.5vw, 3.4rem);
   line-height: 1.1;
   color: var(--color-fg);
@@ -132,7 +138,7 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-style: italic;
+  font-style: normal;
   font-size: 1.1rem;
   color: rgba(243, 234, 216, 0.45);
 }

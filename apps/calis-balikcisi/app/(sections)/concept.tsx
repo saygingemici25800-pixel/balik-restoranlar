@@ -15,7 +15,7 @@ export function Concept() {
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center">
           <div className="aspect-[4/5] bg-fg/5" aria-hidden="true" />
           <div>
-            <h2 className="font-display text-4xl md:text-5xl leading-tight text-fg">
+            <h2 className="font-display font-bold tracking-[-0.01em] text-4xl md:text-5xl leading-tight text-fg">
               Denizin En Yalın Hâli
             </h2>
             <div className="mt-16 space-y-6 text-fg/80 leading-relaxed">

@@ -2,6 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Kalam (handwritten) — Light 300, Regular 400, Bold 700 */
+@font-face {
+  font-family: 'Kalam';
+  src: url('/fonts/Kalam-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Kalam';
+  src: url('/fonts/Kalam-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Kalam';
+  src: url('/fonts/Kalam-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Kalam siteye her yerde uygulanır. next/font html-class'ı (Cormorant Garamond,
+   Fraunces, Newsreader) yüksek specificity ile --font-* setlediği için !important şart. */
+:root {
+  --font-handwritten: 'Kalam', cursive;
+  --font-display: 'Kalam', cursive !important;
+  --font-fraunces: 'Kalam', cursive !important;
+  --font-newsreader: 'Kalam', cursive !important;
+  --serif: 'Kalam', cursive !important;
+}
+
+/* Kalam zaten el yazısı hissi; italic gereksiz — global olarak nötrle. */
+[class*="serif"],
+[style*="serif"],
+[class*="Italic"],
+[class*="italic"] {
+  font-style: normal !important;
+}
+
+/* Kalam varyant utility'leri */
+.kalam-regular {
+  font-family: var(--font-handwritten);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  font-style: normal;
+}
+
+.kalam-light {
+  font-family: var(--font-handwritten);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  font-size: 0.96em;
+  font-style: normal;
+}
+
+.kalam-bold {
+  font-family: var(--font-handwritten);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-style: normal;
+}
+
 html,
 body {
   background-color: var(--color-bg);

@@ -6,10 +6,10 @@ export function ContactHero() {
         className="absolute inset-0 bg-bg/40"
       />
       <div className="relative h-full flex flex-col items-center justify-center text-center px-6">
-        <p className="text-xs uppercase tracking-[0.4em] text-accent">
+        <p className="text-xs uppercase tracking-[0.4em] text-accent font-light">
           Get in touch
         </p>
-        <h1 className="mt-4 md:mt-6 font-display italic text-6xl md:text-7xl leading-tight text-fg">
+        <h1 className="mt-4 md:mt-6 font-display font-bold tracking-[-0.01em] text-6xl md:text-7xl leading-tight text-fg">
           Contact
         </h1>
         <span

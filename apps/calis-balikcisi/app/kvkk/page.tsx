@@ -17,7 +17,7 @@ export default function KvkkPage() {
         lineHeight: 1.7,
       }}
     >
-      <h1 style={{ fontStyle: 'italic', fontSize: '2rem', marginBottom: 24 }}>
+      <h1 style={{ fontWeight: 700, letterSpacing: '-0.01em', fontSize: '2rem', marginBottom: 24 }}>
         Kişisel Verilerin Korunması Aydınlatma Metni
       </h1>
 
@@ -28,7 +28,7 @@ export default function KvkkPage() {
         verilere ilişkin sizi aydınlatmak isteriz.
       </p>
 
-      <h2 style={{ marginTop: 32, fontSize: '1.3rem', fontStyle: 'italic' }}>
+      <h2 style={{ marginTop: 32, fontSize: '1.3rem', fontWeight: 700, letterSpacing: '-0.01em' }}>
         Toplanan Veriler
       </h2>
       <p>
@@ -36,7 +36,7 @@ export default function KvkkPage() {
         tercihleriniz (masa, tarih, saat, kişi sayısı) tarafımızca kaydedilir.
       </p>
 
-      <h2 style={{ marginTop: 32, fontSize: '1.3rem', fontStyle: 'italic' }}>
+      <h2 style={{ marginTop: 32, fontSize: '1.3rem', fontWeight: 700, letterSpacing: '-0.01em' }}>
         Verilerin Kullanım Amacı
       </h2>
       <p>
@@ -45,7 +45,7 @@ export default function KvkkPage() {
         paylaşılmaz.
       </p>
 
-      <h2 style={{ marginTop: 32, fontSize: '1.3rem', fontStyle: 'italic' }}>
+      <h2 style={{ marginTop: 32, fontSize: '1.3rem', fontWeight: 700, letterSpacing: '-0.01em' }}>
         Saklama Süresi
       </h2>
       <p>
@@ -53,7 +53,7 @@ export default function KvkkPage() {
         doğrultusunda 1 yıl süreyle saklanır.
       </p>
 
-      <h2 style={{ marginTop: 32, fontSize: '1.3rem', fontStyle: 'italic' }}>
+      <h2 style={{ marginTop: 32, fontSize: '1.3rem', fontWeight: 700, letterSpacing: '-0.01em' }}>
         Haklarınız
       </h2>
       <p>
@@ -62,7 +62,7 @@ export default function KvkkPage() {
         info@calisbalikcisi.com adresinden bize ulaşabilirsiniz.
       </p>
 
-      <p style={{ marginTop: 48, fontStyle: 'italic', opacity: 0.7 }}>
+      <p style={{ marginTop: 48, fontWeight: 300, letterSpacing: '0.04em', opacity: 0.7 }}>
         Son güncelleme: Mayıs 2026
       </p>
     </main>

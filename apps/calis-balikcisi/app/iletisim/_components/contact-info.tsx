@@ -31,10 +31,10 @@ export function ContactInfo() {
     <section className="max-w-7xl mx-auto px-6 md:px-10 py-24 md:py-32">
       <div className="grid md:grid-cols-2 gap-16 md:gap-24">
         <div>
-          <p className="text-xs uppercase tracking-[0.3em] text-accent mb-6">
+          <p className="text-xs uppercase tracking-[0.3em] text-accent mb-6 font-light">
             Reach Out
           </p>
-          <h2 className="font-display italic text-3xl md:text-4xl text-fg mb-12">
+          <h2 className="font-display font-bold tracking-[-0.01em] text-3xl md:text-4xl text-fg mb-12">
             Reach Out
           </h2>
 
@@ -83,10 +83,10 @@ export function ContactInfo() {
         </div>
 
         <div>
-          <p className="text-xs uppercase tracking-[0.3em] text-accent mb-6">
+          <p className="text-xs uppercase tracking-[0.3em] text-accent mb-6 font-light">
             Find Us
           </p>
-          <h2 className="font-display italic text-3xl md:text-4xl text-fg mb-12">
+          <h2 className="font-display font-bold tracking-[-0.01em] text-3xl md:text-4xl text-fg mb-12">
             Find Us
           </h2>
 

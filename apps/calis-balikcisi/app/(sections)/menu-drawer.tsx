@@ -35,7 +35,7 @@ export function MenuDrawer({ isOpen }: Props) {
             aria-current={active ? 'page' : undefined}
             tabIndex={isOpen ? 0 : -1}
             aria-hidden={!isOpen}
-            className={`font-display text-lg md:text-xl lg:text-2xl transition-all duration-700 ease-out ${
+            className={`font-display font-bold tracking-[-0.01em] text-lg md:text-xl lg:text-2xl transition-all duration-700 ease-out ${
               active ? 'text-accent' : 'text-fg hover:text-accent'
             } ${
               isOpen

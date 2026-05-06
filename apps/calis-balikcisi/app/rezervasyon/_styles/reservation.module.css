@@ -123,7 +123,7 @@
 }
 .intro h1 {
   font-family: var(--serif);
-  font-weight: 400;
+  font-weight: 700;
   letter-spacing: -0.01em;
   margin: 0;
   font-size: clamp(1.6rem, 3vw, 2.4rem);
@@ -132,11 +132,11 @@
   color: var(--ink);
 }
 .intro h1 .italic {
-  font-style: italic;
+  font-style: normal;
 }
 .intro .subline {
   font-family: var(--serif);
-  font-style: italic;
+  font-style: normal;
   color: var(--ink-soft);
   margin: 6px 0 0;
   font-size: 0.9rem;
@@ -148,7 +148,7 @@
   gap: 6px;
   margin-top: 6px;
   font-family: var(--serif);
-  font-style: italic;
+  font-style: normal;
   color: var(--ink-mute);
   font-size: 0.82rem;
   text-decoration: underline;
@@ -172,7 +172,7 @@
   background: transparent;
   border: 0;
   font-family: var(--serif);
-  font-style: italic;
+  font-style: normal;
   font-size: 0.95rem;
   color: var(--ink-soft);
   text-align: center;
@@ -539,7 +539,7 @@
   /* Başlık ile zone aynı satırda küçük italic */
   .metaInline {
     font-family: var(--serif);
-    font-style: italic;
+    font-style: normal;
     font-weight: 400;
     font-size: 0.78rem;
     color: var(--ink-mute);
@@ -644,7 +644,7 @@
 
 .metaLine {
   font-family: var(--serif);
-  font-style: italic;
+  font-style: normal;
   font-size: 0.92rem;
   color: var(--ink-soft);
   margin: 4px 0 0;
@@ -727,7 +727,7 @@
 }
 .input::placeholder {
   color: var(--ink-faint);
-  font-style: italic;
+  font-style: normal;
 }
 .input:focus {
   border-bottom-color: var(--ink);
@@ -745,7 +745,7 @@
 }
 .summaryRow .key {
   color: var(--ink-mute);
-  font-style: italic;
+  font-style: normal;
   font-size: 0.9rem;
 }
 .summaryRow .val {
@@ -778,7 +778,7 @@
 
 .fineprint {
   font-family: var(--serif);
-  font-style: italic;
+  font-style: normal;
   font-size: 0.82rem;
   color: var(--ink-mute);
   line-height: 1.5;
@@ -790,7 +790,7 @@
   align-items: center;
   gap: 10px;
   font-family: var(--serif);
-  font-style: italic;
+  font-style: normal;
   font-size: 0.92rem;
   color: var(--ink);
   cursor: pointer;
@@ -823,7 +823,7 @@
   align-items: flex-start;
   gap: 10px;
   font-family: var(--serif);
-  font-style: italic;
+  font-style: normal;
   font-size: 0.85rem;
   color: var(--ink-soft);
   cursor: pointer;
