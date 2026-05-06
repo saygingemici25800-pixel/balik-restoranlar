@@ -6,6 +6,14 @@
 
 ---
 
+# Çalışma Kuralları
+
+- Bu projede sadece verilen dosya ve component üzerinde çalış.
+- Tüm projeyi analiz etme.
+- Gereksiz dosya okuma.
+
+---
+
 # CLAUDE.md — Monorepo Kök
 
 Bu dosya Claude Code için proje genelinde geçerli talimatları içerir. Alt dizinlerdeki `CLAUDE.md` dosyaları bu dosyayı ezer, ama ezmeyen konular burada bağlayıcıdır.
