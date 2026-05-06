@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Çalış Balıkçısı — Dijital Dönüşüm Projesi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f3ead8;
+  --paper-deep: #ead9b8;
+  --ink: #1f1a12;
+  --ink-soft: #3b3326;
+  --sun: #d97a3c;
+  --sun-deep: #b85f28;
+  --sea: #4a6f7a;
+  --sea-deep: #2f4f5a;
+  --serif: 'Kalam', cursive;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  position: relative;
+}
+
+/* Slide container — yatay scroll snap */
+.deck {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+.deck::-webkit-scrollbar { display: none; }
+
+.slide {
+  flex: 0 0 100vw;
+  width: 100vw;
+  height: 100vh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(40px, 6vh, 80px) clamp(40px, 7vw, 120px);
+  overflow: hidden;
+}
+
+/* Slayt numarası göstergesi */
+.slide-num {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  color: var(--ink);
+  opacity: 0.45;
+}
+
+.slide-tag {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  font-size: 0.7rem;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  color: var(--sun);
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+/* Navigation dots */
+.dots {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 100;
+  padding: 12px 18px;
+  background: rgba(31, 26, 18, 0.04);
+  backdrop-filter: blur(10px);
+  border-radius: 999px;
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink);
+  opacity: 0.25;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  border: none;
+}
+.dot.active {
+  opacity: 1;
+  width: 28px;
+  border-radius: 4px;
+  background: var(--sun);
+}
+
+/* Klavye yardım */
+.kbd-hint {
+  position: fixed;
+  bottom: 28px;
+  right: 32px;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+  opacity: 0.4;
+  z-index: 100;
+  font-weight: 300;
+}
+
+/* === SLAYT 1: KAPAK === */
+.cover {
+  background: linear-gradient(135deg, var(--paper) 0%, var(--paper-deep) 100%);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+.cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at top right, rgba(217, 122, 60, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at bottom left, rgba(74, 111, 122, 0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.cover-eyebrow {
+  font-size: 0.85rem;
+  font-weight: 300;
+  letter-spacing: 0.4em;
+  color: var(--sun);
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  position: relative;
+}
+.cover-title {
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 24px;
+  max-width: 14ch;
+  position: relative;
+}
+.cover-subtitle {
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+  margin-bottom: 60px;
+  max-width: 50ch;
+  line-height: 1.5;
+  position: relative;
+}
+.cover-meta {
+  display: flex;
+  gap: 48px;
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  color: var(--ink);
+  text-transform: uppercase;
+  font-weight: 300;
+  opacity: 0.65;
+  position: relative;
+}
+.cover-meta span::before {
+  content: '◆ ';
+  color: var(--sun);
+  margin-right: 6px;
+}
+
+/* === SLAYT 2: MEVCUT DURUM === */
+.audit-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-top: 60px;
+  flex: 1;
+  align-content: start;
+}
+.audit-card {
+  background: rgba(31, 26, 18, 0.04);
+  border: 1px solid rgba(31, 26, 18, 0.1);
+  border-radius: 16px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.audit-card-platform {
+  font-size: 0.7rem;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  color: var(--sun);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.audit-card-metric {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+.audit-card-metric .unit {
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: var(--ink-soft);
+  margin-left: 4px;
+}
+.audit-card-label {
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  margin-bottom: 20px;
+  font-weight: 400;
+}
+.audit-card-state {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid rgba(31, 26, 18, 0.08);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--ink);
+  font-weight: 400;
+}
+.audit-card-state .badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+.badge.crit { background: rgba(217, 122, 60, 0.15); color: var(--sun-deep); }
+.badge.opp { background: rgba(74, 111, 122, 0.15); color: var(--sea-deep); }
+.badge.ok { background: rgba(31, 26, 18, 0.08); color: var(--ink); }
+
+.section-title {
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin-bottom: 18px;
+  max-width: 22ch;
+}
+.section-lede {
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  max-width: 60ch;
+  letter-spacing: 0.01em;
+}
+
+/* === SLAYT 3: STRATEJİK ÇERÇEVE === */
+.frame-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  margin-top: 60px;
+  flex: 1;
+  align-items: center;
+}
+.frame-quote {
+  position: relative;
+  padding-left: 40px;
+}
+.frame-quote::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 12px;
+  width: 3px;
+  height: calc(100% - 24px);
+  background: var(--sun);
+}
+.frame-quote-text {
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--ink);
+  margin-bottom: 32px;
+}
+.frame-quote-attr {
+  font-size: 0.85rem;
+  letter-spacing: 0.25em;
+  font-weight: 300;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+
+.frame-ratios {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.ratio-row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  align-items: center;
+  gap: 24px;
+}
+.ratio-num {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--sun);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.ratio-label {
+  font-size: 1rem;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.ratio-label strong { font-weight: 700; }
+.ratio-label small {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  font-weight: 300;
+}
+
+.platform-row {
+  margin-top: 60px;
+  display: flex;
+  gap: 36px;
+  flex-wrap: wrap;
+  padding-top: 36px;
+  border-top: 1px solid rgba(31, 26, 18, 0.1);
+}
+.platform-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  font-weight: 400;
+}
+.platform-pill .dot-status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.dot-status.exists { background: var(--sun); }
+.dot-status.new { background: var(--sea); }
+
+/* === SLAYT 4: KAPSAM === */
+.scope-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 50px;
+  flex: 1;
+}
+.scope-card {
+  background: var(--paper-deep);
+  border-radius: 12px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.scope-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--sun);
+  opacity: 0.6;
+}
+.scope-card-num {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--sun);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.scope-card-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+.scope-card-desc {
+  font-size: 0.85rem;
+  font-weight: 300;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+/* === SLAYT 5: İÇERİK MİMARİSİ === */
+.matrix {
+  margin-top: 50px;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+.pillars {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.pillar {
+  display: grid;
+  grid-template-columns: 50px 1fr auto;
+  gap: 20px;
+  padding: 18px 24px;
+  background: rgba(31, 26, 18, 0.03);
+  border-radius: 10px;
+  align-items: center;
+  border-left: 3px solid var(--sun);
+}
+.pillar-num {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--sun);
+  line-height: 1;
+}
+.pillar-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.pillar-desc {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: var(--ink-soft);
+}
+.pillar-freq {
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.rhythm {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 28px;
+  border-radius: 12px;
+}
+.rhythm-title {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--sun);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.rhythm-stat {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.rhythm-label {
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: rgba(243, 234, 216, 0.7);
+  margin-bottom: 20px;
+}
+.rhythm-divider {
+  height: 1px;
+  background: rgba(243, 234, 216, 0.2);
+  margin: 16px 0;
+}
+.rhythm-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin: 6px 0;
+}
+.rhythm-row span:first-child {
+  color: rgba(243, 234, 216, 0.6);
+  font-weight: 300;
+}
+.rhythm-row span:last-child {
+  font-weight: 700;
+}
+
+/* === SLAYT 6: TAKVİM === */
+.timeline {
+  margin-top: 50px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.month-row {
+  display: grid;
+  grid-template-columns: 90px 180px 1fr 100px;
+  gap: 24px;
+  padding: 22px 28px;
+  background: rgba(31, 26, 18, 0.03);
+  border-radius: 12px;
+  align-items: center;
+  border-left: 4px solid var(--sun);
+  transition: all 0.4s ease;
+}
+.month-row:hover {
+  background: rgba(217, 122, 60, 0.08);
+  transform: translateX(8px);
+}
+.month-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.month-name small {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+  font-weight: 300;
+  margin-top: 2px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.month-theme {
+  font-size: 0.95rem;
+  color: var(--sun-deep);
+  font-weight: 700;
+  font-style: normal;
+}
+.month-actions {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  font-weight: 300;
+  line-height: 1.5;
+}
+.month-intensity {
+  display: flex;
+  gap: 3px;
+  justify-self: end;
+}
+.month-intensity-bar {
+  width: 6px;
+  height: 24px;
+  background: var(--ink);
+  opacity: 0.15;
+  border-radius: 2px;
+}
+.month-intensity-bar.on {
+  background: var(--sun);
+  opacity: 1;
+}
+
+/* === SLAYT 7: REKLAM === */
+.ads-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 60px;
+  margin-top: 50px;
+  flex: 1;
+  align-items: start;
+}
+.ads-philosophy {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 36px;
+  border-radius: 14px;
+  position: relative;
+}
+.ads-philosophy::before {
+  content: '"';
+  position: absolute;
+  top: -10px;
+  left: 30px;
+  font-size: 8rem;
+  color: var(--sun);
+  opacity: 0.4;
+  line-height: 1;
+  font-weight: 700;
+}
+.ads-philosophy-text {
+  font-size: 1.3rem;
+  font-weight: 400;
+  line-height: 1.5;
+  margin-top: 30px;
+  position: relative;
+}
+.ads-philosophy-rules {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(243, 234, 216, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ads-rule {
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: rgba(243, 234, 216, 0.85);
+  display: flex;
+  gap: 12px;
+}
+.ads-rule::before {
+  content: '◆';
+  color: var(--sun);
+  flex-shrink: 0;
+}
+
+.ads-segments {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.segment {
+  padding: 20px 24px;
+  background: var(--paper-deep);
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 20px;
+}
+.segment-name {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.segment-detail {
+  font-size: 0.78rem;
+  font-weight: 300;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+.segment-share {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--sun);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* === SLAYT 8: KPI === */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 50px;
+  flex: 1;
+}
+.kpi-card {
+  background: linear-gradient(135deg, var(--paper-deep) 0%, var(--paper) 100%);
+  border-radius: 14px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(31, 26, 18, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  right: -40px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(217, 122, 60, 0.12) 0%, transparent 70%);
+}
+.kpi-platform {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--sun);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.kpi-from-to {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 12px;
+  position: relative;
+}
+.kpi-from {
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--ink-soft);
+  text-decoration: line-through;
+}
+.kpi-arrow {
+  color: var(--sun);
+  font-weight: 700;
+}
+.kpi-to {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.kpi-label {
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--ink-soft);
+  line-height: 1.4;
+  position: relative;
+}
+.kpi-card.featured {
+  background: var(--ink);
+  color: var(--paper);
+}
+.kpi-card.featured .kpi-platform { color: var(--sun); }
+.kpi-card.featured .kpi-from { color: rgba(243, 234, 216, 0.5); }
+.kpi-card.featured .kpi-to { color: var(--paper); }
+.kpi-card.featured .kpi-label { color: rgba(243, 234, 216, 0.7); }
+
+/* === SLAYT 9: OPERASYON === */
+.ops-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  margin-top: 50px;
+  flex: 1;
+  align-items: start;
+}
+.ops-roles {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.ops-role {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 18px;
+  padding: 18px 22px;
+  background: rgba(31, 26, 18, 0.03);
+  border-radius: 10px;
+  align-items: center;
+}
+.ops-role-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--sun);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--paper);
+  flex-shrink: 0;
+}
+.ops-role-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.ops-role-desc {
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  font-weight: 300;
+  line-height: 1.4;
+}
+
+.ops-cadence {
+  background: var(--paper-deep);
+  padding: 32px;
+  border-radius: 14px;
+}
+.ops-cadence-title {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--sun);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.cadence-row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 20px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(31, 26, 18, 0.1);
+  align-items: center;
+}
+.cadence-row:last-child { border-bottom: none; }
+.cadence-when {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--sun-deep);
+  letter-spacing: 0.05em;
+}
+.cadence-what {
+  font-size: 0.85rem;
+  color: var(--ink);
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+/* === SLAYT 10 ve 11: WEB SİTESİ + REZERVASYON === */
+.product-slide {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0;
+  flex-direction: row;
+  align-items: stretch;
+}
+.product-content {
+  flex: 0 0 38%;
+  padding: clamp(40px, 6vh, 80px) clamp(30px, 4vw, 60px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+.product-content .slide-tag { color: var(--sun); }
+.product-content .slide-num { color: var(--paper); opacity: 0.4; }
+.product-eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--sun);
+  font-weight: 300;
+  text-transform: uppercase;
+  margin-top: 30px;
+  margin-bottom: 18px;
+}
+.product-title {
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 700;
+  color: var(--paper);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  margin-bottom: 24px;
+}
+.product-pitch {
+  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgba(243, 234, 216, 0.85);
+  margin-bottom: 30px;
+}
+.product-pitch strong {
+  color: var(--sun);
+  font-weight: 700;
+}
+.product-points {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 12px;
+}
+.product-point {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 14px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: rgba(243, 234, 216, 0.92);
+  font-weight: 300;
+}
+.product-point::before {
+  content: '◆';
+  color: var(--sun);
+  margin-top: 2px;
+}
+.product-cta {
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(243, 234, 216, 0.15);
+}
+.product-cta-quote {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--paper);
+  line-height: 1.4;
+  margin-bottom: 8px;
+  font-style: normal;
+}
+.product-cta-attr {
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  color: var(--sun);
+  font-weight: 300;
+  text-transform: uppercase;
+}
+.product-iframe-wrap {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: var(--paper);
+}
+.product-iframe-wrap::before {
+  content: 'CANLI';
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  background: var(--sun);
+  color: var(--paper);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.product-iframe-wrap::after {
+  content: '';
+  position: absolute;
+  top: 22px;
+  right: calc(16px + 50px);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--paper);
+  z-index: 11;
+  animation: pulse 2s ease infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.product-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* === Mobile fallback === */
+@media (max-width: 900px) {
+  html, body { overflow: auto; }
+  .deck {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+  .slide {
+    flex: 0 0 auto;
+    height: auto;
+    min-height: 100vh;
+    padding: 60px 24px;
+  }
+  .audit-grid,
+  .scope-grid,
+  .kpi-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .frame-layout,
+  .ads-layout,
+  .ops-layout,
+  .matrix {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+  .product-slide {
+    flex-direction: column;
+  }
+  .product-content {
+    flex: 0 0 auto;
+  }
+  .product-iframe-wrap {
+    height: 60vh;
+  }
+  .month-row {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- SLAYT 1: KAPAK -->
+  <section class="slide cover" data-slide="1">
+    <span class="slide-num">01 / 11</span>
+    <span class="cover-eyebrow">Sosyal Medya · Reklam · Marka Yönetimi</span>
+    <h1 class="cover-title">Çalış Balıkçısı<br><em style="font-weight:400; color:var(--sun); font-style:normal;">Dijital Dönüşüm Projesi</em></h1>
+    <p class="cover-subtitle">37 yıllık bir balıkçının hikayesi var — sahilde, ateşin başında. Ama dijitalde bu hikaye, hak ettiği gibi anlatılmıyor. Birlikte oturup, baştan kuralım istedik.</p>
+    <div class="cover-meta">
+      <span>Mayıs — Ekim 2026</span>
+      <span>6 Platform</span>
+      <span>6 Aylık Sezon</span>
+    </div>
+  </section>
+
+  <!-- SLAYT 2: MEVCUT DURUM -->
+  <section class="slide" data-slide="2">
+    <span class="slide-tag">01 — MEVCUT DURUM</span>
+    <span class="slide-num">02 / 11</span>
+    <h2 class="section-title">Üç hesabınıza tek tek baktım. Bir tanesi yangında.</h2>
+    <p class="section-lede">Açık konuşmak gerekirse — durumlar çok farklı. Birini koruyacağız, birini uyandıracağız, biriyle yangın söndüreceğiz. Plan da ona göre.</p>
+
+    <div class="audit-grid">
+      <div class="audit-card">
+        <div class="audit-card-platform">Tripadvisor</div>
+        <div class="audit-card-metric">3.8<span class="unit">/5</span></div>
+        <div class="audit-card-label">56 yorum · #334 / 950 Fethiye</div>
+        <div class="audit-card-state">
+          <span class="badge crit">YANGIN</span><br>
+          Hesap sahiplenilmemiş — ilk gün halletmeliyiz. "Turist için değil" diyen yorumlar tekrar tekrar geliyor. 6 ayda 4.4'e çıkaracağız, söz.
+        </div>
+      </div>
+
+      <div class="audit-card">
+        <div class="audit-card-platform">Instagram</div>
+        <div class="audit-card-metric">28.9<span class="unit">B</span></div>
+        <div class="audit-card-label">596 gönderi · 256 takip</div>
+        <div class="audit-card-state">
+          <span class="badge opp">FIRSAT</span><br>
+          Açıkçası bu rakamı görünce şaşırdım — büyük bir kitle var, ama uyuyor. Bio jenerik, gönderiler dağınık. Sıfırdan kurmaya gerek yok, uyandırmak yeter.
+        </div>
+      </div>
+
+      <div class="audit-card">
+        <div class="audit-card-platform">Google</div>
+        <div class="audit-card-metric">4.4<span class="unit">/5</span></div>
+        <div class="audit-card-label">~1.279 yorum · yerli güçlü</div>
+        <div class="audit-card-state">
+          <span class="badge ok">SAĞLAM</span><br>
+          İşte burada Çalış Balıkçısı'nın gerçek hikayesi var. Yerli müşteri seviyor — bu en sağlam sermayeniz. Aktif yönetim eklenirse, SEO katlanır.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLAYT 3: STRATEJİK ÇERÇEVE -->
+  <section class="slide" data-slide="3">
+    <span class="slide-tag">02 — STRATEJİK ÇERÇEVE</span>
+    <span class="slide-num">03 / 11</span>
+    <h2 class="section-title">Yerli sizi seviyor. Turist sizi tanımıyor. Köprüyü biz kurarız.</h2>
+    <p class="section-lede">Aslında zor bir problem değil. Marka var, ses tonu net, hikaye sağlam. Sadece bu hikaye dijitalde dolaşmıyor. İçerikle, dille, doğru kanallarla bunu çözeriz.</p>
+
+    <div class="frame-layout">
+      <div class="frame-quote">
+        <p class="frame-quote-text">Az müdahale,<br>çok ihtimam.</p>
+        <p class="frame-quote-attr">— Marka Manifestosu</p>
+      </div>
+      <div class="frame-ratios">
+        <div class="ratio-row">
+          <div class="ratio-num">70%</div>
+          <div class="ratio-label">
+            <strong>Turist segmenti</strong>
+            <small>Avrupa + Türk turist · Mayıs-Eylül pik</small>
+          </div>
+        </div>
+        <div class="ratio-row">
+          <div class="ratio-num">30%</div>
+          <div class="ratio-label">
+            <strong>Yerel sadakat</strong>
+            <small>Fethiye + Muğla · yıl boyu, kış kritik</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="platform-row">
+      <div class="platform-pill"><div class="dot-status exists"></div> Tripadvisor — claim + reset</div>
+      <div class="platform-pill"><div class="dot-status exists"></div> Google — koru + büyüt</div>
+      <div class="platform-pill"><div class="dot-status exists"></div> Instagram — reset</div>
+      <div class="platform-pill"><div class="dot-status exists"></div> Facebook — reset</div>
+      <div class="platform-pill"><div class="dot-status new"></div> YouTube — sıfırdan</div>
+      <div class="platform-pill"><div class="dot-status new"></div> TikTok — sıfırdan</div>
+    </div>
+  </section>
+
+  <!-- SLAYT 4: KAPSAM -->
+  <section class="slide" data-slide="4">
+    <span class="slide-tag">03 — KAPSAM</span>
+    <span class="slide-num">04 / 11</span>
+    <h2 class="section-title">Bir tek ekiple, altı platformu birden taşıyacağız.</h2>
+    <p class="section-lede">İçeriği bir kez çekeriz, her platforma uygun şekilde dönüştürürüz. Hiçbir hesabı yalnız bırakmayız — birinde ne oluyorsa, diğerlerinde de uyumlu olur.</p>
+
+    <div class="scope-grid">
+      <div class="scope-card">
+        <div class="scope-card-num">01</div>
+        <div class="scope-card-title">İçerik Üretimi</div>
+        <div class="scope-card-desc">Restoranda, tezgahın başında, ateşin yanında çekim yaparız. Reels, Shorts, ASMR, uzun belgesel — aylık 60+ post, 20+ video.</div>
+      </div>
+      <div class="scope-card">
+        <div class="scope-card-num">02</div>
+        <div class="scope-card-title">Yorum Yönetimi</div>
+        <div class="scope-card-desc">Tripadvisor'daki 56 yoruma tek tek dönüş yaparız. Google'da en kritik olanlara bakarız. 24 saat içinde, sizin ağzınızdan, sizin tonunuzla.</div>
+      </div>
+      <div class="scope-card">
+        <div class="scope-card-num">03</div>
+        <div class="scope-card-title">Reklam Yönetimi</div>
+        <div class="scope-card-desc">Meta, Google, sezon ortasında TikTok. Hangi reklam para getiriyor, hangisi getirmiyor — hepsi şeffaf raporda. Bütçeyi optimize ederiz.</div>
+      </div>
+      <div class="scope-card">
+        <div class="scope-card-num">04</div>
+        <div class="scope-card-title">Marka Tutarlılığı</div>
+        <div class="scope-card-desc">Sitede ne yazıyorsa, Instagram'da da o yazar. Tonda kayma yok, görsel kayma yok. Çalış Balıkçısı her yerde aynı Çalış Balıkçısı.</div>
+      </div>
+      <div class="scope-card">
+        <div class="scope-card-num">05</div>
+        <div class="scope-card-title">Yerel SEO</div>
+        <div class="scope-card-desc">"Fethiye balık restoran" arandığında ilk sıralarda olmak için Google Business'ı her hafta besleriz. Fotoğraf, post, soru-cevap, hepsi.</div>
+      </div>
+      <div class="scope-card">
+        <div class="scope-card-num">06</div>
+        <div class="scope-card-title">Strateji + Raporlama</div>
+        <div class="scope-card-desc">Haftalık özet, aylık detaylı rapor, 3 ayda bir oturup konuşma. Sayılar dürüst gelir — iyi giden de, gitmeyen de görünür.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLAYT 5: İÇERİK MİMARİSİ -->
+  <section class="slide" data-slide="5">
+    <span class="slide-tag">04 — İÇERİK MİMARİSİ</span>
+    <span class="slide-num">05 / 11</span>
+    <h2 class="section-title">Her hafta aynı ritim. Tahmin edilebilir, ölçülebilir, sürdürülebilir.</h2>
+    <p class="section-lede">İçeriği beş ana başlık altında topladık. Her hafta her başlıktan belli bir ritim — ne sayfa boş kalıyor, ne aynı şey tekrar ediliyor.</p>
+
+    <div class="matrix">
+      <div class="pillars">
+        <div class="pillar">
+          <div class="pillar-num">01</div>
+          <div>
+            <span class="pillar-name">Tezgâh</span>
+            <span class="pillar-desc">Sabah mezatından gelen taze balıklar — günün ne getirdiği</span>
+          </div>
+          <div class="pillar-freq">Hafta · 2</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">02</div>
+          <div>
+            <span class="pillar-name">Sofra</span>
+            <span class="pillar-desc">Mezeler, ana yemekler, içecekler — masaya gelen her şey</span>
+          </div>
+          <div class="pillar-freq">Hafta · 2</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">03</div>
+          <div>
+            <span class="pillar-name">Akşamüstü</span>
+            <span class="pillar-desc">Gün batımı, sahil, masa servisi — atmosferin kendisi</span>
+          </div>
+          <div class="pillar-freq">Hafta · 1</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">04</div>
+          <div>
+            <span class="pillar-name">Bizden</span>
+            <span class="pillar-desc">Akif Usta ve ekip — yüzler, eller, anlar</span>
+          </div>
+          <div class="pillar-freq">Hafta · 1</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">05</div>
+          <div>
+            <span class="pillar-name">Hikâye</span>
+            <span class="pillar-desc">37 yıllık geçmiş, mevsim notları, manifesto — uzun anlatım</span>
+          </div>
+          <div class="pillar-freq">Hafta · 1</div>
+        </div>
+      </div>
+
+      <div class="rhythm">
+        <div class="rhythm-title">Haftalık Çıktı</div>
+        <div class="rhythm-stat">7 + 17</div>
+        <div class="rhythm-label">Instagram post + story</div>
+        <div class="rhythm-divider"></div>
+        <div class="rhythm-row"><span>Facebook</span><span>5 post</span></div>
+        <div class="rhythm-row"><span>TikTok</span><span>5 video</span></div>
+        <div class="rhythm-row"><span>YouTube Shorts</span><span>2 video</span></div>
+        <div class="rhythm-row"><span>YouTube uzun</span><span>2 / ay</span></div>
+        <div class="rhythm-row"><span>Google Posts</span><span>2 + 1 mevsimsel</span></div>
+        <div class="rhythm-divider"></div>
+        <div class="rhythm-row" style="font-size:0.95rem;"><span style="color:var(--sun);">6 ayda toplam</span><span>~600 içerik</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLAYT 6: 6 AYLIK TAKVİM -->
+  <section class="slide" data-slide="6">
+    <span class="slide-tag">05 — 6 AYLIK TAKVİM</span>
+    <span class="slide-num">06 / 11</span>
+    <h2 class="section-title">Sezonun temposuna göre nefes alan altı ay.</h2>
+    <p class="section-lede">Her ayın bir teması, bir hedefi, bir reklam yoğunluğu var. Mayıs sakin başlar, temmuz-ağustos ateş gibidir, ekim'de yine kendi kendinize döneriz.</p>
+
+    <div class="timeline">
+      <div class="month-row">
+        <div class="month-name">Mayıs<small>Hafta 1-5</small></div>
+        <div class="month-theme">Sezon yine açıldı</div>
+        <div class="month-actions">Anneler Günü için özel akşam · bahar mezeleri tanıtımı · ilk YouTube belgeseli · Tripadvisor'ı sahiplenip yorum dalgasını başlatıyoruz</div>
+        <div class="month-intensity">
+          <div class="month-intensity-bar on"></div>
+          <div class="month-intensity-bar on"></div>
+          <div class="month-intensity-bar"></div>
+          <div class="month-intensity-bar"></div>
+          <div class="month-intensity-bar"></div>
+        </div>
+      </div>
+
+      <div class="month-row">
+        <div class="month-name">Haziran<small>Hafta 6-9</small></div>
+        <div class="month-theme">Akşamüstü meltemine hoşgeldiniz</div>
+        <div class="month-actions">Avrupa turistine ilk reklam dalgası · Babalar Günü · "Levrek lokum" odaklı içerik · Meta'da büyük lansman</div>
+        <div class="month-intensity">
+          <div class="month-intensity-bar on"></div>
+          <div class="month-intensity-bar on"></div>
+          <div class="month-intensity-bar on"></div>
+          <div class="month-intensity-bar"></div>
+          <div class="month-intensity-bar"></div>
+        </div>
+      </div>
+
+      <div class="month-row">
+        <div class="month-name">Temmuz<small>Hafta 10-13</small></div>
+        <div class="month-theme">Yeriniz hazır</div>
+        <div class="month-actions">Pik sezon başladı · rezervasyon CTA odaklı içerik · influencer iş birlikleri · Akif Usta'nın hikayeleri uzun formatta</div>
+        <div class="month-intensity">
+          <div class="month-intensity-bar on"></div>
+          <div class="month-intensity-bar on"></div>
+          <div class="month-intensity-bar on"></div>
+          <div class="month-intensity-bar on"></div>
+          <div class="month-intensity-bar on"></div>
+        </div>
+      </div>
+
+      <div class="month-row">
+        <div class="month-name">Ağustos<small>Hafta 14-17</small></div>
+        <div class="month-theme">Kalitede taviz yok</div>
+        <div class="month-actions">Premium algıyı koruma · şarap-balık eşleştirme · 30 Ağustos atmosferi · TikTok'ta organik viralite hedefli içerik</div>
+        <div class="month-intensity">
+          <div class="month-intensity-bar on"></div>
+          <div class="month-intensity-bar on"></div>
+          <div class="month-intensity-bar on"></div>
+          <div class="month-intensity-bar on"></div>
+          <div class="month-intensity-bar on"></div>
+        </div>
+      </div>
+
+      <div class="month-row">
+        <div class="month-name">Eylül<small>Hafta 18-21</small></div>
+        <div class="month-theme">Sahil yine bizim</div>
+        <div class="month-actions">Yerel müşteri geri dönüyor · misafirlerin yaz fotoğraflarını paylaşıyoruz · sonbahar mezeleri · Tripadvisor 4.0+ kontrol noktası</div>
+        <div class="month-intensity">
+          <div class="month-intensity-bar on"></div>
+          <div class="month-intensity-bar on"></div>
+          <div class="month-intensity-bar"></div>
+          <div class="month-intensity-bar"></div>
+          <div class="month-intensity-bar"></div>
+        </div>
+      </div>
+
+      <div class="month-row">
+        <div class="month-name">Ekim<small>Hafta 22-26</small></div>
+        <div class="month-theme">Şömine yandı, masa kuruldu</div>
+        <div class="month-actions">Kış teması başladı · "yıl boyu açığız" mesajı · Cumhuriyet Bayramı · 6 ay kapanış raporu · 2027 stratejisini birlikte konuşuyoruz</div>
+        <div class="month-intensity">
+          <div class="month-intensity-bar on"></div>
+          <div class="month-intensity-bar"></div>
+          <div class="month-intensity-bar"></div>
+          <div class="month-intensity-bar"></div>
+          <div class="month-intensity-bar"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLAYT 7: REKLAM -->
+  <section class="slide" data-slide="7">
+    <span class="slide-tag">06 — REKLAM YÖNETİMİ</span>
+    <span class="slide-num">07 / 11</span>
+    <h2 class="section-title">Reklam, Çalış Balıkçısı'nın sesini biraz daha yükseltmek demek.</h2>
+    <p class="section-lede">Çoğu restoran reklamı sırıtır — büyük yazılar, "indirim", "kaçırma" diye bağırır. Biz öyle yapmayacağız. Organikte iyi giden içeriği para ile büyüteceğiz. Aynı dil, aynı saygı.</p>
+
+    <div class="ads-layout">
+      <div class="ads-philosophy">
+        <p class="ads-philosophy-text">Premium algı, fiyat baskısı altında çatlar. Dikkat ederiz — markanın ağırlığı ucuz reklam diliyle harcanmaz.</p>
+        <div class="ads-philosophy-rules">
+          <div class="ads-rule">İndirim, "kaçırma", "fırsat" dili kullanmıyoruz. Marka değeri korunuyor.</div>
+          <div class="ads-rule">Her hafta hangi reklam çalışıyor görüyoruz, çalışmayanı kapatıyoruz.</div>
+          <div class="ads-rule">Reklam, organikten farklı görünmüyor. Aynı ses, aynı görsel — sadece daha çok kişi görüyor.</div>
+        </div>
+      </div>
+
+      <div class="ads-segments">
+        <div class="segment">
+          <div>
+            <div class="segment-name">Avrupa turisti</div>
+            <div class="segment-detail">İngiltere, Almanya, Hollanda, Fransa · Tripadvisor'da 5★ yorum yapanların benzerleri · Mayıs-Eylül</div>
+          </div>
+          <div class="segment-share">35%</div>
+        </div>
+        <div class="segment">
+          <div>
+            <div class="segment-name">Türk turist</div>
+            <div class="segment-detail">İstanbul, Ankara, İzmir · 28-65 yaş · Fethiye'ye gelmeyi düşünenler · Haziran-Ağustos</div>
+          </div>
+          <div class="segment-share">30%</div>
+        </div>
+        <div class="segment">
+          <div>
+            <div class="segment-name">Yerel Fethiye/Muğla</div>
+            <div class="segment-detail">50km çevre · yıl boyu aktif · kış sadakatleri kritik · ucuz reklam, yüksek dönüşüm</div>
+          </div>
+          <div class="segment-share">20%</div>
+        </div>
+        <div class="segment">
+          <div>
+            <div class="segment-name">Sitede gezinmiş olanlar</div>
+            <div class="segment-detail">Site ziyaretçileri · video izleyicileri · niyetleri var, hatırlatma yetiyor · doğrudan rezervasyon CTA</div>
+          </div>
+          <div class="segment-share">15%</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLAYT 8: KPI -->
+  <section class="slide" data-slide="8">
+    <span class="slide-tag">07 — BEKLENTİLER · 6 AY</span>
+    <span class="slide-num">08 / 11</span>
+    <h2 class="section-title">Ekim'de kapağı kapattığımızda — bunlar görünecek.</h2>
+    <p class="section-lede">Hedefler hayalci değil, gerçekçi. Her ay raporda nerede olduğumuzu göreceksiniz. Sapma olursa, beklemeden müdahale ederiz — şeffaf bir iş.</p>
+
+    <div class="kpi-grid">
+      <div class="kpi-card featured">
+        <div class="kpi-platform">Tripadvisor</div>
+        <div class="kpi-from-to">
+          <span class="kpi-from">3.8</span>
+          <span class="kpi-arrow">→</span>
+          <span class="kpi-to">4.4+</span>
+        </div>
+        <div class="kpi-label">Puan toparlanması · 200+ yeni dürüst yorum · Travelers' Choice 2027 yolu açık</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-platform">Instagram</div>
+        <div class="kpi-from-to">
+          <span class="kpi-from">28.9B</span>
+          <span class="kpi-arrow">→</span>
+          <span class="kpi-to">50B</span>
+        </div>
+        <div class="kpi-label">Takipçi büyümesi · uyuyan kitleyi aktive ediyoruz · etkileşim %3-5 hedefi</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-platform">TikTok</div>
+        <div class="kpi-from-to">
+          <span class="kpi-from">0</span>
+          <span class="kpi-arrow">→</span>
+          <span class="kpi-to">50B</span>
+        </div>
+        <div class="kpi-label">Sıfırdan başlıyoruz · ASMR + Akif Usta'nın elleri · viralite buradan gelecek</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-platform">YouTube</div>
+        <div class="kpi-from-to">
+          <span class="kpi-from">0</span>
+          <span class="kpi-arrow">→</span>
+          <span class="kpi-to">8B</span>
+        </div>
+        <div class="kpi-label">Abone · 12 uzun video + 50 Shorts · "Fethiye balık" aramasında ilk sayfa</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-platform">Facebook</div>
+        <div class="kpi-from-to">
+          <span class="kpi-from">611</span>
+          <span class="kpi-arrow">→</span>
+          <span class="kpi-to">5B</span>
+        </div>
+        <div class="kpi-label">Takipçi · etkinlikler aktifleşiyor · yerel kitle için hâlâ önemli</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-platform">Rezervasyon</div>
+        <div class="kpi-from-to">
+          <span class="kpi-from">~%20</span>
+          <span class="kpi-arrow">→</span>
+          <span class="kpi-to">%40</span>
+        </div>
+        <div class="kpi-label">Sosyal medyadan gelen rezervasyon oranı · işin asıl ölçüsü bu</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLAYT 9: OPERASYON -->
+  <section class="slide" data-slide="9">
+    <span class="slide-tag">08 — OPERASYON</span>
+    <span class="slide-num">09 / 11</span>
+    <h2 class="section-title">Tek bir ekip. Sabit ritim. Hep şeffaf.</h2>
+    <p class="section-lede">Aylık abonelik mantığında çalışıyoruz. Normal süreçlerde belli bir takvim var, acil durumlarda 7/24 erişebileceksiniz. Sayılar her ay önünüzde, dürüstçe.</p>
+
+    <div class="ops-layout">
+      <div class="ops-roles">
+        <div class="ops-role">
+          <div class="ops-role-icon">İÇ</div>
+          <div>
+            <div class="ops-role-name">İçerik üreticisi</div>
+            <div class="ops-role-desc">Restoranınızda — haftada 2-3 gün çekim için yanınızda</div>
+          </div>
+        </div>
+        <div class="ops-role">
+          <div class="ops-role-icon">SM</div>
+          <div>
+            <div class="ops-role-name">Sosyal medya yöneticisi</div>
+            <div class="ops-role-desc">Tüm platformlar, copywriting, yorumlar, mesajlar — günlük operasyon</div>
+          </div>
+        </div>
+        <div class="ops-role">
+          <div class="ops-role-icon">RU</div>
+          <div>
+            <div class="ops-role-name">Reklam uzmanı</div>
+            <div class="ops-role-desc">Meta + Google'da kampanyaları kurar, optimize eder, raporlar</div>
+          </div>
+        </div>
+        <div class="ops-role">
+          <div class="ops-role-icon">TS</div>
+          <div>
+            <div class="ops-role-name">Tasarımcı</div>
+            <div class="ops-role-desc">Highlight kapakları, etkinlik görselleri, reklam yaratıcıları</div>
+          </div>
+        </div>
+        <div class="ops-role">
+          <div class="ops-role-icon">ST</div>
+          <div>
+            <div class="ops-role-name">Strateji + birebir koordinasyon</div>
+            <div class="ops-role-desc">Aylık görüşmeler, kriz yönetimi, sizinle karar verme — burada ben varım</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ops-cadence">
+        <div class="ops-cadence-title">Raporlama Ritmi</div>
+        <div class="cadence-row">
+          <div class="cadence-when">Haftalık</div>
+          <div class="cadence-what">Bir sayfa özet — bu hafta neler iyi gitti, neler iyi gitmedi, rezervasyona dönüş</div>
+        </div>
+        <div class="cadence-row">
+          <div class="cadence-when">Aylık</div>
+          <div class="cadence-what">Detaylı rapor — tüm sayılar, içerik analizi, reklam dönüşü, yorum trendleri</div>
+        </div>
+        <div class="cadence-row">
+          <div class="cadence-when">3 Aylık</div>
+          <div class="cadence-what">Birlikte oturup konuşma — nereye geldik, nereye gidiyoruz, neyi değiştirelim</div>
+        </div>
+        <div class="cadence-row">
+          <div class="cadence-when">7/24</div>
+          <div class="cadence-what">Acil durumda — kötü yorum dalgası, kriz iletişimi, anında ulaşırsınız</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLAYT 10: WEB SİTESİ -->
+  <section class="slide product-slide" data-slide="10">
+    <div class="product-content">
+      <div>
+        <span class="slide-tag">09 — DİJİTAL ALTYAPI</span>
+        <span class="slide-num">10 / 11</span>
+        <div class="product-eyebrow">Web Sitesi · Canlı Önizleme</div>
+        <h2 class="product-title">Bu site sıradan bir restoran sitesi değil — biraz açıklamam lazım.</h2>
+        <p class="product-pitch">
+          Çoğu restoran sitesi <strong>menü + telefon + adres</strong>'ten ibaret. Ben Çalış Balıkçısı için bambaşka bir şey yaptım — markanın hikayesini, ateşin sıcaklığını, gün batımının tonunu hissettiren bir site. Aşağıdan kendiniz bakabilirsiniz.
+        </p>
+        <div class="product-points">
+          <div class="product-point">"Bir Günün Üç Vakti" — sabah mezat, öğlen mutfak, akşam ateş, scroll'la canlanıyor</div>
+          <div class="product-point">Akif Usta + ekip showcase'i, üzerine geldikçe portre değişiyor</div>
+          <div class="product-point">Misafir yorumları carousel'i — Google, Tripadvisor, Instagram bir arada</div>
+          <div class="product-point">El yazısı font + sıcak renkler — site ile sosyal medya tek dil konuşuyor</div>
+          <div class="product-point">Mobilde kusursuz, hızlı yükleme, modern teknoloji</div>
+        </div>
+      </div>
+      <div class="product-cta">
+        <p class="product-cta-quote">"Bir turist siteyi açar — kararını orada verir."</p>
+        <p class="product-cta-attr">— Sezon başında konum</p>
+      </div>
+    </div>
+    <div class="product-iframe-wrap">
+      <iframe src="https://calis-balikcisi.vercel.app/" class="product-iframe" loading="lazy" title="Çalış Balıkçısı — Web Sitesi"></iframe>
+    </div>
+  </section>
+
+  <!-- SLAYT 11: REZERVASYON -->
+  <section class="slide product-slide" data-slide="11">
+    <div class="product-content">
+      <div>
+        <span class="slide-tag">10 — DİJİTAL ALTYAPI</span>
+        <span class="slide-num">11 / 11</span>
+        <div class="product-eyebrow">Rezervasyon Sayfası · Canlı Önizleme</div>
+        <h2 class="product-title">Rezervasyon bir form değil — bir akşamın provası gibi.</h2>
+        <p class="product-pitch">
+          Diğer sitelerde "tarih, saat, kişi sayısı, gönder" — soğuk bir form. Çalış Balıkçısı'nda misafir <strong>masasını seçiyor</strong>. Mekanın iso haritasında dolaşıyor, akşamüstüne yaklaşırken sahne yavaşça canlanıyor — güneş iniyor, ateş yanıyor. Aşağıdan deneyin.
+        </p>
+        <div class="product-points">
+          <div class="product-point">Mekanın iso haritası — D1-D30 dış, S1-S18 iç salon, gerçek yerleşim</div>
+          <div class="product-point">Saat saat değişen atmosfer — güneş iniyor, ay yükseliyor, martılar değişiyor</div>
+          <div class="product-point">"Sizin için masa seçeyim" — kararsız misafir için tek tıkla çözüm</div>
+          <div class="product-point">KVKK'ya tam uyumlu, mobilde sorunsuz, anında onay alıyor misafir</div>
+          <div class="product-point">Onay sayfası — talep numaralı, paylaşılabilir, profesyonel</div>
+        </div>
+      </div>
+      <div class="product-cta">
+        <p class="product-cta-quote">"Rezervasyon, akşamın ilk anıdır."</p>
+        <p class="product-cta-attr">— Marka prensibi</p>
+      </div>
+    </div>
+    <div class="product-iframe-wrap">
+      <iframe src="https://calis-balikcisi.vercel.app/rezervasyon" class="product-iframe" loading="lazy" title="Çalış Balıkçısı — Rezervasyon"></iframe>
+    </div>
+  </section>
+
+</div>
+
+<!-- Navigation Dots -->
+<div class="dots" id="dots"></div>
+
+<!-- Klavye yardım -->
+<div class="kbd-hint">← → ile gezin</div>
+
+<script>
+const deck = document.getElementById('deck');
+const slides = document.querySelectorAll('.slide');
+const dotsContainer = document.getElementById('dots');
+
+// Dot'ları oluştur
+slides.forEach((_, i) => {
+  const dot = document.createElement('button');
+  dot.className = 'dot' + (i === 0 ? ' active' : '');
+  dot.setAttribute('aria-label', `Slayt ${i + 1}`);
+  dot.addEventListener('click', () => {
+    deck.scrollTo({ left: i * window.innerWidth, behavior: 'smooth' });
+  });
+  dotsContainer.appendChild(dot);
+});
+
+const dots = document.querySelectorAll('.dot');
+
+// Aktif slayt takip
+let scrollTimeout;
+deck.addEventListener('scroll', () => {
+  clearTimeout(scrollTimeout);
+  scrollTimeout = setTimeout(() => {
+    const idx = Math.round(deck.scrollLeft / window.innerWidth);
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+  }, 80);
+});
+
+// Klavye navigasyonu
+document.addEventListener('keydown', (e) => {
+  const cur = Math.round(deck.scrollLeft / window.innerWidth);
+  if (e.key === 'ArrowRight' && cur < slides.length - 1) {
+    e.preventDefault();
+    deck.scrollTo({ left: (cur + 1) * window.innerWidth, behavior: 'smooth' });
+  } else if (e.key === 'ArrowLeft' && cur > 0) {
+    e.preventDefault();
+    deck.scrollTo({ left: (cur - 1) * window.innerWidth, behavior: 'smooth' });
+  } else if (e.key === 'Home') {
+    e.preventDefault();
+    deck.scrollTo({ left: 0, behavior: 'smooth' });
+  } else if (e.key === 'End') {
+    e.preventDefault();
+    deck.scrollTo({ left: (slides.length - 1) * window.innerWidth, behavior: 'smooth' });
+  }
+});
+
+// Touch swipe (mobil dikey scroll, ama yatay swipe da çalışsın masaüstünde)
+let touchStartX = null;
+deck.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+deck.addEventListener('touchend', e => {
+  if (touchStartX === null) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 50) {
+    const cur = Math.round(deck.scrollLeft / window.innerWidth);
+    if (dx < 0 && cur < slides.length - 1) {
+      deck.scrollTo({ left: (cur + 1) * window.innerWidth, behavior: 'smooth' });
+    } else if (dx > 0 && cur > 0) {
+      deck.scrollTo({ left: (cur - 1) * window.innerWidth, behavior: 'smooth' });
+    }
+  }
+  touchStartX = null;
+});
+
+// Resize'da scroll position düzelt
+window.addEventListener('resize', () => {
+  const cur = Math.round(deck.scrollLeft / window.innerWidth);
+  deck.scrollTo({ left: cur * window.innerWidth, behavior: 'instant' });
+});
+</script>
+
+</body>
+</html>
