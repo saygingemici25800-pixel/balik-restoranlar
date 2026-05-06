@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { SiteFooter } from '../(sections)/footer';
 import { MenuContent } from './_components/menu-content';
 
 export const metadata: Metadata = {
@@ -14,7 +13,6 @@ export default function MenuPage() {
       <main>
         <MenuContent />
       </main>
-      <SiteFooter />
     </>
   );
 }

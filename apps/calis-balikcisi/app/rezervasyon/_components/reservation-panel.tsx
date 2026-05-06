@@ -81,6 +81,7 @@ export function ReservationPanel({
   const [phone, setPhone] = useState('');
   const [hasAllergy, setHasAllergy] = useState(false);
   const [allergyNote, setAllergyNote] = useState('');
+  const [kvkkAccepted, setKvkkAccepted] = useState(false);
 
   // ESC closes
   useEffect(() => {
@@ -96,7 +97,7 @@ export function ReservationPanel({
   const dayObj = days.find((d) => d.key === date);
 
   function handleSubmit() {
-    if (!can || !table) return;
+    if (!can || !table || !kvkkAccepted) return;
     const trimmedAllergy = hasAllergy ? allergyNote.trim() : '';
     onConfirm({
       tableId: table.id,
@@ -251,10 +252,30 @@ export function ReservationPanel({
             </span>
           </div>
 
+          <label className={styles.kvkkRow}>
+            <input
+              type="checkbox"
+              checked={kvkkAccepted}
+              onChange={(e) => setKvkkAccepted(e.target.checked)}
+              required
+            />
+            <span>
+              <a
+                href="/kvkk"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.kvkkLink}
+              >
+                Kişisel Verilerin Korunması Aydınlatma Metni
+              </a>
+              &apos;ni okudum, kabul ediyorum.
+            </span>
+          </label>
+
           <button
             type="button"
             className={styles.btnPrimary}
-            disabled={!can}
+            disabled={!can || !kvkkAccepted}
             onClick={handleSubmit}
           >
             Rezervasyonu onayla
@@ -418,10 +439,30 @@ export function ReservationPanel({
           </span>
         </div>
 
+        <label className={styles.kvkkRow}>
+          <input
+            type="checkbox"
+            checked={kvkkAccepted}
+            onChange={(e) => setKvkkAccepted(e.target.checked)}
+            required
+          />
+          <span>
+            <a
+              href="/kvkk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.kvkkLink}
+            >
+              Kişisel Verilerin Korunması Aydınlatma Metni
+            </a>
+            &apos;ni okudum, kabul ediyorum.
+          </span>
+        </label>
+
         <button
           type="button"
           className={styles.btnPrimary}
-          disabled={!can}
+          disabled={!can || !kvkkAccepted}
           onClick={handleSubmit}
         >
           Rezervasyonu onayla

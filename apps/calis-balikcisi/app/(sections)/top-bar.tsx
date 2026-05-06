@@ -36,7 +36,7 @@ export function SiteTopBar({ className = '' }: Props) {
   return (
     <>
       <header
-        className={`px-4 md:px-8 py-2 md:py-3 grid grid-cols-3 items-center ${className}`}
+        className={`px-3 md:px-8 py-2 md:py-3 grid grid-cols-3 items-center gap-2 ${className}`}
       >
         <button
           id="hamburger-icon"
@@ -77,7 +77,7 @@ export function SiteTopBar({ className = '' }: Props) {
           aria-label="Çalış Balıkçısı — Anasayfa"
           className="justify-self-center"
         >
-          <h1 className="m-0 font-display italic font-normal text-fg text-[1.1rem] md:text-[1.4rem] tracking-[0.02em]">
+          <h1 className="m-0 font-display italic font-normal text-fg text-[0.95rem] md:text-[1.4rem] tracking-[0.02em] whitespace-nowrap">
             Çalış Balıkçısı
           </h1>
         </Link>
@@ -86,7 +86,7 @@ export function SiteTopBar({ className = '' }: Props) {
           href="/rezervasyon"
           className="relative inline-block justify-self-end pb-1"
         >
-          <span className="text-xs uppercase tracking-[0.3em] text-accent">
+          <span className="text-[0.6rem] md:text-xs uppercase tracking-[0.15em] md:tracking-[0.3em] text-accent whitespace-nowrap">
             Rezervasyon
           </span>
           <span
