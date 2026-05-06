@@ -11,16 +11,18 @@ import {
 } from 'framer-motion';
 import styles from './principles.module.css';
 
-type Vakit = {
+type VakitBase = {
   time: string;
   title: string;
   description: string;
-  mediaType: 'image' | 'video';
-  mediaSrc: string;
-  alt: string;
   direction: 'card-left' | 'card-right';
   scrollZoom?: boolean;
 };
+
+type Vakit =
+  | (VakitBase & { mediaType: 'image'; mediaSrc: string; alt: string })
+  | (VakitBase & { mediaType: 'video'; mediaSrc: string; alt: string })
+  | (VakitBase & { mediaType: 'placeholder' });
 
 const VAKITLER: Vakit[] = [
   {
@@ -29,8 +31,7 @@ const VAKITLER: Vakit[] = [
     description:
       'Mezattan masaya, hiç soğumadan. Sabahın ilk ışığında balık seçilir, buz tabletlerinde tezgâha yerleşir.',
     mediaType: 'image',
-    mediaSrc:
-      'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1200',
+    mediaSrc: '/images/principles-1.jpg',
     alt: 'Sabah balık mezadı',
     direction: 'card-left',
   },
@@ -40,8 +41,7 @@ const VAKITLER: Vakit[] = [
     description:
       'Balık zaten balık. Tuz, limon, ateş — fazlası gerekmez. Mutfakta sade bir el, çok ihtimam.',
     mediaType: 'image',
-    mediaSrc:
-      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1200',
+    mediaSrc: '/images/principles-2.jpg',
     alt: 'Mutfakta sade hazırlık',
     direction: 'card-right',
   },
@@ -50,10 +50,7 @@ const VAKITLER: Vakit[] = [
     title: 'Doğal Ateş',
     description:
       'Akşam üstü, kömür kor olduğunda balık ateşle tanışır. Ne fazla, ne eksik — saygıyla.',
-    mediaType: 'video',
-    mediaSrc:
-      'https://videos.pexels.com/video-files/3997798/3997798-uhd_2560_1440_25fps.mp4',
-    alt: 'Ateşte pişen balık',
+    mediaType: 'placeholder',
     direction: 'card-left',
     scrollZoom: true,
   },
@@ -68,9 +65,9 @@ function VakitRow({ vakit }: { vakit: Vakit }) {
 
   const { scrollYProgress } = useScroll({
     target: rowRef,
-    offset: ['start end', 'center start'],
+    offset: ['start 80%', 'end 20%'],
   });
-  const scaleValue = useTransform(scrollYProgress, [0.3, 0.7], [1, 1.4], {
+  const scaleValue = useTransform(scrollYProgress, [0.2, 0.8], [1, 1.4], {
     clamp: true,
   });
   const scale =
@@ -102,7 +99,11 @@ function VakitRow({ vakit }: { vakit: Vakit }) {
         transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 0.9, 0.3, 1] }}
         style={scale ? { scale } : undefined}
       >
-        {vakit.mediaType === 'video' ? (
+        {vakit.mediaType === 'placeholder' ? (
+          <div className={styles.placeholder}>
+            <span>video gelecek</span>
+          </div>
+        ) : vakit.mediaType === 'video' ? (
           <video
             src={vakit.mediaSrc}
             autoPlay

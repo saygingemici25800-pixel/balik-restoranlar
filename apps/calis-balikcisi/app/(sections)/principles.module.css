@@ -108,6 +108,21 @@
   display: block;
 }
 
+.placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: rgba(243, 234, 216, 0.04);
+  border: 1px dashed rgba(243, 234, 216, 0.25);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: rgba(243, 234, 216, 0.45);
+}
+
 @media (max-width: 900px) {
   .section {
     padding: 80px 24px;
