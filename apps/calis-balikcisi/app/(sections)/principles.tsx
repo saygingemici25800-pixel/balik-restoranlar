@@ -65,9 +65,9 @@ function VakitRow({ vakit }: { vakit: Vakit }) {
 
   const { scrollYProgress } = useScroll({
     target: rowRef,
-    offset: ['start 80%', 'end 20%'],
+    offset: ['start end', 'end start'],
   });
-  const scaleValue = useTransform(scrollYProgress, [0.2, 0.8], [1, 1.4], {
+  const scaleValue = useTransform(scrollYProgress, [0.2, 1], [1, 1.8], {
     clamp: true,
   });
   const scale =
@@ -94,6 +94,7 @@ function VakitRow({ vakit }: { vakit: Vakit }) {
         className={`${styles.medya} ${
           isCardLeft ? styles.medyaRight : styles.medyaLeft
         }`}
+        data-zoom={vakit.scrollZoom ? 'true' : 'false'}
         initial={{ x: isCardLeft ? slide : -slide, opacity: 0 }}
         animate={isInView ? { x: 0, opacity: 1 } : undefined}
         transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 0.9, 0.3, 1] }}

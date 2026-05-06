@@ -1,6 +1,7 @@
 .section {
   background-color: var(--color-bg);
   padding: 120px 32px;
+  overflow: visible;
 }
 
 .header {
@@ -41,6 +42,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 56px;
   align-items: center;
+  overflow: visible;
 }
 
 .kart {
@@ -70,6 +72,18 @@
 
 .medyaRight {
   order: 2;
+}
+
+.medya[data-zoom='true'] {
+  z-index: 5;
+}
+
+.medya[data-zoom='true'].medyaRight {
+  transform-origin: left center;
+}
+
+.medya[data-zoom='true'].medyaLeft {
+  transform-origin: right center;
 }
 
 .time {
