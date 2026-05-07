@@ -11,6 +11,7 @@ import './globals.css';
 import { Footer } from './_components/footer';
 import { LenisProvider } from './_components/lenis-provider';
 import { ScrollProgress } from './_components/scroll-progress';
+import { ScrollToTop } from './_components/scroll-to-top';
 
 const displayFont = Cormorant_Garamond({
   subsets: ['latin'],
@@ -67,6 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ScrollProgress />
           {children}
           <Footer />
+          <ScrollToTop />
         </LenisProvider>
       </body>
     </html>
