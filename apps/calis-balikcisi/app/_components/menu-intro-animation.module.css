@@ -20,14 +20,27 @@
 .item {
   position: relative;
   font-family: var(--font-display);
-  font-weight: 700;
   font-style: normal;
-  font-size: 1.125rem;
   color: var(--color-fg);
   letter-spacing: -0.01em;
   line-height: 1.1;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
   transform-origin: center center;
+}
+
+.item[data-size='0'] {
+  font-size: 1rem;
+  font-weight: 300;
+}
+
+.item[data-size='1'] {
+  font-size: 1.375rem;
+  font-weight: 500;
+}
+
+.item[data-size='2'] {
+  font-size: 1.75rem;
+  font-weight: 700;
 }
 
 .itemText {
@@ -41,28 +54,30 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 24px;
-  height: 24px;
+  width: 36px;
+  height: 36px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(217, 122, 60, 0.55) 0%,
-    rgba(243, 234, 216, 0.25) 40%,
+    rgba(217, 122, 60, 0.75) 0%,
+    rgba(243, 234, 216, 0.4) 40%,
     rgba(243, 234, 216, 0) 70%
   );
   opacity: 0;
   pointer-events: none;
   z-index: 1;
-  filter: blur(4px);
+  filter: blur(5px);
   transition: opacity 0.4s ease-in;
 }
 
+.item[data-phase='emerging'] .itemGlow,
 .item[data-phase='morphing'] .itemGlow,
 .item[data-phase='flying'] .itemGlow {
   opacity: 1;
 }
 
+.item[data-phase='emerging'] .itemText,
 .item[data-phase='morphing'] .itemText,
 .item[data-phase='flying'] .itemText {
   filter: blur(2px);
@@ -74,8 +89,16 @@
     padding: 7rem 2rem 0;
   }
 
-  .item {
+  .item[data-size='0'] {
     font-size: 1.25rem;
+  }
+
+  .item[data-size='1'] {
+    font-size: 1.625rem;
+  }
+
+  .item[data-size='2'] {
+    font-size: 2rem;
   }
 }
 
@@ -84,8 +107,16 @@
     padding: 7rem 2.5rem 0;
   }
 
-  .item {
+  .item[data-size='0'] {
     font-size: 1.5rem;
+  }
+
+  .item[data-size='1'] {
+    font-size: 2rem;
+  }
+
+  .item[data-size='2'] {
+    font-size: 2.5rem;
   }
 }
 
@@ -95,8 +126,8 @@
   }
 
   .itemGlow {
-    width: 18px;
-    height: 18px;
+    width: 26px;
+    height: 26px;
   }
 }
 

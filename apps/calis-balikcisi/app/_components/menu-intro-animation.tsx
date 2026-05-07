@@ -6,19 +6,29 @@ import { motion } from 'framer-motion';
 import styles from './menu-intro-animation.module.css';
 
 const ITEMS = [
-  { label: 'Taze Taze' },
-  { label: 'Sofra' },
-  { label: 'Rezervasyon' },
-  { label: 'Konuşalım' },
+  { label: 'Sofra', sizeStep: 0 },
+  { label: 'Rezervasyon', sizeStep: 1 },
+  { label: 'Konuşalım', sizeStep: 2 },
 ];
 
-type ItemPhase = 'visible' | 'morphing' | 'flying' | 'done';
+type ItemPhase =
+  | 'hidden'
+  | 'emerging'
+  | 'arriving'
+  | 'visible'
+  | 'morphing'
+  | 'flying'
+  | 'done';
 type Target = { x: number; y: number };
 
-const INITIAL_PHASES: ItemPhase[] = ITEMS.map(() => 'visible');
+const INITIAL_PHASES: ItemPhase[] = ITEMS.map(() => 'hidden');
 const ZERO_TARGETS: Target[] = ITEMS.map(() => ({ x: 0, y: 0 }));
 
-const INITIAL_DELAY = 3000;
+const INITIAL_DELAY = 0;
+const EMERGE_DURATION = 700;
+const ARRIVE_DURATION = 500;
+const ENTER_STAGGER = EMERGE_DURATION;
+const VISIBLE_HOLD = 800;
 const MORPH_DURATION = 600;
 const FLY_DURATION = 800;
 const STAGGER = MORPH_DURATION;
@@ -50,11 +60,45 @@ export function MenuIntroAnimation() {
 
     const timers: ReturnType<typeof setTimeout>[] = [];
 
-    ITEMS.forEach((_, i) => {
-      const morphStart = INITIAL_DELAY + i * STAGGER;
-      const flyStart = morphStart + MORPH_DURATION;
-      const doneAt = flyStart + FLY_DURATION;
+    const lastEmergeStart =
+      INITIAL_DELAY + (ITEMS.length - 1) * ENTER_STAGGER;
+    const allVisibleAt = lastEmergeStart + EMERGE_DURATION + ARRIVE_DURATION;
+    const exitStart = allVisibleAt + VISIBLE_HOLD;
 
+    ITEMS.forEach((_, i) => {
+      const emergeStart = INITIAL_DELAY + i * ENTER_STAGGER;
+      const arriveStart = emergeStart + EMERGE_DURATION;
+      const visibleStart = arriveStart + ARRIVE_DURATION;
+      const morphStart = exitStart + i * STAGGER;
+      const flyStart = morphStart + MORPH_DURATION;
+
+      timers.push(
+        setTimeout(() => {
+          setPhases((prev) => {
+            const next = [...prev];
+            next[i] = 'emerging';
+            return next;
+          });
+        }, emergeStart),
+      );
+      timers.push(
+        setTimeout(() => {
+          setPhases((prev) => {
+            const next = [...prev];
+            next[i] = 'arriving';
+            return next;
+          });
+        }, arriveStart),
+      );
+      timers.push(
+        setTimeout(() => {
+          setPhases((prev) => {
+            const next = [...prev];
+            next[i] = 'visible';
+            return next;
+          });
+        }, visibleStart),
+      );
       timers.push(
         setTimeout(() => {
           setPhases((prev) => {
@@ -73,19 +117,10 @@ export function MenuIntroAnimation() {
           });
         }, flyStart),
       );
-      timers.push(
-        setTimeout(() => {
-          setPhases((prev) => {
-            const next = [...prev];
-            next[i] = 'done';
-            return next;
-          });
-        }, doneAt),
-      );
     });
 
     const lastDoneAt =
-      INITIAL_DELAY +
+      exitStart +
       (ITEMS.length - 1) * STAGGER +
       MORPH_DURATION +
       FLY_DURATION +
@@ -104,20 +139,36 @@ export function MenuIntroAnimation() {
     <div className={styles.overlay} aria-hidden="true">
       <ul className={styles.itemList}>
         {ITEMS.map((item, i) => {
-          const phase = phases[i] ?? 'visible';
+          const phase = phases[i] ?? 'hidden';
           const target = targets[i] ?? { x: 0, y: 0 };
 
           const animateValues =
-            phase === 'visible'
-              ? { opacity: 1, scale: 1, x: 0, y: 0 }
-              : phase === 'morphing'
+            phase === 'hidden'
+              ? { opacity: 0, scale: 0.05, x: target.x, y: target.y }
+              : phase === 'emerging'
                 ? { opacity: 1, scale: 0.15, x: 0, y: 0 }
-                : { opacity: 0, scale: 0.05, x: target.x, y: target.y };
+                : phase === 'arriving'
+                  ? { opacity: 1, scale: 1, x: 0, y: 0 }
+                  : phase === 'visible'
+                    ? { opacity: 1, scale: 1, x: 0, y: 0 }
+                    : phase === 'morphing'
+                      ? { opacity: 1, scale: 0.15, x: 0, y: 0 }
+                      : { opacity: 0, scale: 0.05, x: target.x, y: target.y };
 
           const duration =
-            phase === 'morphing' ? 0.6 : phase === 'flying' ? 0.8 : 0;
+            phase === 'emerging'
+              ? 0.7
+              : phase === 'arriving'
+                ? 0.5
+                : phase === 'morphing'
+                  ? 0.6
+                  : phase === 'flying'
+                    ? 0.8
+                    : 0;
           const ease =
-            phase === 'flying' ? ([0.5, 0, 0.4, 1] as const) : 'easeOut';
+            phase === 'emerging' || phase === 'flying'
+              ? ([0.5, 0, 0.4, 1] as const)
+              : 'easeOut';
 
           return (
             <motion.li
@@ -127,7 +178,8 @@ export function MenuIntroAnimation() {
               }}
               className={styles.item}
               data-phase={phase}
-              initial={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+              data-size={item.sizeStep}
+              initial={{ opacity: 0, scale: 0.05, x: 0, y: 0 }}
               animate={animateValues}
               transition={{ duration, ease }}
             >

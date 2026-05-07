@@ -8,10 +8,24 @@ type Props = {
 };
 
 const links = [
-  { href: '/#bugun-tezgahta', label: 'Taze Taze' },
-  { href: '/menu', label: 'Sofra' },
-  { href: '/rezervasyon', label: 'Rezervasyon' },
-  { href: '/iletisim', label: 'Konuşalım' },
+  {
+    href: '/menu',
+    label: 'Sofra',
+    sizeClass: 'text-base md:text-lg lg:text-xl',
+    weightClass: 'font-light',
+  },
+  {
+    href: '/rezervasyon',
+    label: 'Rezervasyon',
+    sizeClass: 'text-lg md:text-xl lg:text-2xl',
+    weightClass: 'font-medium',
+  },
+  {
+    href: '/iletisim',
+    label: 'Konuşalım',
+    sizeClass: 'text-xl md:text-2xl lg:text-3xl',
+    weightClass: 'font-bold',
+  },
 ];
 
 export function MenuDrawer({ isOpen }: Props) {
@@ -35,7 +49,7 @@ export function MenuDrawer({ isOpen }: Props) {
             aria-current={active ? 'page' : undefined}
             tabIndex={isOpen ? 0 : -1}
             aria-hidden={!isOpen}
-            className={`font-display font-bold tracking-[-0.01em] text-lg md:text-xl lg:text-2xl transition-all duration-700 ease-out ${
+            className={`font-display ${link.weightClass} tracking-[-0.01em] ${link.sizeClass} transition-all duration-700 ease-out ${
               active ? 'text-accent' : 'text-fg hover:text-accent'
             } ${
               isOpen
