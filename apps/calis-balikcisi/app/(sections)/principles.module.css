@@ -146,6 +146,7 @@
 @media (max-width: 900px) {
   .section {
     padding: 80px 24px;
+    overflow: hidden;
   }
 
   .header {
@@ -159,6 +160,7 @@
   .vakitRow {
     grid-template-columns: 1fr;
     gap: 32px;
+    overflow: hidden;
   }
 
   .cardLeft,
@@ -170,5 +172,14 @@
 
   .title {
     font-size: 2rem;
+  }
+
+  .medya {
+    transform: none !important;
+    scale: 1 !important;
+  }
+
+  .medya[data-zoom='true'] {
+    transform-origin: center !important;
   }
 }

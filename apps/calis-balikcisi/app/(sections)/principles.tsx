@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import {
   motion,
@@ -60,6 +60,14 @@ function VakitRow({ vakit }: { vakit: Vakit }) {
   const rowRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(rowRef, { once: true, margin: '-100px' });
   const prefersReducedMotion = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 720);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   const isCardLeft = vakit.direction === 'card-left';
 
@@ -71,7 +79,9 @@ function VakitRow({ vakit }: { vakit: Vakit }) {
     clamp: true,
   });
   const scale =
-    vakit.scrollZoom && !prefersReducedMotion ? scaleValue : undefined;
+    vakit.scrollZoom && !prefersReducedMotion && !isMobile
+      ? scaleValue
+      : undefined;
 
   const slide = prefersReducedMotion ? 0 : 100;
 

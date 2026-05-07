@@ -24,12 +24,20 @@ function activateOnEnterOrSpace(
 export function Ekibimiz() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   const activeMember = TEAM_MEMBERS.find((m) => m.id === activeId);
 
   const col1 = TEAM_MEMBERS.filter((_, i) => i % 3 === 0);
   const col2 = TEAM_MEMBERS.filter((_, i) => i % 3 === 1);
   const col3 = TEAM_MEMBERS.filter((_, i) => i % 3 === 2);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 720);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
     if (!activeId) return;
@@ -58,8 +66,9 @@ export function Ekibimiz() {
           {[col1, col2, col3].map((col, ci) => (
             <div key={ci} className={styles.photoCol}>
               {col.map((m) => (
-                <div
+                <motion.div
                   key={m.id}
+                  layoutId={isMobile ? undefined : `card-${m.id}`}
                   role="button"
                   tabIndex={0}
                   aria-label={`${m.name} — ${m.role}`}
@@ -82,7 +91,7 @@ export function Ekibimiz() {
                     height={650}
                     sizes="(max-width: 900px) 33vw, 200px"
                   />
-                </div>
+                </motion.div>
               ))}
             </div>
           ))}
@@ -130,11 +139,12 @@ export function Ekibimiz() {
           >
             <motion.div
               className={styles.modalCard}
+              layoutId={isMobile ? undefined : `card-${activeMember.id}`}
               onClick={(e) => e.stopPropagation()}
-              initial={{ opacity: 0, scale: 0.92 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 280, damping: 28 }}
+              initial={isMobile ? { opacity: 0, scale: 0.95 } : { opacity: 0, scale: 0.92 }}
+              animate={isMobile ? { opacity: 1, scale: 1 } : { opacity: 1, scale: 1 }}
+              exit={isMobile ? { opacity: 0, scale: 0.95 } : { opacity: 0, scale: 0.95 }}
+              transition={isMobile ? { duration: 0.2 } : { type: 'spring', stiffness: 280, damping: 28 }}
               role="dialog"
               aria-modal="true"
               aria-label={activeMember.name}

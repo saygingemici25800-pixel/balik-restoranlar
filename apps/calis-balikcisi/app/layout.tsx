@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import {
   Cormorant_Garamond,
   DM_Mono,
@@ -49,6 +49,11 @@ const newsreaderFont = Newsreader({
 export const metadata: Metadata = {
   title: 'Çalış Balıkçısı',
   description: 'Çalış sahilinde, günün taze balığı ve gün batımı manzarası.',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
