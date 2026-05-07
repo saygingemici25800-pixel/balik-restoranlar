@@ -131,3 +131,7 @@ pnpm test                            # Jest + Playwright
 - `docs/plan.md` — tam strateji, sitemap, rezervasyon akışı, MVP listesi.
 - `apps/calis-balikcisi/CLAUDE.md` — Çalış'a özgü kurallar.
 - `apps/fethiye-alkolsuz/CLAUDE.md` — Fethiye Alkolsüz'e özgü kurallar.
+
+## Git Komutları
+- Git komutlarını her zaman en kısa şekilde ver. Tek satırda `git add -A && git commit -m '...' && git push`. Uzun multi-line komut yazma. Dosya yollarını tek tek listeleme.
+- Birden fazla commit gerekirse de toplam tek satıra sıkıştır.
