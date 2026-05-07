@@ -87,9 +87,12 @@ body:has([data-rezervasyon]) {
   color: #1f1a12;
 }
 
-/* /rezervasyon/onay — global footer gizli; sayfa kendi kompakt footer'ını
-   render eder. Diğer route'larda ana footer normal görünür. */
-body:has([data-page="onay"]) footer[data-global-footer] {
+/* Sayfa kendi footer'ını render ettiğinde layout'tan gelen global footer
+   dublike olmasın diye gizlenir:
+   - /rezervasyon/onay → kompakt onay footer'ı
+   - / (anasayfa) → page.tsx en altta global footer'ı kendi render eder */
+body:has([data-page="onay"]) footer[data-global-footer],
+body:has([data-page="home"]) footer[data-global-footer]:not([data-page="home"] footer[data-global-footer]) {
   display: none;
 }
 
