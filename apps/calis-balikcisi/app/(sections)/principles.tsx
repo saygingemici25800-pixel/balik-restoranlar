@@ -63,7 +63,7 @@ function VakitRow({ vakit }: { vakit: Vakit }) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 720);
+    const check = () => setIsMobile(window.innerWidth < 768);
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
@@ -75,13 +75,14 @@ function VakitRow({ vakit }: { vakit: Vakit }) {
     target: rowRef,
     offset: ['start end', 'end start'],
   });
-  const scaleValue = useTransform(scrollYProgress, [0.2, 1], [1, 1.8], {
-    clamp: true,
-  });
+  const scaleValue = useTransform(
+    scrollYProgress,
+    [0.2, 1],
+    [1, isMobile ? 1 : 1.8],
+    { clamp: true }
+  );
   const scale =
-    vakit.scrollZoom && !prefersReducedMotion && !isMobile
-      ? scaleValue
-      : undefined;
+    vakit.scrollZoom && !prefersReducedMotion ? scaleValue : undefined;
 
   const slide = prefersReducedMotion ? 0 : 100;
 

@@ -183,3 +183,23 @@
     transform-origin: center !important;
   }
 }
+
+@media (max-width: 768px) {
+  .section {
+    overflow-x: hidden;
+  }
+
+  .vakitRow {
+    overflow: hidden;
+  }
+
+  .medya {
+    transform: none !important;
+    scale: none !important;
+    max-width: 100%;
+  }
+
+  .medya[data-zoom='true'] {
+    transform-origin: center center !important;
+  }
+}
