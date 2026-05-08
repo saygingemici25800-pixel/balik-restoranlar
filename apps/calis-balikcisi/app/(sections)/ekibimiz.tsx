@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import { TEAM_MEMBERS } from './_team-data';
@@ -9,16 +8,6 @@ import styles from './ekibimiz.module.css';
 
 function classes(...names: Array<string | false | null | undefined>) {
   return names.filter(Boolean).join(' ');
-}
-
-function activateOnEnterOrSpace(
-  e: ReactKeyboardEvent<HTMLDivElement>,
-  fn: () => void,
-) {
-  if (e.key === 'Enter' || e.key === ' ') {
-    e.preventDefault();
-    fn();
-  }
 }
 
 export function Ekibimiz() {
@@ -66,11 +55,10 @@ export function Ekibimiz() {
           {[col1, col2, col3].map((col, ci) => (
             <div key={ci} className={styles.photoCol}>
               {col.map((m) => (
-                <motion.div
+                <motion.button
                   key={m.id}
+                  type="button"
                   layoutId={isMobile ? undefined : `card-${m.id}`}
-                  role="button"
-                  tabIndex={0}
                   aria-label={`${m.name} — ${m.role}`}
                   className={classes(
                     styles.photoCard,
@@ -82,7 +70,6 @@ export function Ekibimiz() {
                   onFocus={() => setHoveredId(m.id)}
                   onBlur={() => setHoveredId(null)}
                   onClick={() => setActiveId(m.id)}
-                  onKeyDown={(e) => activateOnEnterOrSpace(e, () => setActiveId(m.id))}
                 >
                   <Image
                     src={m.image}
@@ -91,7 +78,7 @@ export function Ekibimiz() {
                     height={650}
                     sizes="(max-width: 900px) 33vw, 200px"
                   />
-                </motion.div>
+                </motion.button>
               ))}
             </div>
           ))}
@@ -99,10 +86,9 @@ export function Ekibimiz() {
 
         <div className={styles.nameList}>
           {TEAM_MEMBERS.map((m) => (
-            <div
+            <button
               key={m.id}
-              role="button"
-              tabIndex={0}
+              type="button"
               aria-label={`${m.name} — ${m.role}`}
               className={classes(
                 styles.nameRow,
@@ -114,14 +100,13 @@ export function Ekibimiz() {
               onFocus={() => setHoveredId(m.id)}
               onBlur={() => setHoveredId(null)}
               onClick={() => setActiveId(m.id)}
-              onKeyDown={(e) => activateOnEnterOrSpace(e, () => setActiveId(m.id))}
             >
               <div className={styles.nameInner}>
                 <span className={styles.square} aria-hidden="true" />
                 <span className={styles.nameText}>{m.name}</span>
               </div>
               <p className={styles.roleText}>{m.role}</p>
-            </div>
+            </button>
           ))}
         </div>
       </div>

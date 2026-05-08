@@ -92,7 +92,10 @@ export function OnayContent({
           ← Anasayfa
         </Link>
         <span className={styles.dot}>·</span>
-        <span className={styles.requestNo}>Talep no {requestNo}</span>
+        <span className={styles.requestNo}>
+          <span className="sr-only">Talep numarası: </span>
+          Talep no {requestNo}
+        </span>
       </div>
 
       <footer className={styles.compactFooter}>
