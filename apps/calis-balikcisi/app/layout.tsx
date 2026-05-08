@@ -52,6 +52,9 @@ export const metadata: Metadata = {
   title: 'Çalış Balıkçısı — Fethiye Sahilinde Taze Deniz Ürünleri',
   description:
     "Çalış sahilinde 1987'den beri Akif Usta'nın elinden taze deniz ürünleri. Gün batımı manzarası, mevsimsel mezeler ve rezervasyon kolaylığı ile Fethiye'nin köklü balık restoranı.",
+  alternates: {
+    canonical: 'https://calis-balikcisi.vercel.app',
+  },
   openGraph: {
     title: 'Çalış Balıkçısı — Fethiye',
     description:

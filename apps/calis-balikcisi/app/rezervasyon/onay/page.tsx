@@ -23,6 +23,10 @@ const interTight = Inter_Tight({
 export const metadata: Metadata = {
   title: 'Talebiniz alındı — Çalış Balıkçısı',
   description: 'Rezervasyon talebiniz alındı.',
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 const TR_MONTHS = [

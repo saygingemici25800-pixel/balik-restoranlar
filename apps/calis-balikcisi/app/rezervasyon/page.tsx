@@ -20,7 +20,11 @@ const interTight = Inter_Tight({
 
 export const metadata: Metadata = {
   title: 'Rezervasyon — Çalış Balıkçısı',
-  description: 'Sahil kenarında bir akşam için masa seçin.',
+  description:
+    'Çalış sahilinde masa ayırtın. Gün batımı saatleri için önceden rezervasyon önerilir. Online masa seçimi ve anlık onay.',
+  alternates: {
+    canonical: 'https://calis-balikcisi.vercel.app/rezervasyon',
+  },
 };
 
 export default function RezervasyonPage() {

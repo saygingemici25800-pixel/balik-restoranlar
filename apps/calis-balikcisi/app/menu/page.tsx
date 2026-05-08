@@ -2,9 +2,12 @@ import type { Metadata } from 'next';
 import { MenuContent } from './_components/menu-content';
 
 export const metadata: Metadata = {
-  title: 'Menü — Çalış Balıkçısı',
+  title: 'Sofra — Çalış Balıkçısı',
   description:
-    'Çalış sahilinde mezelerden mangala, tatlılara — günün tezgâhından seçilmiş özel menü.',
+    "Çalış Balıkçısı'nın günlük taze balık menüsü. Levrek lokum, jumbo karides, kalamar ızgara ve mevsimsel mezeler. Fethiye'nin sahil restoranında Akdeniz sofrası.",
+  alternates: {
+    canonical: 'https://calis-balikcisi.vercel.app/menu',
+  },
 };
 
 export default function MenuPage() {

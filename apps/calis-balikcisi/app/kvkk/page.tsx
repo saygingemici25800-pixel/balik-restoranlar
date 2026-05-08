@@ -2,6 +2,11 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'KVKK Aydınlatma Metni — Çalış Balıkçısı',
+  description:
+    'Çalış Balıkçısı kişisel verilerin korunması aydınlatma metni. KVKK kapsamında veri işleme politikası.',
+  alternates: {
+    canonical: 'https://calis-balikcisi.vercel.app/kvkk',
+  },
 };
 
 export default function KvkkPage() {
