@@ -26,7 +26,7 @@ const TESTIMONIALS: Testimonial[] = [
     description:
       "Authentic Fish restaurant with fresh ingredients. The grouper kebab was something we'd never tasted before — meaty, moist, melting in the mouth. The waiter's recommendation was perfect. We came back the next night for the same.",
     profileImage:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300',
+      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=220&q=80',
   },
   {
     id: '2',
@@ -36,7 +36,7 @@ const TESTIMONIALS: Testimonial[] = [
     description:
       "Fethiye'ye her gittiğimde mutlaka uğradığım yer. Levrek lokum bir başka. Akif Usta'nın elinden çıkan iş belli oluyor — sade, doğru, dürüst.",
     profileImage:
-      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300',
+      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=220&q=80',
   },
   {
     id: '3',
@@ -46,7 +46,7 @@ const TESTIMONIALS: Testimonial[] = [
     description:
       "4 aydır Fethiye'deyiz, bu mekanı keşfettiğimizden beri sadece burada yiyoruz. Çok temiz, personel çok güleryüzlü, yemekler çok lezzetli. Kışın da yazın da gönül rahatlığıyla gidebilirsiniz.",
     profileImage:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300',
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=220&q=80',
   },
   {
     id: '4',
@@ -56,7 +56,7 @@ const TESTIMONIALS: Testimonial[] = [
     description:
       "Sahil kenarında, gün batımında, taze balıkla — Fethiye'nin en iyi akşam yemeği adresi. Akif Usta'yla balık üzerine sohbet etmek de ayrı bir keyif.",
     profileImage:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300',
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=220&q=80',
   },
   {
     id: '5',
@@ -66,7 +66,7 @@ const TESTIMONIALS: Testimonial[] = [
     description:
       "Çupra ızgara mükemmeldi, mezeler birbirinden taze. Sahile bakan bahçede oturmak, akşamüstü meltemiyle birlikte yenen bir yemek — Fethiye'de buradan iyisi yok.",
     profileImage:
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=220&q=80',
   },
   {
     id: '6',
@@ -76,7 +76,7 @@ const TESTIMONIALS: Testimonial[] = [
     description:
       'Fish was beautifully cooked, the prawns were huge and meaty with a roasted garlic dip. The team was very helpful explaining the dishes. We booked again before we even left.',
     profileImage:
-      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300',
+      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=220&q=80',
   },
 ];
 

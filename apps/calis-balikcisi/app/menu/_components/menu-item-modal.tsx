@@ -254,7 +254,6 @@ export function MenuItemModal({ item, eyebrow, onClose }: Props) {
                       sizes="(min-width: 768px) 60rem, 95vw"
                       className="cinema-photo object-cover"
                       loading="eager"
-                      unoptimized
                     />
                   ) : (
                     <div

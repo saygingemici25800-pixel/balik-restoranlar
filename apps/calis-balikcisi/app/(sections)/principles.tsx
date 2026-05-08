@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import type { RefObject } from 'react';
 import Image from 'next/image';
 import {
   motion,
@@ -9,6 +10,7 @@ import {
   useScroll,
   useTransform,
 } from 'framer-motion';
+import type { MotionValue } from 'framer-motion';
 import styles from './principles.module.css';
 
 type VakitBase = {
@@ -56,34 +58,22 @@ const VAKITLER: Vakit[] = [
   },
 ];
 
-function VakitRow({ vakit }: { vakit: Vakit }) {
-  const rowRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(rowRef, { once: true, margin: '-100px' });
-  const prefersReducedMotion = useReducedMotion();
-  const [isMobile, setIsMobile] = useState(false);
+type VakitRowBaseProps = {
+  vakit: Vakit;
+  rowRef: RefObject<HTMLDivElement>;
+  isInView: boolean;
+  prefersReducedMotion: boolean | null;
+  scale?: MotionValue<number>;
+};
 
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
-
+function VakitRowBase({
+  vakit,
+  rowRef,
+  isInView,
+  prefersReducedMotion,
+  scale,
+}: VakitRowBaseProps) {
   const isCardLeft = vakit.direction === 'card-left';
-
-  const { scrollYProgress } = useScroll({
-    target: rowRef,
-    offset: ['start end', 'end start'],
-  });
-  const scaleValue = useTransform(
-    scrollYProgress,
-    [0.2, 1],
-    [1, isMobile ? 1 : 1.8],
-    { clamp: true }
-  );
-  const scale =
-    vakit.scrollZoom && !prefersReducedMotion ? scaleValue : undefined;
-
   const slide = prefersReducedMotion ? 0 : 100;
 
   return (
@@ -136,6 +126,62 @@ function VakitRow({ vakit }: { vakit: Vakit }) {
       </motion.div>
     </div>
   );
+}
+
+function VakitRowStatic({ vakit }: { vakit: Vakit }) {
+  const rowRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(rowRef, { once: true, margin: '-100px' });
+  const prefersReducedMotion = useReducedMotion();
+
+  return (
+    <VakitRowBase
+      vakit={vakit}
+      rowRef={rowRef}
+      isInView={isInView}
+      prefersReducedMotion={prefersReducedMotion}
+    />
+  );
+}
+
+function VakitRowZoom({ vakit }: { vakit: Vakit }) {
+  const rowRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(rowRef, { once: true, margin: '-100px' });
+  const prefersReducedMotion = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  const { scrollYProgress } = useScroll({
+    target: rowRef,
+    offset: ['start end', 'end start'],
+  });
+  const scaleValue = useTransform(
+    scrollYProgress,
+    [0.2, 1],
+    [1, isMobile ? 1 : 1.8],
+    { clamp: true },
+  );
+  const scale = prefersReducedMotion ? undefined : scaleValue;
+
+  return (
+    <VakitRowBase
+      vakit={vakit}
+      rowRef={rowRef}
+      isInView={isInView}
+      prefersReducedMotion={prefersReducedMotion}
+      scale={scale}
+    />
+  );
+}
+
+function VakitRow({ vakit }: { vakit: Vakit }) {
+  if (vakit.scrollZoom) return <VakitRowZoom vakit={vakit} />;
+  return <VakitRowStatic vakit={vakit} />;
 }
 
 export function Principles() {
