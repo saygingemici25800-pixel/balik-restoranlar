@@ -49,16 +49,10 @@ export function CalisHero() {
         </div>
         <Link
           href="/menu"
-          className="relative inline-block pb-1 mt-10"
-          style={{ textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}
+          className="inline-block bg-[rgba(243,234,216,0.92)] text-[#1f1a12] px-8 py-3.5 tracking-[0.18em] uppercase text-sm shadow-[0_4px_24px_rgba(0,0,0,0.3)] hover:bg-[#1f1a12] hover:text-[#f3ead8] transition-colors duration-300 border border-[rgba(31,26,18,0.15)] mt-10"
+          style={{ textShadow: 'none' }}
         >
-          <span className="text-xs uppercase tracking-[0.3em] text-accent">
-            Sofraya Göz At
-          </span>
-          <span
-            aria-hidden="true"
-            className="absolute left-0 bottom-0 h-px w-full bg-accent"
-          />
+          Sofraya Göz At
         </Link>
       </div>
 
