@@ -44,17 +44,25 @@ export function MenuDemoVideo() {
         margin: '0 auto',
         borderRadius: '8px',
         overflow: 'hidden',
+        aspectRatio: '16/9',
       }}
     >
       <video
-        src="/menu-loop.mov"
         autoPlay
         muted
         loop
         playsInline
-        style={{ width: '100%', display: 'block' }}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          display: 'block',
+        }}
         onError={() => setFailed(true)}
-      />
+      >
+        <source src="/menu-loop.webm" type="video/webm" />
+        <source src="/menu-loop.mp4" type="video/mp4" />
+      </video>
     </div>
   );
 }
