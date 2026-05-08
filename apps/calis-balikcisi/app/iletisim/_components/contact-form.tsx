@@ -22,22 +22,31 @@ const INPUT_CLASS =
 const LABEL_CLASS =
   'block text-[11px] md:text-xs uppercase tracking-wider text-fg/70 mb-1.5 md:mb-2 font-light';
 
+type Status = 'idle' | 'sending' | 'success' | 'error';
+
 export function ContactForm() {
   const [formData, setFormData] = useState<FormData>(INITIAL);
+  const [status, setStatus] = useState<Status>('idle');
 
   const isValid = Boolean(
     formData.name && formData.email && formData.message,
   );
+  const isSending = status === 'sending';
 
   function set<K extends keyof FormData>(field: K, value: FormData[K]) {
     setFormData((prev) => ({ ...prev, [field]: value }));
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!isValid) return;
-    console.log('Inquiry submitted', formData);
-    alert('Mesajınız iletildi — yakında size dönüş yapılacak.');
+    if (!isValid || isSending) return;
+    setStatus('sending');
+    try {
+      await new Promise((r) => setTimeout(r, 1500));
+      setStatus('success');
+    } catch {
+      setStatus('error');
+    }
   }
 
   return (
@@ -50,77 +59,102 @@ export function ContactForm() {
           Mesajınız
         </h2>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-6 md:mb-8">
-            <label htmlFor="contact-name" className={LABEL_CLASS}>
-              İsim
-            </label>
-            <input
-              id="contact-name"
-              type="text"
-              required
-              autoComplete="name"
-              value={formData.name}
-              onChange={(e) => set('name', e.target.value)}
-              className={INPUT_CLASS}
-            />
-          </div>
-
-          <div className="mb-6 md:mb-8">
-            <label htmlFor="contact-email" className={LABEL_CLASS}>
-              E-posta
-            </label>
-            <input
-              id="contact-email"
-              type="email"
-              required
-              autoComplete="email"
-              value={formData.email}
-              onChange={(e) => set('email', e.target.value)}
-              className={INPUT_CLASS}
-            />
-          </div>
-
-          <div className="mb-6 md:mb-8">
-            <label htmlFor="contact-phone" className={LABEL_CLASS}>
-              Telefon{' '}
-              <span className="text-fg/40 normal-case tracking-normal">
-                (isteğe bağlı)
-              </span>
-            </label>
-            <input
-              id="contact-phone"
-              type="tel"
-              autoComplete="tel"
-              pattern="[0-9+ ]*"
-              value={formData.phone}
-              onChange={(e) => set('phone', e.target.value)}
-              className={INPUT_CLASS}
-            />
-          </div>
-
-          <div className="mb-8 md:mb-10">
-            <label htmlFor="contact-message" className={LABEL_CLASS}>
-              Mesaj
-            </label>
-            <textarea
-              id="contact-message"
-              required
-              rows={4}
-              value={formData.message}
-              onChange={(e) => set('message', e.target.value)}
-              className="w-full bg-transparent border-0 border-b border-fg/30 focus:border-accent focus:outline-none py-3 text-fg placeholder:text-fg/40 resize-none min-h-[120px]"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={!isValid}
-            className="w-full border border-accent text-accent py-3 md:py-4 px-6 text-xs md:text-sm uppercase tracking-wider md:tracking-[0.3em] font-bold transition-colors hover:bg-accent hover:text-bg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-accent"
+        {status === 'success' ? (
+          <div
+            role="alert"
+            aria-live="polite"
+            className="border border-accent/40 py-10 px-6 text-center"
           >
-            Gönder
-          </button>
-        </form>
+            <p className="font-display text-xl md:text-2xl text-fg">
+              Mesajınız ulaştı. En kısa sürede dönüş yaparız.
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} aria-busy={isSending}>
+            <div className="mb-6 md:mb-8">
+              <label htmlFor="contact-name" className={LABEL_CLASS}>
+                İsim
+              </label>
+              <input
+                id="contact-name"
+                type="text"
+                required
+                autoComplete="name"
+                disabled={isSending}
+                value={formData.name}
+                onChange={(e) => set('name', e.target.value)}
+                className={INPUT_CLASS}
+              />
+            </div>
+
+            <div className="mb-6 md:mb-8">
+              <label htmlFor="contact-email" className={LABEL_CLASS}>
+                E-posta
+              </label>
+              <input
+                id="contact-email"
+                type="email"
+                required
+                autoComplete="email"
+                disabled={isSending}
+                value={formData.email}
+                onChange={(e) => set('email', e.target.value)}
+                className={INPUT_CLASS}
+              />
+            </div>
+
+            <div className="mb-6 md:mb-8">
+              <label htmlFor="contact-phone" className={LABEL_CLASS}>
+                Telefon{' '}
+                <span className="text-fg/40 normal-case tracking-normal">
+                  (isteğe bağlı)
+                </span>
+              </label>
+              <input
+                id="contact-phone"
+                type="tel"
+                autoComplete="tel"
+                pattern="[0-9+ ]*"
+                disabled={isSending}
+                value={formData.phone}
+                onChange={(e) => set('phone', e.target.value)}
+                className={INPUT_CLASS}
+              />
+            </div>
+
+            <div className="mb-8 md:mb-10">
+              <label htmlFor="contact-message" className={LABEL_CLASS}>
+                Mesaj
+              </label>
+              <textarea
+                id="contact-message"
+                required
+                rows={4}
+                disabled={isSending}
+                value={formData.message}
+                onChange={(e) => set('message', e.target.value)}
+                className="w-full bg-transparent border-0 border-b border-fg/30 focus:border-accent focus:outline-none py-3 text-fg placeholder:text-fg/40 resize-none min-h-[120px] disabled:opacity-60"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={!isValid || isSending}
+              className="w-full border border-accent text-accent py-3 md:py-4 px-6 text-xs md:text-sm uppercase tracking-wider md:tracking-[0.3em] font-bold transition-colors hover:bg-accent hover:text-bg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-accent"
+            >
+              {isSending ? 'Gönderiliyor...' : 'Gönder'}
+            </button>
+
+            {status === 'error' && (
+              <p
+                role="alert"
+                className="mt-4 text-center text-xs md:text-sm text-accent"
+              >
+                Bir sorun oluştu. Lütfen tekrar deneyin.
+              </p>
+            )}
+          </form>
+        )}
       </div>
     </section>
   );
