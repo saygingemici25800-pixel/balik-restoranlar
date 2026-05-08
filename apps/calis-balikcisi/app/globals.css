@@ -106,6 +106,18 @@ body {
   font-family: var(--font-body);
 }
 
+/* Hero 3D canvas yalnız hero alanında görünür: body transparent olur,
+   sonraki section'lar kendi opaque bg'leriyle canvas'ı kapatır. */
+body:has([data-hero-canvas]) {
+  background-color: transparent;
+}
+
+body:has([data-hero-canvas]) main > section:not(:first-of-type) {
+  position: relative;
+  z-index: 1;
+  background-color: rgba(11, 30, 42, 0.85);
+}
+
 /* /rezervasyon kağıt zemin — body'nin koyu deniz overscroll'da sızmasın */
 html:has([data-rezervasyon]),
 body:has([data-rezervasyon]) {

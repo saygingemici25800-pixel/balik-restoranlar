@@ -1,23 +1,14 @@
-import Image from 'next/image';
 import Link from 'next/link';
+import { HeroCanvas } from './hero-canvas';
 import { SiteTopBar } from './top-bar';
 
 export function CalisHero() {
   return (
-    <section className="relative h-[100svh] w-full overflow-hidden text-fg">
-      <div className="absolute inset-0">
-        <Image
-          src="/images/calis-hero-sunset.png"
-          alt="Çalış Balıkçısı sahil gün batımı"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-      </div>
+    <section className="relative z-0 h-[100svh] w-full overflow-hidden text-fg">
+      <HeroCanvas />
 
       <div
-        className="absolute inset-0 bg-gradient-to-b from-bg/70 via-bg/55 to-bg/80"
+        className="absolute inset-0 z-[1] bg-gradient-to-b from-bg/40 via-transparent to-bg/55"
         aria-hidden="true"
       />
 
