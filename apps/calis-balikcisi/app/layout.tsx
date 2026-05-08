@@ -48,8 +48,33 @@ const newsreaderFont = Newsreader({
 });
 
 export const metadata: Metadata = {
-  title: 'Çalış Balıkçısı',
-  description: 'Çalış sahilinde, günün taze balığı ve gün batımı manzarası.',
+  title: 'Çalış Balıkçısı — Fethiye Sahilinde Taze Deniz Ürünleri',
+  description:
+    "Çalış sahilinde 1987'den beri Akif Usta'nın elinden taze deniz ürünleri. Gün batımı manzarası, mevsimsel mezeler ve rezervasyon kolaylığı ile Fethiye'nin köklü balık restoranı.",
+  openGraph: {
+    title: 'Çalış Balıkçısı — Fethiye',
+    description:
+      "Çalış sahilinde 1987'den beri. Mezattan masaya, az müdahaleyle.",
+    url: 'https://calis-balikcisi.vercel.app',
+    siteName: 'Çalış Balıkçısı',
+    locale: 'tr_TR',
+    type: 'website',
+    images: [
+      {
+        url: '/images/tezgah-1.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Çalış Balıkçısı — Fethiye sahilinde taze deniz ürünleri',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Çalış Balıkçısı — Fethiye',
+    description:
+      "Çalış sahilinde 1987'den beri. Mezattan masaya, az müdahaleyle.",
+    images: ['/images/tezgah-1.jpg'],
+  },
 };
 
 export const viewport: Viewport = {
