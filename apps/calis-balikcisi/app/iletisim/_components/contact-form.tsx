@@ -44,16 +44,16 @@ export function ContactForm() {
     <section className="border-t border-fg/10 py-24 md:py-32 px-6">
       <div className="max-w-2xl mx-auto">
         <p className="text-xs uppercase tracking-[0.3em] text-accent text-center mb-6 font-light">
-          Inquiries
+          Mesajınız
         </p>
         <h2 className="font-display font-bold tracking-[-0.01em] text-3xl md:text-4xl text-fg text-center mb-12">
-          Inquiries
+          Mesajınız
         </h2>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-6 md:mb-8">
             <label htmlFor="contact-name" className={LABEL_CLASS}>
-              Name
+              İsim
             </label>
             <input
               id="contact-name"
@@ -68,7 +68,7 @@ export function ContactForm() {
 
           <div className="mb-6 md:mb-8">
             <label htmlFor="contact-email" className={LABEL_CLASS}>
-              Email
+              E-posta
             </label>
             <input
               id="contact-email"
@@ -83,9 +83,9 @@ export function ContactForm() {
 
           <div className="mb-6 md:mb-8">
             <label htmlFor="contact-phone" className={LABEL_CLASS}>
-              Phone{' '}
+              Telefon{' '}
               <span className="text-fg/40 normal-case tracking-normal">
-                (optional)
+                (isteğe bağlı)
               </span>
             </label>
             <input
@@ -101,7 +101,7 @@ export function ContactForm() {
 
           <div className="mb-8 md:mb-10">
             <label htmlFor="contact-message" className={LABEL_CLASS}>
-              Message
+              Mesaj
             </label>
             <textarea
               id="contact-message"
@@ -118,7 +118,7 @@ export function ContactForm() {
             disabled={!isValid}
             className="w-full border border-accent text-accent py-3 md:py-4 px-6 text-xs md:text-sm uppercase tracking-wider md:tracking-[0.3em] font-bold transition-colors hover:bg-accent hover:text-bg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-accent"
           >
-            Send Message
+            Gönder
           </button>
         </form>
       </div>

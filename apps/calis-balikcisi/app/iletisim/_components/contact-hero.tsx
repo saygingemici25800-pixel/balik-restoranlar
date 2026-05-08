@@ -7,10 +7,10 @@ export function ContactHero() {
       />
       <div className="relative h-full flex flex-col items-center justify-center text-center px-6">
         <p className="text-xs uppercase tracking-[0.4em] text-accent font-light">
-          Get in touch
+          Konuşalım
         </p>
         <h1 className="mt-4 md:mt-6 font-display font-bold tracking-[-0.01em] text-6xl md:text-7xl leading-tight text-fg">
-          Contact
+          İletişim
         </h1>
         <span
           aria-hidden="true"

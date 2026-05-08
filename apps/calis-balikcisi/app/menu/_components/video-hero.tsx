@@ -13,7 +13,7 @@ export function VideoHero() {
           aria-hidden="true"
         />
         <p className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 text-xs uppercase tracking-[0.4em] text-accent">
-          A Culinary Journey
+          Tezgâhtan Sofraya
         </p>
       </div>
     </section>

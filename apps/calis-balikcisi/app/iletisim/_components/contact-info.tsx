@@ -32,14 +32,14 @@ export function ContactInfo() {
       <div className="grid md:grid-cols-2 gap-16 md:gap-24">
         <div>
           <p className="text-xs uppercase tracking-[0.3em] text-accent mb-6 font-light">
-            Reach Out
+            Bize Ulaşın
           </p>
           <h2 className="font-display font-bold tracking-[-0.01em] text-3xl md:text-4xl text-fg mb-12">
-            Reach Out
+            Bize Ulaşın
           </h2>
 
           <div className="space-y-8">
-            <InfoBlock icon={<Phone className="h-4 w-4" />} label="Telephone">
+            <InfoBlock icon={<Phone className="h-4 w-4" />} label="Telefon">
               <a
                 href={phoneHref}
                 className="hover:text-accent transition-colors"
@@ -48,7 +48,7 @@ export function ContactInfo() {
               </a>
             </InfoBlock>
 
-            <InfoBlock icon={<Mail className="h-4 w-4" />} label="Email">
+            <InfoBlock icon={<Mail className="h-4 w-4" />} label="E-posta">
               <a
                 href={emailHref}
                 className="hover:text-accent transition-colors"
@@ -57,7 +57,7 @@ export function ContactInfo() {
               </a>
             </InfoBlock>
 
-            <InfoBlock icon={<MapPin className="h-4 w-4" />} label="Address">
+            <InfoBlock icon={<MapPin className="h-4 w-4" />} label="Adres">
               <a
                 href={address.mapHref}
                 target="_blank"
@@ -69,7 +69,7 @@ export function ContactInfo() {
               </a>
             </InfoBlock>
 
-            <InfoBlock icon={<Clock className="h-4 w-4" />} label="Opening Hours">
+            <InfoBlock icon={<Clock className="h-4 w-4" />} label="Açık Saatler">
               <ul className="space-y-1">
                 {openingHours.map((slot) => (
                   <li key={slot.days} className="text-sm">
@@ -84,16 +84,16 @@ export function ContactInfo() {
 
         <div>
           <p className="text-xs uppercase tracking-[0.3em] text-accent mb-6 font-light">
-            Find Us
+            Bizi Bulun
           </p>
           <h2 className="font-display font-bold tracking-[-0.01em] text-3xl md:text-4xl text-fg mb-12">
-            Find Us
+            Bizi Bulun
           </h2>
 
           <div className="aspect-[4/5] w-full overflow-hidden bg-fg/5">
             <iframe
               src={mapEmbedSrc}
-              title="Çalış Balıkçısı — Find Us"
+              title="Çalış Balıkçısı — Bizi Bulun"
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
@@ -101,7 +101,7 @@ export function ContactInfo() {
             />
           </div>
           <p className="mt-4 text-sm italic text-fg/60 text-center">
-            By the sea, awaiting your arrival.
+            Sahil kenarında sizi bekliyoruz.
           </p>
         </div>
       </div>

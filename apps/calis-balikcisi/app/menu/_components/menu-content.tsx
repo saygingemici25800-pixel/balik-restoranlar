@@ -28,10 +28,10 @@ export function MenuContent() {
 
       <section className="pt-8 pb-16 md:pt-12 md:pb-20 px-6 text-center">
         <p className="text-xs uppercase tracking-[0.4em] text-accent">
-          À La Carte
+          Taze Sofra
         </p>
         <h1 className="mt-6 font-display text-6xl md:text-8xl leading-[1.05] text-fg">
-          The Menu
+          Sofra
         </h1>
         <div className="w-16 h-px bg-accent mx-auto mt-6" aria-hidden="true" />
       </section>
