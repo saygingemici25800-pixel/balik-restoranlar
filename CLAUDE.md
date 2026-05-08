@@ -135,3 +135,12 @@ pnpm test                            # Jest + Playwright
 ## Git Komutları
 - Git komutlarını her zaman en kısa şekilde ver. Tek satırda `git add -A && git commit -m '...' && git push`. Uzun multi-line komut yazma. Dosya yollarını tek tek listeleme.
 - Birden fazla commit gerekirse de toplam tek satıra sıkıştır.
+
+## Aktif Skill'ler
+Aşağıdaki skill'leri ilgili task'larda oku ve uygula:
+- UI/UX: ~/.claude/skills/ui-ux-pro-max/SKILL.md
+- Mobil: ~/.claude/skills/mobile-design/SKILL.md
+- Frontend: ~/.claude/skills/frontend-design/SKILL.md
+- Senior Frontend: ~/.claude/skills/senior-frontend/SKILL.md
+- SEO: ~/.claude/skills/seo-optimizer/SKILL.md
+- React: ~/.claude/skills/react-best-practices/SKILL.md
