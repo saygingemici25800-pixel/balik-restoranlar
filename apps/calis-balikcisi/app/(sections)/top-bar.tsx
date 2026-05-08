@@ -77,9 +77,9 @@ export function SiteTopBar({ className = '' }: Props) {
           aria-label="Çalış Balıkçısı — Anasayfa"
           className="justify-self-center"
         >
-          <h1 className="m-0 font-display italic font-normal text-fg text-[0.95rem] md:text-[1.4rem] tracking-[0.02em] whitespace-nowrap">
+          <span className="m-0 font-display italic font-normal text-fg text-[0.95rem] md:text-[1.4rem] tracking-[0.02em] whitespace-nowrap">
             Çalış Balıkçısı
-          </h1>
+          </span>
         </Link>
 
         <Link
