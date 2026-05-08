@@ -15,17 +15,6 @@
   margin: 0 auto 64px;
 }
 
-.eyebrow {
-  display: inline-block;
-  font-family: var(--font-handwritten);
-  font-weight: 300;
-  font-size: 0.72rem;
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-  margin-bottom: 18px;
-}
-
 .title {
   font-family: var(--font-handwritten);
   font-weight: 700;

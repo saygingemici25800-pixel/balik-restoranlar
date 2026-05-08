@@ -10,17 +10,6 @@
   text-align: center;
 }
 
-.eyebrow {
-  display: block;
-  font-family: var(--font-handwritten);
-  font-weight: 300;
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-  opacity: 0.85;
-}
-
 .heading {
   font-family: var(--font-display);
   font-weight: 700;

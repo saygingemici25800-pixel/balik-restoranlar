@@ -148,7 +148,7 @@ export function Testimonials() {
     <section className={styles.section} aria-labelledby="testimonials-title">
       <div className={styles.headerRow}>
         <div className={styles.headerText}>
-          <span className={styles.eyebrow}>Misafirlerimiz</span>
+          <span className="eyebrow">Misafirlerimiz</span>
           <h2 id="testimonials-title" className={styles.title}>
             Sofradan sonra söylenenler
           </h2>

@@ -45,7 +45,7 @@ export function Ekibimiz() {
   return (
     <section className={styles.section}>
       <div className={styles.header}>
-        <span className={styles.eyebrow}>Mutfağın Ardındakiler</span>
+        <span className="eyebrow">Mutfağın Ardındakiler</span>
         <h2 className={styles.title}>Ekibimiz</h2>
         <div className={styles.titleRule} aria-hidden="true" />
       </div>

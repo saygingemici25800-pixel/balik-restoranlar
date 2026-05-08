@@ -188,7 +188,7 @@ export function Principles() {
   return (
     <section className={styles.section}>
       <header className={styles.header}>
-        <span className={styles.eyebrow}>Bir günün üç vakti</span>
+        <span className="eyebrow">Bir günün üç vakti</span>
         <h2 className={styles.heading}>Az müdahale, çok ihtimam</h2>
       </header>
 

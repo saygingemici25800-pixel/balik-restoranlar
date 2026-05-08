@@ -15,7 +15,7 @@ export function ContactSummary() {
     >
       <div className={styles.inner}>
         <div className={styles.header}>
-          <span className={styles.eyebrow}>Konuşalım</span>
+          <span className="eyebrow">Konuşalım</span>
           <h2 id="contact-summary-title" className={styles.title}>
             Sahile uğramadan önce, bir el sallayın
           </h2>

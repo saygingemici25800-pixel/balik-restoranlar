@@ -52,6 +52,20 @@
   --font-inter-tight: 'Kalam', cursive !important;
   --font-dm-mono: 'Kalam', cursive !important;
   --font-spectral: 'Kalam', cursive !important;
+
+  --sun: #d97a3c;
+  --color-accent: #d97a3c;
+}
+
+.eyebrow {
+  display: block;
+  font-family: var(--serif);
+  font-size: 0.72rem;
+  font-weight: 300;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--sun);
+  opacity: 0.85;
 }
 
 /* Kalam zaten el yazısı hissi; italic gereksiz — global olarak nötrle. */
