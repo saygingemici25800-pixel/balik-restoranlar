@@ -6,6 +6,7 @@ import {
   Inter,
   Newsreader,
 } from 'next/font/google';
+import Script from 'next/script';
 import '@balik/design-tokens/calis-balikcisi.css';
 import './globals.css';
 import { Footer } from './_components/footer';
@@ -88,6 +89,67 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="tr"
       className={`${displayFont.variable} ${bodyFont.variable} ${frauncesFont.variable} ${dmMonoFont.variable} ${newsreaderFont.variable}`}
     >
+      <Script
+        id="schema-restaurant"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Restaurant',
+            name: 'Çalış Balıkçısı',
+            description:
+              "Çalış sahilinde 1987'den beri Akif Usta'nın elinden taze deniz ürünleri. Gün batımı manzarası, mevsimsel mezeler.",
+            url: 'https://calis-balikcisi.vercel.app',
+            telephone: '+902526140000',
+            email: 'info@calisbalikcisi.com',
+            foundingDate: '1987',
+            servesCuisine: [
+              'Türk Mutfağı',
+              'Akdeniz Mutfağı',
+              'Deniz Ürünleri',
+            ],
+            priceRange: '₺₺₺',
+            address: {
+              '@type': 'PostalAddress',
+              streetAddress:
+                'Foça Mahallesi, 1054. Sokak No:66, Çalış Sahili',
+              addressLocality: 'Fethiye',
+              addressRegion: 'Muğla',
+              postalCode: '48300',
+              addressCountry: 'TR',
+            },
+            geo: {
+              '@type': 'GeoCoordinates',
+              latitude: 36.6630325,
+              longitude: 29.1082134,
+            },
+            openingHoursSpecification: [
+              {
+                '@type': 'OpeningHoursSpecification',
+                dayOfWeek: [
+                  'Monday',
+                  'Tuesday',
+                  'Wednesday',
+                  'Thursday',
+                  'Friday',
+                  'Saturday',
+                  'Sunday',
+                ],
+                opens: '12:00',
+                closes: '23:00',
+              },
+            ],
+            hasMap:
+              'https://www.google.com/maps/place/Çalış+Balıkçısı/@36.6630367,29.1033425,17z',
+            image:
+              'https://calis-balikcisi.vercel.app/images/tezgah-1.jpg',
+            sameAs: [
+              'https://www.instagram.com/calisbalikcisi/',
+              'https://www.facebook.com/calisbalikcisi',
+            ],
+          }),
+        }}
+      />
       <body>
         <LenisProvider>
           <ScrollProgress />
