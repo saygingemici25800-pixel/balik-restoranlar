@@ -353,6 +353,8 @@ export function HeroCanvas() {
       const ctx = canvas.getContext('2d');
       if (!ctx) return null;
 
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
       ctx.save();
 
       // BODY — vertical gradient (dark top → bright mid → dark bottom)
@@ -458,6 +460,7 @@ export function HeroCanvas() {
       const material = new THREE.SpriteMaterial({
         map: texture,
         transparent: true,
+        alphaTest: 0.1,
         opacity: 0,
       });
       const sprite = new THREE.Sprite(material);
