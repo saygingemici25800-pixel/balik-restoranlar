@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { CONTACT } from '@/lib/constants';
 import { ZONE_LABEL } from '../_data/tables';
 import type { ReservationDraft, SelectedTable } from '../_types/reservation';
 import styles from '../_styles/reservation.module.css';
@@ -287,8 +288,8 @@ export function ReservationPanel({
           </p>
           <p className={styles.fineprint}>
             Telefonla rezervasyon:{' '}
-            <a href="tel:+902521234567" className={styles.phoneLink}>
-              0252 XXX XX XX
+            <a href={CONTACT.phoneHref} className={styles.phoneLink}>
+              {CONTACT.phone}
             </a>
           </p>
         </div>
@@ -474,8 +475,8 @@ export function ReservationPanel({
         </p>
         <p className={styles.fineprint}>
           Telefonla rezervasyon:{' '}
-          <a href="tel:+902521234567" className={styles.phoneLink}>
-            0252 XXX XX XX
+          <a href={CONTACT.phoneHref} className={styles.phoneLink}>
+            {CONTACT.phone}
           </a>
         </p>
       </div>

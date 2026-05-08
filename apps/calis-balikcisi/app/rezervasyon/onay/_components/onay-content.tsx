@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { CONTACT } from '@/lib/constants';
 import styles from '../_styles/onay.module.css';
 
 type Props = {
@@ -75,8 +76,8 @@ export function OnayContent({
       </div>
 
       <div className={styles.phoneBlock}>
-        <a className={styles.phoneLink} href="tel:+902526143821">
-          +90 252 614 38 21
+        <a className={styles.phoneLink} href={CONTACT.phoneHref}>
+          {CONTACT.phone}
         </a>
         <p className={styles.phoneNote}>
           İptal veya değişiklik için aynı numara — telefonda halledelim.
@@ -97,7 +98,7 @@ export function OnayContent({
       <footer className={styles.compactFooter}>
         <div className={styles.twoCol}>
           <div className={styles.colLeft}>
-            <p>Çalış Plajı, Fethiye</p>
+            <p>{CONTACT.address}</p>
             <p>
               <a
                 className={styles.socialBtn}
@@ -111,7 +112,7 @@ export function OnayContent({
             <p>
               <a
                 className={styles.socialBtn}
-                href="https://www.google.com/maps/place/%C3%87al%C4%B1%C5%9F+Bal%C4%B1k%C3%A7%C4%B1s%C4%B1/@36.6630367,29.1033425,17z/data=!3m1!4b1!4m6!3m5!1s0x14c04351f8de4c79:0xf866e29db47e04ae!8m2!3d36.6630325!4d29.1082134!16s%2Fg%2F11jpg_gk6x?entry=ttu&g_ep=EgoyMDI2MDUwMi4wIKXMDSoASAFQAw%3D%3D"
+                href={CONTACT.mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -121,10 +122,10 @@ export function OnayContent({
           </div>
           <div className={styles.colRight}>
             <p>
-              <a href="tel:+902526140000">+90 252 614 XX XX</a>
+              <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>
             </p>
             <p>
-              <a href="mailto:info@calisbalikcisi.com">info@calisbalikcisi.com</a>
+              <a href={CONTACT.emailHref}>{CONTACT.email}</a>
             </p>
             <p>Her gün 12:00–23:00 · Pazar 12:00–22:00</p>
           </div>
