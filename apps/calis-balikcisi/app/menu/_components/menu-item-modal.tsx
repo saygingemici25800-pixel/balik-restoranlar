@@ -190,8 +190,8 @@ export function MenuItemModal({ item, eyebrow, onClose }: Props) {
         </div>
 
         <div className="cinema-panel flex-1 flex items-stretch px-4 md:px-10 py-6 md:py-12">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 w-full items-center">
-            <div className="md:col-span-5 flex flex-col justify-center order-2 md:order-1">
+          <div className="flex flex-col md:flex-row gap-6 md:gap-10 w-full items-center">
+            <div className="flex-1 flex flex-col justify-center order-2 md:order-1 w-full">
               <p
                 className="cinema-text font-mono text-[10px] md:text-[11px] tracking-[0.4em] uppercase text-accent/80"
                 style={{ animationDelay: '650ms' }}
@@ -242,28 +242,47 @@ export function MenuItemModal({ item, eyebrow, onClose }: Props) {
               </p>
             </div>
 
-            <div className="md:col-span-7 order-1 md:order-2">
-              <div className="flex items-stretch gap-2 md:gap-3 w-full">
-                <ColorBars side="left" hideOnMobile />
-                <div className="flex-1 relative overflow-hidden aspect-[16/9] md:aspect-[235/100]">
-                  {item.photoUrl ? (
-                    <Image
-                      src={item.photoUrl}
-                      alt={item.name}
-                      fill
-                      sizes="(min-width: 768px) 60rem, 95vw"
-                      className="cinema-photo object-cover"
-                      loading="eager"
-                    />
-                  ) : (
-                    <div
-                      aria-hidden="true"
-                      className="cinema-photo cinema-fallback absolute inset-0"
-                    />
-                  )}
-                </div>
-                <ColorBars side="right" />
+            <div className="order-1 md:order-2 w-full md:w-auto md:flex-none flex items-stretch justify-center gap-2 md:gap-3">
+              <ColorBars side="left" hideOnMobile />
+              <div
+                className="relative overflow-hidden bg-black/40 w-full md:w-[clamp(200px,30vw,320px)]"
+                style={{
+                  aspectRatio: '9 / 16',
+                  maxHeight: '70vh',
+                  borderRadius: '12px',
+                }}
+              >
+                {item.videoUrl ? (
+                  <video
+                    src={item.videoUrl}
+                    poster={item.photoUrl}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
+                  />
+                ) : item.photoUrl ? (
+                  <Image
+                    src={item.photoUrl}
+                    alt={item.name}
+                    fill
+                    sizes="(min-width: 768px) 320px, 95vw"
+                    className="cinema-photo object-cover"
+                    loading="eager"
+                  />
+                ) : (
+                  <div
+                    aria-hidden="true"
+                    className="cinema-photo cinema-fallback absolute inset-0"
+                  />
+                )}
               </div>
+              <ColorBars side="right" hideOnMobile />
             </div>
           </div>
         </div>
