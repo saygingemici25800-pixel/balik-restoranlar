@@ -41,3 +41,4 @@ coverage/
 
 # Stitch tasarım referansları (local only)
 **/public/images/stitch/
+docs/motion-docs.db
