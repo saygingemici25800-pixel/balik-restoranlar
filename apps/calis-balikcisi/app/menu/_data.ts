@@ -2,7 +2,6 @@ export type MenuItem = {
   name: string;
   description?: string;
   photoUrl?: string;
-  videoUrl?: string;
   longDescription?: string;
   price?: string;
 };
@@ -22,18 +21,16 @@ function spotlightItem(
   longDescription: string,
   photoUrl?: string,
   price?: string,
-  videoUrl?: string,
 ): MenuItem {
-  return { name, description, longDescription, photoUrl, price, videoUrl };
+  return { name, description, longDescription, photoUrl, price };
 }
 
 function listItem(
   name: string,
   longDescription: string,
   price?: string,
-  videoUrl?: string,
 ): MenuItem {
-  return { name, longDescription, price, videoUrl };
+  return { name, longDescription, price };
 }
 
 const LONG = {
@@ -80,7 +77,6 @@ export const CORBA: MenuSection = {
       'Günün taze balığından çıkarılan stokla pişen, hafifçe limonlanmış sıcak başlangıç. Tezgâhın özü, ilk kaşıkta dile gelen şey.',
       'https://images.unsplash.com/photo-1609355108742-dcbc6c51a3a3?q=80&w=987&auto=format&fit=crop',
       '150 ₺',
-      'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/balik-corbasi.mp4',
     ),
     spotlightItem(
       'Günün Çorbası',
@@ -105,7 +101,6 @@ export const YOGURTLU_MEZELER: MenuSection = {
       'Süzme yoğurt, közlenmiş kuru biber ve cevizin sıcak tereyağıyla buluşması. Acımtırak ve dolgun, rakının yanında parlayan bir başlangıç.',
       'https://images.unsplash.com/photo-1777199264017-84af9308a41f?q=80&w=2070&auto=format&fit=crop',
       '130 ₺',
-      'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/atom.mp4',
     ),
     spotlightItem(
       'Cacık',
@@ -113,7 +108,6 @@ export const YOGURTLU_MEZELER: MenuSection = {
       'İnce doğranmış salatalık, dövülmüş sarımsak ve taze nanenin yoğurttaki serin uyumu. Yaz öğlenleri için hafif, ferahlatıcı bir başlangıç.',
       'https://images.unsplash.com/photo-1687540953277-2ead6ffb3a1c?q=80&w=927&auto=format&fit=crop',
       '95 ₺',
-      'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/cacık.mp4',
     ),
     spotlightItem(
       'Haydari',
@@ -121,14 +115,13 @@ export const YOGURTLU_MEZELER: MenuSection = {
       LONG.mezeSpot,
       undefined,
       '110 ₺',
-      'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/haydari.mp4',
     ),
   ],
   fullList: [
     listItem('Akdeniz', LONG.mezeList, '130 ₺'),
-    listItem('Havuç Tarator', LONG.mezeList, '110 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/havuç-tarator.mp4'),
+    listItem('Havuç Tarator', LONG.mezeList, '110 ₺'),
     listItem('Girit Güzeli', LONG.mezeList, '140 ₺'),
-    listItem('Köpoğlu', LONG.mezeList, '130 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/köpeoglu.mp4'),
+    listItem('Köpoğlu', LONG.mezeList, '130 ₺'),
     listItem('Yoğurtlu Semizotu', LONG.mezeList, '120 ₺'),
   ],
 };
@@ -159,7 +152,6 @@ export const SEBZELI_MEZELER: MenuSection = {
       LONG.mezeSpot,
       undefined,
       '110 ₺',
-      'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/antep-ezme.mp4',
     ),
     spotlightItem(
       'Avokado Meze',
@@ -170,15 +162,15 @@ export const SEBZELI_MEZELER: MenuSection = {
     ),
   ],
   fullList: [
-    listItem('Patlıcan Salata', LONG.mezeList, '110 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/patlıcan-salatası.mp4'),
+    listItem('Patlıcan Salata', LONG.mezeList, '110 ₺'),
     listItem('Special House', LONG.mezeList, '140 ₺'),
-    listItem('Deniz Börülcesi', LONG.mezeList, '130 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/deniz-börülcesi.mp4'),
-    listItem('Pancar', LONG.mezeList, '100 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/elmalı-pancar.mp4'),
-    listItem('Kaya Koruğu', LONG.mezeList, '120 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/kaya-korugu.mp4'),
-    listItem('Zeytinyağlı Enginar', LONG.mezeList, '150 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/enginar.mp4'),
-    listItem('Brokoli', LONG.mezeList, '110 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/brokoli.mp4'),
+    listItem('Deniz Börülcesi', LONG.mezeList, '130 ₺'),
+    listItem('Pancar', LONG.mezeList, '100 ₺'),
+    listItem('Kaya Koruğu', LONG.mezeList, '120 ₺'),
+    listItem('Zeytinyağlı Enginar', LONG.mezeList, '150 ₺'),
+    listItem('Brokoli', LONG.mezeList, '110 ₺'),
     listItem('Köz Biber', LONG.mezeList, '100 ₺'),
-    listItem('Karışık Ot Tabağı', LONG.mezeList, '130 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/karisik-ot.mp4'),
+    listItem('Karışık Ot Tabağı', LONG.mezeList, '130 ₺'),
   ],
 };
 
@@ -194,7 +186,6 @@ export const BAKLIYATLI_MEZELER: MenuSection = {
       "Suda tatlanmış iç bakla püresi, soğuk soğuk dilimlenip dereotuyla servis edilir. Çalış'ın geleneksel başlangıcı, zeytinyağı dökülerek yenir.",
       'https://images.unsplash.com/photo-1680990999782-ba7fe26e4d0b?q=80&w=1910&auto=format&fit=crop',
       '110 ₺',
-      'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/fava-tekmil.mp4',
     ),
     spotlightItem(
       'Humus',
@@ -213,7 +204,7 @@ export const BAKLIYATLI_MEZELER: MenuSection = {
   ],
   fullList: [
     listItem('Kuru Börülce', LONG.mezeList, '110 ₺'),
-    listItem('Izgara Zeytin', LONG.mezeList, '90 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/izgara-zeytin.mp4'),
+    listItem('Izgara Zeytin', LONG.mezeList, '90 ₺'),
     listItem('Yeşil Zeytin', LONG.mezeList, '80 ₺'),
   ],
 };
@@ -261,7 +252,6 @@ export const DENIZ_MAHSULLERI_MEZE: MenuSection = {
       LONG.denizMezeSpot,
       undefined,
       '220 ₺',
-      'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/levrek-marin.mp4',
     ),
     spotlightItem(
       'Ahtapot Salata',
@@ -269,7 +259,6 @@ export const DENIZ_MAHSULLERI_MEZE: MenuSection = {
       LONG.denizMezeSpot,
       undefined,
       '240 ₺',
-      'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/ahtapot-salatasi.mp4',
     ),
     spotlightItem(
       'Hamsi Marin',
@@ -281,9 +270,9 @@ export const DENIZ_MAHSULLERI_MEZE: MenuSection = {
   ],
   fullList: [
     listItem('Fesleğenli Levrek Marin', LONG.denizMezeList, '230 ₺'),
-    listItem('Çiroz', LONG.denizMezeList, '180 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/çiroz.mp4'),
+    listItem('Çiroz', LONG.denizMezeList, '180 ₺'),
     listItem('Midye Marin', LONG.denizMezeList, '170 ₺'),
-    listItem('Karışık Deniz Mahsülleri Salata', LONG.denizMezeList, '280 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/karisik-deniz-mahsülü.mp4'),
+    listItem('Karışık Deniz Mahsülleri Salata', LONG.denizMezeList, '280 ₺'),
   ],
 };
 
@@ -299,7 +288,6 @@ export const SPESIYAL_LEVREK_LOKUM: MenuSection = {
       LONG.lokumSpot,
       undefined,
       '320 ₺',
-      'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/levrek-lokum.mp4',
     ),
     spotlightItem(
       'Spesiyal Levrek Lokum 2',
@@ -331,7 +319,6 @@ export const ARA_SICAKLAR: MenuSection = {
       LONG.araSpot,
       undefined,
       '240 ₺',
-      'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/kalamar-izgara.mp4',
     ),
     spotlightItem(
       'Karides Tava',
@@ -339,7 +326,6 @@ export const ARA_SICAKLAR: MenuSection = {
       LONG.araSpot,
       undefined,
       '260 ₺',
-      'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/karide-tava.mp4',
     ),
     spotlightItem(
       'Arpa Şehriye, Midye ve Trüf Mantarlı Karışımı',
@@ -354,7 +340,6 @@ export const ARA_SICAKLAR: MenuSection = {
       LONG.araSpot,
       undefined,
       '220 ₺',
-      'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/levrek-simit.mp4',
     ),
     spotlightItem(
       'Lezzet Bombası',
@@ -362,26 +347,25 @@ export const ARA_SICAKLAR: MenuSection = {
       LONG.araSpot,
       undefined,
       '250 ₺',
-      'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/lezzet-bombasi.mp4',
     ),
   ],
   fullList: [
-    listItem('Kalamar Tava', LONG.araList, '220 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/kalamar-tava.mp4'),
+    listItem('Kalamar Tava', LONG.araList, '220 ₺'),
     listItem('Çıtır Karides', LONG.araList, '240 ₺'),
     listItem('Jumbo Karides', LONG.araList, '320 ₺'),
     listItem('Paçanga Böreği', LONG.araList, '160 ₺'),
-    listItem('Balıkçı Böreği', LONG.araList, '170 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/balikçi-boregi.mp4'),
+    listItem('Balıkçı Böreği', LONG.araList, '170 ₺'),
     listItem('Patlıcan Kadayıflı Levrek', LONG.araList, '280 ₺'),
     listItem('Bademli Levrek', LONG.araList, '280 ₺'),
     listItem('Anasonlu Levrek', LONG.araList, '280 ₺'),
     listItem('Domates Soslu Patlıcan Pane', LONG.araList, '180 ₺'),
     listItem('Anne Patatesi', LONG.araList, '130 ₺'),
     listItem('Chips', LONG.araList, '110 ₺'),
-    listItem('Fish & Chips', LONG.araList, '240 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/fish-and-chips.mp4'),
-    listItem('Ahtapot Izgara', LONG.araList, '290 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/ahtapot-izgara.mp4'),
+    listItem('Fish & Chips', LONG.araList, '240 ₺'),
+    listItem('Ahtapot Izgara', LONG.araList, '290 ₺'),
     listItem('Ahtapot Tandır', LONG.araList, '310 ₺'),
     listItem('Midye Tava', LONG.araList, '200 ₺'),
-    listItem('Şevketi Bostan', LONG.araList, '190 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/çitir-sevketi-bostan.mp4'),
+    listItem('Şevketi Bostan', LONG.araList, '190 ₺'),
     listItem('Deniz Mahsüllü Şevketi Bostan', LONG.araList, '280 ₺'),
     listItem('Kaşar Mantar', LONG.araList, '160 ₺'),
   ],
@@ -399,7 +383,6 @@ export const SALATALAR: MenuSection = {
       LONG.salataSpot,
       undefined,
       '180 ₺',
-      'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/calis-special.mp4',
     ),
     spotlightItem(
       'Gavurdağ Salata',
@@ -417,7 +400,7 @@ export const SALATALAR: MenuSection = {
     ),
   ],
   fullList: [
-    listItem('Mevsim Salata', LONG.salataList, '130 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/mevsim-salata.mp4'),
+    listItem('Mevsim Salata', LONG.salataList, '130 ₺'),
     listItem('Çoban Salata', LONG.salataList, '130 ₺'),
     listItem('Yeşil Salata', LONG.salataList, '120 ₺'),
     listItem('İstanbul Salata', LONG.salataList, '150 ₺'),
@@ -443,7 +426,6 @@ export const PORSIYON_BALIK: MenuSection = {
       LONG.porsiyonSpot,
       undefined,
       '575 ₺',
-      'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/cupra-izgara-gercek.mp4',
     ),
     spotlightItem(
       'Somon Izgara',
@@ -451,12 +433,11 @@ export const PORSIYON_BALIK: MenuSection = {
       LONG.porsiyonSpot,
       undefined,
       '750 ₺',
-      'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/somon-izgara.mp4',
     ),
   ],
   fullList: [
     listItem('Dil Şiş', LONG.porsiyonList, '700 ₺'),
-    listItem('Lagos Şiş', LONG.porsiyonList, '850 ₺', 'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/lahos-şiş.mp4'),
+    listItem('Lagos Şiş', LONG.porsiyonList, '850 ₺'),
     listItem('Somon Şiş', LONG.porsiyonList, '750 ₺'),
     listItem('Barbun Tava / Izgara', LONG.porsiyonList, '450 ₺'),
     listItem('Balık Şaşlık', LONG.porsiyonList, '600 ₺'),
@@ -518,7 +499,6 @@ export const BEYAZ_KIRMIZI_ET: MenuSection = {
       LONG.etSpot,
       undefined,
       '380 ₺',
-      'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/izgara-köfte.mp4',
     ),
     spotlightItem(
       'Et Çökertme',
