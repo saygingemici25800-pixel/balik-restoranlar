@@ -2,8 +2,17 @@
 
 export const dynamic = "force-dynamic";
 
+import {
+  AlertCircle,
+  LogOut,
+  Plus,
+  RefreshCw,
+  Trash2,
+  X,
+} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import styles from "./admin.module.css";
 
 // Basit koruma — production auth değil. Şifre client-side karşılaştırılır.
 // ADMIN_PASSWORD env değişkeni sunucu tarafı olduğundan tarayıcıya ulaşmaz;
@@ -36,6 +45,7 @@ export default function AdminPage() {
   const [error, setError] = useState<string | null>(null);
   const [savingId, setSavingId] = useState<number | null>(null);
 
+  const [modalOpen, setModalOpen] = useState(false);
   const [newItem, setNewItem] = useState<NewItem>(EMPTY_NEW_ITEM);
   const [adding, setAdding] = useState(false);
 
@@ -70,6 +80,12 @@ export default function AdminPage() {
     } else {
       setAuthError(true);
     }
+  }
+
+  function handleLogout() {
+    setAuthed(false);
+    setPasswordInput("");
+    setItems([]);
   }
 
   function updateField<K extends keyof MenuItem>(
@@ -160,6 +176,7 @@ export default function AdminPage() {
     }
     setNewItem(EMPTY_NEW_ITEM);
     setAdding(false);
+    setModalOpen(false);
   }
 
   const categories = useMemo(() => {
@@ -167,329 +184,280 @@ export default function AdminPage() {
     return Array.from(set).sort((a, b) => a.localeCompare(b, "tr"));
   }, [items]);
 
+  const grouped = useMemo(() => {
+    const map = new Map<string, MenuItem[]>();
+    for (const item of items) {
+      const list = map.get(item.category);
+      if (list) {
+        list.push(item);
+      } else {
+        map.set(item.category, [item]);
+      }
+    }
+    return Array.from(map.entries()).sort((a, b) =>
+      a[0].localeCompare(b[0], "tr"),
+    );
+  }, [items]);
+
   if (!authed) {
     return (
-      <main style={styles.authWrap}>
-        <form onSubmit={handleLogin} style={styles.authCard}>
-          <h1 style={styles.authTitle}>Yönetim Paneli</h1>
-          <label htmlFor="admin-password" style={styles.label}>
-            Şifre
-          </label>
-          <input
-            id="admin-password"
-            type="password"
-            value={passwordInput}
-            onChange={(e) => setPasswordInput(e.target.value)}
-            style={styles.input}
-            autoComplete="current-password"
-          />
-          {authError && (
-            <p style={styles.errorText}>Şifre hatalı. Tekrar deneyin.</p>
-          )}
-          <button type="submit" style={styles.primaryBtn}>
-            Giriş
-          </button>
-        </form>
-      </main>
+      <div className={styles.wrap}>
+        <main className={styles.authWrap}>
+          <form className={styles.authCard} onSubmit={handleLogin}>
+            <h1 className={styles.authTitle}>Çalış Balıkçısı</h1>
+            <p className={styles.authSub}>Menü Yönetimi — giriş yapın</p>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="admin-password">
+                Şifre
+              </label>
+              <input
+                id="admin-password"
+                className={styles.input}
+                type="password"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                autoComplete="current-password"
+                autoFocus
+              />
+            </div>
+            {authError && (
+              <p className={styles.authError}>Şifre hatalı. Tekrar deneyin.</p>
+            )}
+            <button
+              type="submit"
+              className={`${styles.btnPrimary} ${styles.authBtn}`}
+            >
+              Giriş yap
+            </button>
+          </form>
+        </main>
+      </div>
     );
   }
 
   return (
-    <main style={styles.page}>
-      <header style={styles.header}>
-        <h1 style={styles.title}>Menü Yönetimi</h1>
-        <button
-          type="button"
-          onClick={() => void fetchItems()}
-          style={styles.secondaryBtn}
-        >
-          Yenile
-        </button>
+    <div className={styles.wrap}>
+      <header className={styles.header}>
+        <div className={styles.headerInner}>
+          <h1 className={styles.brand}>
+            Çalış Balıkçısı <span className={styles.brandMuted}>— Menü Yönetimi</span>
+          </h1>
+          <button
+            type="button"
+            className={styles.btnGhost}
+            onClick={handleLogout}
+          >
+            <LogOut size={16} aria-hidden="true" />
+            Çıkış
+          </button>
+        </div>
       </header>
 
-      {error && <p style={styles.errorBanner}>{error}</p>}
+      <main className={styles.container}>
+        <div className={styles.toolbar}>
+          <h2 className={styles.toolbarTitle}>Tabaklar</h2>
+          <div className={styles.toolbarActions}>
+            <button
+              type="button"
+              className={styles.btnGhost}
+              onClick={() => void fetchItems()}
+              aria-label="Listeyi yenile"
+            >
+              <RefreshCw size={16} aria-hidden="true" />
+              Yenile
+            </button>
+            <button
+              type="button"
+              className={styles.btnPrimary}
+              onClick={() => {
+                setNewItem(EMPTY_NEW_ITEM);
+                setModalOpen(true);
+              }}
+            >
+              <Plus size={16} aria-hidden="true" />
+              Yeni Tabak Ekle
+            </button>
+          </div>
+        </div>
 
-      <section style={styles.card}>
-        <h2 style={styles.sectionTitle}>Yeni Tabak Ekle</h2>
-        <form onSubmit={addItem} style={styles.addForm}>
-          <input
-            list="kategori-list"
-            placeholder="Kategori"
-            value={newItem.category}
-            onChange={(e) =>
-              setNewItem((prev) => ({ ...prev, category: e.target.value }))
-            }
-            style={styles.input}
-            aria-label="Kategori"
-          />
-          <datalist id="kategori-list">
-            {categories.map((cat) => (
-              <option key={cat} value={cat} />
-            ))}
-          </datalist>
-          <input
-            placeholder="İsim"
-            value={newItem.name}
-            onChange={(e) =>
-              setNewItem((prev) => ({ ...prev, name: e.target.value }))
-            }
-            style={styles.input}
-            aria-label="İsim"
-          />
-          <input
-            type="number"
-            step="0.01"
-            min="0"
-            placeholder="Fiyat"
-            value={newItem.price}
-            onChange={(e) =>
-              setNewItem((prev) => ({ ...prev, price: e.target.value }))
-            }
-            style={styles.input}
-            aria-label="Fiyat"
-          />
-          <button type="submit" style={styles.primaryBtn} disabled={adding}>
-            {adding ? "Ekleniyor…" : "Ekle"}
-          </button>
-        </form>
-      </section>
+        {error && (
+          <p className={styles.errorBanner}>
+            <AlertCircle size={16} aria-hidden="true" />
+            {error}
+          </p>
+        )}
 
-      <section style={styles.card}>
         {loading ? (
-          <p style={styles.muted}>Yükleniyor…</p>
+          <p className={styles.muted}>Yükleniyor…</p>
         ) : items.length === 0 ? (
-          <p style={styles.muted}>Kayıt bulunamadı.</p>
+          <p className={styles.muted}>Henüz tabak yok. Yeni bir tane ekleyin.</p>
         ) : (
-          <div style={styles.tableWrap}>
-            <table style={styles.table}>
-              <thead>
-                <tr>
-                  <th style={styles.th}>Kategori</th>
-                  <th style={styles.th}>İsim</th>
-                  <th style={styles.th}>Fiyat</th>
-                  <th style={styles.th}>Aktif</th>
-                  <th style={styles.th}>İşlemler</th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((item) => (
-                  <tr
+          grouped.map(([category, list]) => (
+            <section className={styles.category} key={category}>
+              <h3 className={styles.categoryTitle}>{category}</h3>
+              <div className={styles.card}>
+                {list.map((item) => (
+                  <div
+                    className={`${styles.row} ${
+                      item.is_active ? "" : styles.rowInactive
+                    }`}
                     key={item.id}
-                    style={item.is_active ? undefined : styles.inactiveRow}
                   >
-                    <td style={styles.td}>{item.category}</td>
-                    <td style={styles.td}>
+                    <input
+                      className={`${styles.input} ${styles.nameInput}`}
+                      value={item.name}
+                      onChange={(e) =>
+                        updateField(item.id, "name", e.target.value)
+                      }
+                      aria-label={`${item.name} ismi`}
+                    />
+                    <div className={styles.priceWrap}>
                       <input
-                        value={item.name}
-                        onChange={(e) =>
-                          updateField(item.id, "name", e.target.value)
-                        }
-                        style={styles.cellInput}
-                        aria-label={`${item.name} ismi`}
-                      />
-                    </td>
-                    <td style={styles.td}>
-                      <input
+                        className={`${styles.input} ${styles.priceInput}`}
                         type="number"
                         step="0.01"
                         min="0"
                         value={item.price}
                         onChange={(e) =>
-                          updateField(
-                            item.id,
-                            "price",
-                            Number(e.target.value),
-                          )
+                          updateField(item.id, "price", Number(e.target.value))
                         }
-                        style={{ ...styles.cellInput, width: 90 }}
                         aria-label={`${item.name} fiyatı`}
                       />
-                    </td>
-                    <td style={styles.td}>
-                      <label style={styles.toggleLabel}>
-                        <input
-                          type="checkbox"
-                          checked={item.is_active}
-                          onChange={() => void toggleActive(item)}
-                          aria-label={`${item.name} aktiflik durumu`}
-                        />
-                        <span>{item.is_active ? "Aktif" : "Pasif"}</span>
-                      </label>
-                    </td>
-                    <td style={styles.td}>
-                      <div style={styles.actions}>
-                        <button
-                          type="button"
-                          onClick={() => void saveItem(item)}
-                          style={styles.primaryBtn}
-                          disabled={savingId === item.id}
-                        >
-                          {savingId === item.id ? "…" : "Kaydet"}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => void softDelete(item)}
-                          style={styles.dangerBtn}
-                        >
-                          Sil
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+                    </div>
+                    <label
+                      className={styles.switch}
+                      title={item.is_active ? "Aktif" : "Pasif"}
+                    >
+                      <input
+                        className={styles.switchInput}
+                        type="checkbox"
+                        checked={item.is_active}
+                        onChange={() => void toggleActive(item)}
+                        aria-label={`${item.name} aktiflik durumu`}
+                      />
+                      <span className={styles.slider} />
+                    </label>
+                    <div className={styles.actions}>
+                      <button
+                        type="button"
+                        className={`${styles.btnPrimary} ${styles.saveBtn}`}
+                        onClick={() => void saveItem(item)}
+                        disabled={savingId === item.id}
+                      >
+                        {savingId === item.id ? "…" : "Kaydet"}
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.btnDanger}
+                        onClick={() => void softDelete(item)}
+                        aria-label={`${item.name} sil`}
+                        title="Sil (pasife al)"
+                      >
+                        <Trash2 size={16} aria-hidden="true" />
+                      </button>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </div>
+            </section>
+          ))
         )}
-      </section>
-    </main>
+      </main>
+
+      {modalOpen && (
+        <div
+          className={styles.overlay}
+          onClick={() => !adding && setModalOpen(false)}
+          role="presentation"
+        >
+          <div
+            className={styles.modal}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="add-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className={styles.modalTitle} id="add-title">
+              Yeni Tabak Ekle
+            </h2>
+            <p className={styles.modalSub}>
+              Kategori, isim ve fiyat girin. Tabak varsayılan olarak aktif eklenir.
+            </p>
+            <form onSubmit={addItem}>
+              <div className={styles.field}>
+                <label className={styles.label} htmlFor="new-category">
+                  Kategori
+                </label>
+                <input
+                  id="new-category"
+                  className={styles.input}
+                  list="kategori-list"
+                  placeholder="Örn. Mezeler"
+                  value={newItem.category}
+                  onChange={(e) =>
+                    setNewItem((prev) => ({ ...prev, category: e.target.value }))
+                  }
+                  autoFocus
+                />
+                <datalist id="kategori-list">
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat} />
+                  ))}
+                </datalist>
+              </div>
+              <div className={styles.field}>
+                <label className={styles.label} htmlFor="new-name">
+                  İsim
+                </label>
+                <input
+                  id="new-name"
+                  className={styles.input}
+                  placeholder="Örn. Levrek ızgara"
+                  value={newItem.name}
+                  onChange={(e) =>
+                    setNewItem((prev) => ({ ...prev, name: e.target.value }))
+                  }
+                />
+              </div>
+              <div className={styles.field}>
+                <label className={styles.label} htmlFor="new-price">
+                  Fiyat (₺)
+                </label>
+                <input
+                  id="new-price"
+                  className={styles.input}
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="0"
+                  value={newItem.price}
+                  onChange={(e) =>
+                    setNewItem((prev) => ({ ...prev, price: e.target.value }))
+                  }
+                />
+              </div>
+              <div className={styles.modalActions}>
+                <button
+                  type="button"
+                  className={styles.btnGhost}
+                  onClick={() => setModalOpen(false)}
+                  disabled={adding}
+                >
+                  <X size={16} aria-hidden="true" />
+                  Vazgeç
+                </button>
+                <button
+                  type="submit"
+                  className={styles.btnPrimary}
+                  disabled={adding}
+                >
+                  {adding ? "Ekleniyor…" : "Ekle"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  authWrap: {
-    minHeight: "100vh",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#ffffff",
-    color: "#111111",
-    fontFamily: "Arial, Helvetica, sans-serif",
-    padding: 16,
-  },
-  authCard: {
-    width: "100%",
-    maxWidth: 320,
-    display: "flex",
-    flexDirection: "column",
-    gap: 12,
-    border: "1px solid #dddddd",
-    borderRadius: 8,
-    padding: 24,
-  },
-  authTitle: { fontSize: 20, margin: 0, fontWeight: 700 },
-  page: {
-    minHeight: "100vh",
-    backgroundColor: "#ffffff",
-    color: "#111111",
-    fontFamily: "Arial, Helvetica, sans-serif",
-    padding: 16,
-    maxWidth: 960,
-    margin: "0 auto",
-  },
-  header: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 12,
-    marginBottom: 16,
-    flexWrap: "wrap",
-  },
-  title: { fontSize: 22, margin: 0, fontWeight: 700 },
-  sectionTitle: { fontSize: 16, margin: "0 0 12px", fontWeight: 700 },
-  card: {
-    border: "1px solid #dddddd",
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-  },
-  addForm: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: 8,
-    alignItems: "center",
-  },
-  label: { fontSize: 13, fontWeight: 600 },
-  input: {
-    flex: "1 1 140px",
-    minWidth: 0,
-    padding: "8px 10px",
-    border: "1px solid #cccccc",
-    borderRadius: 6,
-    fontSize: 14,
-    color: "#111111",
-    backgroundColor: "#ffffff",
-    fontFamily: "inherit",
-  },
-  cellInput: {
-    width: "100%",
-    minWidth: 120,
-    padding: "6px 8px",
-    border: "1px solid #cccccc",
-    borderRadius: 6,
-    fontSize: 14,
-    color: "#111111",
-    backgroundColor: "#ffffff",
-    fontFamily: "inherit",
-  },
-  tableWrap: { overflowX: "auto" },
-  table: {
-    width: "100%",
-    borderCollapse: "collapse",
-    fontSize: 14,
-  },
-  th: {
-    textAlign: "left",
-    padding: "8px 10px",
-    borderBottom: "2px solid #111111",
-    whiteSpace: "nowrap",
-  },
-  td: {
-    padding: "8px 10px",
-    borderBottom: "1px solid #eeeeee",
-    verticalAlign: "middle",
-  },
-  inactiveRow: { opacity: 0.5 },
-  toggleLabel: {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: 6,
-    whiteSpace: "nowrap",
-    cursor: "pointer",
-  },
-  actions: { display: "flex", gap: 6 },
-  primaryBtn: {
-    padding: "8px 14px",
-    border: "1px solid #111111",
-    borderRadius: 6,
-    backgroundColor: "#111111",
-    color: "#ffffff",
-    fontSize: 14,
-    cursor: "pointer",
-    fontFamily: "inherit",
-    whiteSpace: "nowrap",
-  },
-  secondaryBtn: {
-    padding: "8px 14px",
-    border: "1px solid #111111",
-    borderRadius: 6,
-    backgroundColor: "#ffffff",
-    color: "#111111",
-    fontSize: 14,
-    cursor: "pointer",
-    fontFamily: "inherit",
-    whiteSpace: "nowrap",
-  },
-  dangerBtn: {
-    padding: "8px 14px",
-    border: "1px solid #b00020",
-    borderRadius: 6,
-    backgroundColor: "#ffffff",
-    color: "#b00020",
-    fontSize: 14,
-    cursor: "pointer",
-    fontFamily: "inherit",
-    whiteSpace: "nowrap",
-  },
-  muted: { color: "#666666", margin: 0 },
-  errorText: { color: "#b00020", fontSize: 13, margin: 0 },
-  errorBanner: {
-    color: "#b00020",
-    backgroundColor: "#fdecef",
-    border: "1px solid #f5c2cb",
-    borderRadius: 6,
-    padding: "8px 12px",
-    fontSize: 14,
-    marginBottom: 16,
-  },
-};
