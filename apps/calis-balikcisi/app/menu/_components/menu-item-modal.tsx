@@ -247,12 +247,12 @@ export function MenuItemModal({ item, eyebrow, onClose }: Props) {
               <div className="flex items-stretch gap-2 md:gap-3 w-full">
                 <ColorBars side="left" hideOnMobile />
                 <div className="flex-1 relative overflow-hidden aspect-[16/9] md:aspect-[235/100]">
-                  {item.videoUrl && item.photoUrl ? (
+                  {item.videoUrl ? (
                     <MenuVideoCard
-                      poster={item.photoUrl}
                       video={item.videoUrl}
+                      poster={item.photoUrl}
                       title={item.name}
-                      fill
+                      className="mvc-fill"
                     />
                   ) : item.photoUrl ? (
                     <Image
@@ -269,6 +269,13 @@ export function MenuItemModal({ item, eyebrow, onClose }: Props) {
                       className="cinema-photo cinema-fallback absolute inset-0"
                     />
                   )}
+                  <style>{`
+                    .mvc.mvc-fill {
+                      position: absolute; inset: 0;
+                      aspect-ratio: auto; height: 100%;
+                      border-radius: 0;
+                    }
+                  `}</style>
                 </div>
                 <ColorBars side="right" />
               </div>
