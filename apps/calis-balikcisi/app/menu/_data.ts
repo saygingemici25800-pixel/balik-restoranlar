@@ -2,8 +2,11 @@ export type MenuItem = {
   name: string;
   description?: string;
   photoUrl?: string;
+  videoUrl?: string;
   longDescription?: string;
   price?: string;
+  /** Fiyatı henüz girilmemiş ürün: canlıda gösterilmez (MENU_DATA'da filtrelenir). */
+  hidden?: boolean;
 };
 
 export type MenuSection = {
@@ -31,6 +34,12 @@ function listItem(
   price?: string,
 ): MenuItem {
   return { name, longDescription, price };
+}
+
+// Fiyatı henüz girilmemiş yeni ürün: medya bağlı ama canlıda gizli (hidden).
+// MENU_DATA, hidden öğeleri filtreler; fiyat girilip hidden kaldırılınca görünür.
+function hiddenItem(name: string, longDescription: string): MenuItem {
+  return { name, longDescription, hidden: true };
 }
 
 const LONG = {
@@ -123,6 +132,8 @@ export const YOGURTLU_MEZELER: MenuSection = {
     listItem('Girit Güzeli', LONG.mezeList, '140 ₺'),
     listItem('Köpoğlu', LONG.mezeList, '130 ₺'),
     listItem('Yoğurtlu Semizotu', LONG.mezeList, '120 ₺'),
+    hiddenItem('Yoğurtlu Meze', LONG.mezeList),
+    hiddenItem('Bademli Havuç Tarator', LONG.mezeList),
   ],
 };
 
@@ -171,6 +182,13 @@ export const SEBZELI_MEZELER: MenuSection = {
     listItem('Brokoli', LONG.mezeList, '110 ₺'),
     listItem('Köz Biber', LONG.mezeList, '100 ₺'),
     listItem('Karışık Ot Tabağı', LONG.mezeList, '130 ₺'),
+    hiddenItem('Patlıcan Dövme', LONG.mezeList),
+    hiddenItem('Yaprak Sarması', LONG.mezeList),
+    hiddenItem('Yunan Ezmesi', LONG.mezeList),
+    hiddenItem('Yunan Mezesi', LONG.mezeList),
+    hiddenItem('Zeytinyağlı Kereviz', LONG.mezeList),
+    hiddenItem('Mevsim Meze', LONG.mezeList),
+    hiddenItem('Kıbrıs Mezesi', LONG.mezeList),
   ],
 };
 
@@ -206,6 +224,7 @@ export const BAKLIYATLI_MEZELER: MenuSection = {
     listItem('Kuru Börülce', LONG.mezeList, '110 ₺'),
     listItem('Izgara Zeytin', LONG.mezeList, '90 ₺'),
     listItem('Yeşil Zeytin', LONG.mezeList, '80 ₺'),
+    hiddenItem('Bezirgan', LONG.mezeList),
   ],
 };
 
@@ -273,6 +292,8 @@ export const DENIZ_MAHSULLERI_MEZE: MenuSection = {
     listItem('Çiroz', LONG.denizMezeList, '180 ₺'),
     listItem('Midye Marin', LONG.denizMezeList, '170 ₺'),
     listItem('Karışık Deniz Mahsülleri Salata', LONG.denizMezeList, '280 ₺'),
+    hiddenItem('Karides Marin', LONG.denizMezeList),
+    hiddenItem('Kremalı Ahtapot', LONG.denizMezeList),
   ],
 };
 
@@ -368,6 +389,10 @@ export const ARA_SICAKLAR: MenuSection = {
     listItem('Şevketi Bostan', LONG.araList, '190 ₺'),
     listItem('Deniz Mahsüllü Şevketi Bostan', LONG.araList, '280 ₺'),
     listItem('Kaşar Mantar', LONG.araList, '160 ₺'),
+    hiddenItem('Çıtır Kabak', LONG.araList),
+    hiddenItem('Çıtır Tabak', LONG.araList),
+    hiddenItem('Ekşili Mantar', LONG.araList),
+    hiddenItem('Izgara Peynir', LONG.araList),
   ],
 };
 
@@ -404,6 +429,7 @@ export const SALATALAR: MenuSection = {
     listItem('Çoban Salata', LONG.salataList, '130 ₺'),
     listItem('Yeşil Salata', LONG.salataList, '120 ₺'),
     listItem('İstanbul Salata', LONG.salataList, '150 ₺'),
+    hiddenItem('Peynirli Mevsim Salata', LONG.salataList),
   ],
 };
 
@@ -561,6 +587,96 @@ export const TATLI: MenuSection = {
   ],
 };
 
+// Poster public/menu/<slug>.webp, video R2 public bucket'tan <slug>.mp4 olarak gelir.
+const R2_MENU_BASE =
+  'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/menu';
+
+// Ürün adı -> medya slug eşlemesi. Tek doğruluk kaynağı: yeni çekim geldikçe
+// buraya bir satır eklenir, eşleşen ürün otomatik poster + video alır.
+const MENU_MEDIA: Record<string, string> = {
+  'Antep Acılı Ezme': 'antep-ezme',
+  Atom: 'atom',
+  'Balık Çorbası': 'balik-corbasi',
+  'Balıkçı Böreği': 'balikci-boregi',
+  Brokoli: 'brokoli',
+  Cacık: 'cacik',
+  'Çalış Spesiyal Salatası': 'calis-special',
+  Çiroz: 'ciroz',
+  'Şevketi Bostan': 'citir-sevketi-bostan',
+  'Çipura Izgara': 'cupra-izgara',
+  'Deniz Börülcesi': 'deniz-borulcesi',
+  Pancar: 'elmali-pancar',
+  'Zeytinyağlı Enginar': 'enginar',
+  Fava: 'fava-tekmil',
+  'Havuç Tarator': 'havuc-tarator',
+  Haydari: 'haydari',
+  Köfte: 'izgara-kofte',
+  'Izgara Zeytin': 'izgara-zeytin',
+  'Kalamar Izgara': 'kalamar-izgara',
+  'Kalamar Tava': 'kalamar-tava',
+  'Karides Tava': 'karide-tava',
+  'Karışık Deniz Mahsülleri Salata': 'karisik-deniz-mahsulu',
+  'Karışık Ot Tabağı': 'karisik-ot',
+  'Kaya Koruğu': 'kaya-korugu',
+  'Lagos Şiş': 'lahos-sis',
+  'Spesiyal Levrek Lokum 1': 'levrek-lokum',
+  'Levrek Marin': 'levrek-marin',
+  'Levrek Simit': 'levrek-simit',
+  'Lezzet Bombası': 'lezzet-bombasi',
+  'Mevsim Salata': 'mevsim-salata',
+  'Patlıcan Salata': 'patlican-salatasi',
+  // Kurtarılan — mevcut ürünlere bağlandı
+  'Ahtapot Izgara': 'ahtapot-izgara',
+  'Köz Biber': 'koz-biber',
+  'Yoğurtlu Semizotu': 'yogurtlu-sicak-ot',
+  // Yeni ürünler (fiyatsız/hidden) — medya staged
+  'Çıtır Kabak': 'citir-kabak',
+  'Çıtır Tabak': 'citir-tabak',
+  'Ekşili Mantar': 'eksili-mantar',
+  'Izgara Peynir': 'izgara-peynir',
+  'Yoğurtlu Meze': 'yogurtlu-meze',
+  'Bademli Havuç Tarator': 'bademli-havuc-tarator',
+  'Patlıcan Dövme': 'patlican-dovme',
+  'Yaprak Sarması': 'yaprak-sarmasi',
+  'Yunan Ezmesi': 'yunan-ezmesi',
+  'Yunan Mezesi': 'yunan-mezesi',
+  'Zeytinyağlı Kereviz': 'zeytinyagli-kereviz',
+  'Mevsim Meze': 'mevsim-meze',
+  'Kıbrıs Mezesi': 'kibris-meze',
+  Bezirgan: 'bezirgan',
+  'Karides Marin': 'karides-marin',
+  'Kremalı Ahtapot': 'kremali-ahtapot',
+  'Peynirli Mevsim Salata': 'peynirli-mevsim-salata',
+};
+
+function withMedia(item: MenuItem): MenuItem {
+  const slug = MENU_MEDIA[item.name];
+  if (!slug) return item;
+  return {
+    ...item,
+    photoUrl: `/menu/${slug}.webp`,
+    videoUrl: `${R2_MENU_BASE}/${slug}.mp4`,
+  };
+}
+
+function applyMedia(section: MenuSection): MenuSection {
+  return {
+    ...section,
+    spotlight: section.spotlight.map(withMedia),
+    fullList: section.fullList.map(withMedia),
+  };
+}
+
+// Fiyatsız (hidden) ürünleri canlı menüden çıkarır. Tanımları yukarıda durur;
+// fiyat girilip hidden kaldırılınca otomatik görünür hale gelir.
+function stripHidden(section: MenuSection): MenuSection {
+  return {
+    ...section,
+    spotlight: section.spotlight.filter((i) => !i.hidden),
+    fullList: section.fullList.filter((i) => !i.hidden),
+  };
+}
+
 export const MENU_DATA: MenuSection[] = [
   CORBA,
   YOGURTLU_MEZELER,
@@ -575,4 +691,6 @@ export const MENU_DATA: MenuSection[] = [
   SEZON_BALIK,
   BEYAZ_KIRMIZI_ET,
   TATLI,
-];
+]
+  .map(applyMedia)
+  .map(stripHidden);

@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import Image from 'next/image';
 import { MENU_DATA, type MenuItem } from '../_data';
+import MenuVideoCard from './menu-video-card';
 
 type Props = {
   item: MenuItem;
@@ -246,7 +247,14 @@ export function MenuItemModal({ item, eyebrow, onClose }: Props) {
               <div className="flex items-stretch gap-2 md:gap-3 w-full">
                 <ColorBars side="left" hideOnMobile />
                 <div className="flex-1 relative overflow-hidden aspect-[16/9] md:aspect-[235/100]">
-                  {item.photoUrl ? (
+                  {item.videoUrl && item.photoUrl ? (
+                    <MenuVideoCard
+                      poster={item.photoUrl}
+                      video={item.videoUrl}
+                      title={item.name}
+                      fill
+                    />
+                  ) : item.photoUrl ? (
                     <Image
                       src={item.photoUrl}
                       alt={item.name}

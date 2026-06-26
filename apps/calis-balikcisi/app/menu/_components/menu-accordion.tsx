@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useState } from 'react';
 import { getLenis } from '../../_components/lenis-provider';
 import { MENU_DATA, type MenuItem, type MenuSection } from '../_data';
+import MenuVideoCard from './menu-video-card';
 
 type Props = {
   onItemClick: (item: MenuItem, eyebrow: string) => void;
@@ -225,27 +226,51 @@ function Panel({ section, onItemClick }: PanelProps) {
   return (
     <div className="px-2 pb-14 pt-4">
       <div className={`grid grid-cols-1 ${spotlightCols} gap-y-10 gap-x-8`}>
-        {section.spotlight.map((item) => (
-          <div key={item.name} className="text-center">
-            <button
-              type="button"
-              onClick={() => onItemClick(item, section.eyebrow)}
-              className="font-display italic text-xl md:text-2xl text-fg hover:text-accent transition-colors"
-            >
-              {item.name}
-            </button>
-            {item.description ? (
-              <p className="mt-3 max-w-xs mx-auto text-sm text-fg/55 leading-relaxed">
-                {item.description}
-              </p>
-            ) : null}
-            {item.price ? (
-              <p className="mt-3 font-sans text-[0.95rem] font-medium tracking-[0.01em] text-fg/85 not-italic">
-                {item.price}
-              </p>
-            ) : null}
-          </div>
-        ))}
+        {section.spotlight.map((item) =>
+          item.videoUrl && item.photoUrl ? (
+            <div key={item.name} className="text-center">
+              <MenuVideoCard
+                poster={item.photoUrl}
+                video={item.videoUrl}
+                title={item.name}
+                price={item.price}
+                aspectRatio="4 / 5"
+              />
+              {item.description ? (
+                <p className="mt-3 max-w-xs mx-auto text-sm text-fg/55 leading-relaxed">
+                  {item.description}
+                </p>
+              ) : null}
+              <button
+                type="button"
+                onClick={() => onItemClick(item, section.eyebrow)}
+                className="mt-3 inline-block text-[11px] uppercase tracking-[0.3em] text-accent/70 hover:text-accent transition-colors"
+              >
+                Detay
+              </button>
+            </div>
+          ) : (
+            <div key={item.name} className="text-center">
+              <button
+                type="button"
+                onClick={() => onItemClick(item, section.eyebrow)}
+                className="font-display italic text-xl md:text-2xl text-fg hover:text-accent transition-colors"
+              >
+                {item.name}
+              </button>
+              {item.description ? (
+                <p className="mt-3 max-w-xs mx-auto text-sm text-fg/55 leading-relaxed">
+                  {item.description}
+                </p>
+              ) : null}
+              {item.price ? (
+                <p className="mt-3 font-sans text-[0.95rem] font-medium tracking-[0.01em] text-fg/85 not-italic">
+                  {item.price}
+                </p>
+              ) : null}
+            </div>
+          ),
+        )}
       </div>
 
       {section.fullList.length > 0 ? (
