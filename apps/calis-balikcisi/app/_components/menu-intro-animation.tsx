@@ -4,10 +4,11 @@ import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
 import styles from './menu-intro-animation.module.css';
+import { RES_ENABLED } from '@/lib/flags';
 
 const ITEMS = [
   { label: 'Sofra', sizeStep: 0 },
-  { label: 'Rezervasyon', sizeStep: 1 },
+  ...(RES_ENABLED ? [{ label: 'Rezervasyon', sizeStep: 1 }] : []),
   { label: 'Konuşalım', sizeStep: 2 },
 ];
 

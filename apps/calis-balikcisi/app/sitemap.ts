@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { RES_ENABLED } from '@/lib/flags';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
@@ -14,12 +15,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
-    {
-      url: 'https://calis-balikcisi.vercel.app/rezervasyon',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
+    ...(RES_ENABLED
+      ? ([
+          {
+            url: 'https://calis-balikcisi.vercel.app/rezervasyon',
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.8,
+          },
+        ] as MetadataRoute.Sitemap)
+      : []),
     {
       url: 'https://calis-balikcisi.vercel.app/iletisim',
       lastModified: new Date(),

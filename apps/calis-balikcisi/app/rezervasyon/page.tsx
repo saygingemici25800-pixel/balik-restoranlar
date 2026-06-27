@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import { Inter_Tight, Spectral } from 'next/font/google';
+import { RES_ENABLED } from '@/lib/flags';
 import styles from './_styles/reservation.module.css';
 import { ReservationShell } from './_components/reservation-shell';
 
@@ -28,6 +30,7 @@ export const metadata: Metadata = {
 };
 
 export default function RezervasyonPage() {
+  if (!RES_ENABLED) redirect('/');
   return (
     <div
       data-rezervasyon

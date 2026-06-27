@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { MenuDrawer } from './menu-drawer';
+import { RES_ENABLED } from '@/lib/flags';
 
 type Props = {
   className?: string;
@@ -82,18 +83,20 @@ export function SiteTopBar({ className = '' }: Props) {
           </span>
         </Link>
 
-        <Link
-          href="/rezervasyon"
-          className="relative inline-block justify-self-end pb-1"
-        >
-          <span className="text-[0.6rem] md:text-xs uppercase tracking-[0.15em] md:tracking-[0.3em] text-accent whitespace-nowrap font-light">
-            Rezervasyon
-          </span>
-          <span
-            aria-hidden="true"
-            className="absolute left-0 bottom-0 h-px w-full bg-accent"
-          />
-        </Link>
+        {RES_ENABLED && (
+          <Link
+            href="/rezervasyon"
+            className="relative inline-block justify-self-end pb-1"
+          >
+            <span className="text-[0.6rem] md:text-xs uppercase tracking-[0.15em] md:tracking-[0.3em] text-accent whitespace-nowrap font-light">
+              Rezervasyon
+            </span>
+            <span
+              aria-hidden="true"
+              className="absolute left-0 bottom-0 h-px w-full bg-accent"
+            />
+          </Link>
+        )}
       </header>
 
       <MenuDrawer isOpen={isOpen} />

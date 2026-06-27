@@ -1,6 +1,8 @@
 import Link from 'next/link';
+import { RES_ENABLED } from '@/lib/flags';
 
 export function ReserveCta() {
+  if (!RES_ENABLED) return null;
   return (
     <section className="relative py-32 md:py-40 px-6 overflow-hidden">
       <div className="relative max-w-2xl mx-auto text-center">

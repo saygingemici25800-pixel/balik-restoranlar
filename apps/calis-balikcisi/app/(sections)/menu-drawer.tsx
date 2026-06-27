@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { RES_ENABLED } from '@/lib/flags';
 
 type Props = {
   isOpen: boolean;
@@ -14,12 +15,16 @@ const links = [
     sizeClass: 'text-base md:text-lg lg:text-xl',
     weightClass: 'font-light',
   },
-  {
-    href: '/rezervasyon',
-    label: 'Rezervasyon',
-    sizeClass: 'text-lg md:text-xl lg:text-2xl',
-    weightClass: 'font-medium',
-  },
+  ...(RES_ENABLED
+    ? [
+        {
+          href: '/rezervasyon',
+          label: 'Rezervasyon',
+          sizeClass: 'text-lg md:text-xl lg:text-2xl',
+          weightClass: 'font-medium',
+        },
+      ]
+    : []),
   {
     href: '/iletisim',
     label: 'Konuşalım',

@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import { Inter_Tight, Spectral } from 'next/font/google';
+import { RES_ENABLED } from '@/lib/flags';
 import { ZONE_LABEL } from '../_data/tables';
 import type { Zone } from '../_types/reservation';
 import styles from './_styles/onay.module.css';
@@ -93,6 +95,7 @@ export default function OnayPage({
 }: {
   searchParams: SearchParams;
 }) {
+  if (!RES_ENABLED) redirect('/');
   const tableId = searchParams.table ?? '';
   const zone = pickZone(searchParams.zone);
   const date = searchParams.date ?? '';
