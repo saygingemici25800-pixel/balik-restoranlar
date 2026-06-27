@@ -3,7 +3,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import Image from 'next/image';
 import { MENU_DATA, type MenuItem } from '../_data';
-import MenuVideoCard from './menu-video-card';
 
 type Props = {
   item: MenuItem;
@@ -152,6 +151,8 @@ export function MenuItemModal({ item, eyebrow, onClose }: Props) {
 
   const chapter = formatChapter(eyebrow);
   const take = formatTake(eyebrow, item.name);
+  // Sadece gerçek /menu/ poster'ları foto sayılır; Unsplash/istock başlık-only.
+  const photo = item.photoUrl?.startsWith('/menu/') ? item.photoUrl : undefined;
 
   return (
     <div
@@ -191,8 +192,8 @@ export function MenuItemModal({ item, eyebrow, onClose }: Props) {
         </div>
 
         <div className="cinema-panel flex-1 flex items-stretch px-4 md:px-10 py-6 md:py-12">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 w-full items-center">
-            <div className="md:col-span-5 flex flex-col justify-center order-2 md:order-1">
+          <div className={`grid grid-cols-1 ${photo ? 'md:grid-cols-12' : ''} gap-6 md:gap-10 w-full items-center`}>
+            <div className={`${photo ? 'md:col-span-5' : 'mx-auto max-w-2xl'} flex flex-col justify-center order-2 md:order-1`}>
               <p
                 className="cinema-text font-mono text-[10px] md:text-[11px] tracking-[0.4em] uppercase text-accent/80"
                 style={{ animationDelay: '650ms' }}
@@ -243,43 +244,24 @@ export function MenuItemModal({ item, eyebrow, onClose }: Props) {
               </p>
             </div>
 
-            <div className="md:col-span-7 order-1 md:order-2">
-              <div className="flex items-stretch gap-2 md:gap-3 w-full">
-                <ColorBars side="left" hideOnMobile />
-                <div className="flex-1 relative overflow-hidden aspect-[16/9] md:aspect-[235/100]">
-                  {item.videoUrl ? (
-                    <MenuVideoCard
-                      video={item.videoUrl}
-                      poster={item.photoUrl}
-                      title={item.name}
-                      className="mvc-fill"
-                    />
-                  ) : item.photoUrl ? (
+            {photo ? (
+              <div className="md:col-span-7 order-1 md:order-2">
+                <div className="flex items-stretch gap-2 md:gap-3 w-full">
+                  <ColorBars side="left" hideOnMobile />
+                  <div className="flex-1 relative overflow-hidden aspect-[16/9] md:aspect-[235/100]">
                     <Image
-                      src={item.photoUrl}
+                      src={photo}
                       alt={item.name}
                       fill
                       sizes="(min-width: 768px) 60rem, 95vw"
                       className="cinema-photo object-cover"
                       loading="eager"
                     />
-                  ) : (
-                    <div
-                      aria-hidden="true"
-                      className="cinema-photo cinema-fallback absolute inset-0"
-                    />
-                  )}
-                  <style>{`
-                    .mvc.mvc-fill {
-                      position: absolute; inset: 0;
-                      aspect-ratio: auto; height: 100%;
-                      border-radius: 0;
-                    }
-                  `}</style>
+                  </div>
+                  <ColorBars side="right" />
                 </div>
-                <ColorBars side="right" />
               </div>
-            </div>
+            ) : null}
           </div>
         </div>
 

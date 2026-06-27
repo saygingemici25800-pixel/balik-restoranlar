@@ -1,9 +1,9 @@
 'use client';
 
 import { Fragment, useEffect, useState } from 'react';
+import Image from 'next/image';
 import { getLenis } from '../../_components/lenis-provider';
 import { MENU_DATA, type MenuItem, type MenuSection } from '../_data';
-import MenuVideoCard from './menu-video-card';
 
 type Props = {
   onItemClick: (item: MenuItem, eyebrow: string) => void;
@@ -79,7 +79,7 @@ export function MenuAccordion({ onItemClick }: Props) {
   useEffect(() => {
     MENU_DATA.forEach((category) => {
       category.spotlight.forEach((item) => {
-        if (!item.photoUrl) return;
+        if (!item.photoUrl?.startsWith('/menu/')) return;
         const img = new window.Image();
         img.src = item.photoUrl;
       });
@@ -231,35 +231,25 @@ function Panel({ section, onItemClick }: PanelProps) {
 
   return (
     <div className="px-2 pb-14 pt-4">
-      <div className={`grid grid-cols-1 ${spotlightCols} gap-y-10 gap-x-8`}>
-        {section.spotlight.map((item) =>
-          item.videoUrl ? (
+      <div className={`grid grid-cols-1 ${spotlightCols} items-start gap-y-10 gap-x-8`}>
+        {section.spotlight.map((item) => {
+          // Sadece gerçek /menu/ poster'ları foto sayılır; Unsplash/istock başlık-only.
+          const photo = item.photoUrl?.startsWith('/menu/')
+            ? item.photoUrl
+            : undefined;
+          return (
             <div key={item.name} className="text-center">
-              <MenuVideoCard
-                video={item.videoUrl}
-                poster={item.photoUrl}
-                title={item.name}
-              />
-              <button
-                type="button"
-                onClick={() => onItemClick(item, section.eyebrow)}
-                className="mt-4 font-display italic text-xl md:text-2xl text-fg hover:text-accent transition-colors"
-              >
-                {item.name}
-              </button>
-              {item.description ? (
-                <p className="mt-3 max-w-xs mx-auto text-sm text-fg/55 leading-relaxed">
-                  {item.description}
-                </p>
+              {photo ? (
+                <div className="relative mx-auto mb-4 w-full max-w-[220px] aspect-square overflow-hidden rounded-2xl">
+                  <Image
+                    src={photo}
+                    alt={item.name}
+                    fill
+                    sizes="(min-width: 1024px) 220px, (min-width: 768px) 33vw, 60vw"
+                    className="object-cover"
+                  />
+                </div>
               ) : null}
-              {item.price ? (
-                <p className="mt-3 font-sans text-[0.95rem] font-medium tracking-[0.01em] text-fg/85 not-italic">
-                  {formatPrice(item)}
-                </p>
-              ) : null}
-            </div>
-          ) : (
-            <div key={item.name} className="text-center">
               <button
                 type="button"
                 onClick={() => onItemClick(item, section.eyebrow)}
@@ -278,8 +268,8 @@ function Panel({ section, onItemClick }: PanelProps) {
                 </p>
               ) : null}
             </div>
-          ),
-        )}
+          );
+        })}
       </div>
 
       {section.fullList.length > 0 ? (
