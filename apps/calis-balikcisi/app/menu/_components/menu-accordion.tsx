@@ -22,7 +22,7 @@ const FLOW_SIZES = [
 // kg birimli ürünlerde fiyatın önüne "kg" gelir (örn. "kg 900 ₺").
 function formatPrice(item: MenuItem): string | undefined {
   if (!item.price) return undefined;
-  return item.unit === 'kg' ? `kg ${formatPrice(item)}` : item.price;
+  return item.unit === 'kg' ? `kg ${item.price}` : item.price;
 }
 
 function computeScrollTarget(
