@@ -19,6 +19,12 @@ const FLOW_SIZES = [
   'text-xl italic',
 ];
 
+// kg birimli ürünlerde fiyatın önüne "kg" gelir (örn. "kg 900 ₺").
+function formatPrice(item: MenuItem): string | undefined {
+  if (!item.price) return undefined;
+  return item.unit === 'kg' ? `kg ${formatPrice(item)}` : item.price;
+}
+
 function computeScrollTarget(
   targetId: string,
   closingId: string | null,
@@ -248,7 +254,7 @@ function Panel({ section, onItemClick }: PanelProps) {
               ) : null}
               {item.price ? (
                 <p className="mt-3 font-sans text-[0.95rem] font-medium tracking-[0.01em] text-fg/85 not-italic">
-                  {item.price}
+                  {formatPrice(item)}
                 </p>
               ) : null}
             </div>
@@ -268,7 +274,7 @@ function Panel({ section, onItemClick }: PanelProps) {
               ) : null}
               {item.price ? (
                 <p className="mt-3 font-sans text-[0.95rem] font-medium tracking-[0.01em] text-fg/85 not-italic">
-                  {item.price}
+                  {formatPrice(item)}
                 </p>
               ) : null}
             </div>
@@ -295,7 +301,7 @@ function Panel({ section, onItemClick }: PanelProps) {
                   {item.name}
                   {item.price ? (
                     <span className="ml-2 font-sans text-xs font-medium not-italic text-fg/75 tracking-[0.01em] align-middle">
-                      {item.price}
+                      {formatPrice(item)}
                     </span>
                   ) : null}
                 </button>

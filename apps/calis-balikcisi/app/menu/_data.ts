@@ -5,6 +5,8 @@ export type MenuItem = {
   videoUrl?: string;
   longDescription?: string;
   price?: string;
+  /** Fiyat birimi. 'kg' -> "kg <price>" gösterilir; varsayılan 'portion'. */
+  unit?: 'kg' | 'portion';
   /** Fiyatı henüz girilmemiş ürün: canlıda gösterilmez (MENU_DATA'da filtrelenir). */
   hidden?: boolean;
 };
@@ -433,11 +435,11 @@ export const SALATALAR: MenuSection = {
   ],
 };
 
-export const PORSIYON_BALIK: MenuSection = {
-  id: 'porsiyon-balik',
-  eyebrow: 'PORSİYON BALIK',
-  title: 'Porsiyon Balık',
-  listLabel: '— Tüm Porsiyon Balıklar —',
+export const BALIKLARIMIZ: MenuSection = {
+  id: 'baliklarimiz',
+  eyebrow: 'BALIKLARIMIZ',
+  title: 'Balıklarımız',
+  listLabel: '— Tüm Balıklar —',
   spotlight: [
     spotlightItem(
       'Levrek Izgara',
@@ -460,6 +462,14 @@ export const PORSIYON_BALIK: MenuSection = {
       undefined,
       '750 ₺',
     ),
+    // TODO: fiyat ekle — yeni ürün (porsiyon), gerçek fiyat girilecek
+    spotlightItem(
+      'Lagos Izgara',
+      'Beyaz etli lagos, mangalda. Sezonun değerlilerinden.',
+      LONG.porsiyonSpot,
+      undefined,
+      'Güncel fiyat',
+    ),
   ],
   fullList: [
     listItem('Dil Şiş', LONG.porsiyonList, '700 ₺'),
@@ -468,48 +478,13 @@ export const PORSIYON_BALIK: MenuSection = {
     listItem('Barbun Tava / Izgara', LONG.porsiyonList, '450 ₺'),
     listItem('Balık Şaşlık', LONG.porsiyonList, '600 ₺'),
     listItem('Balık Kavurma', LONG.porsiyonList, '550 ₺'),
-  ],
-};
-
-export const SEZON_BALIK: MenuSection = {
-  id: 'sezon-balik',
-  eyebrow: 'SEZON BALIK ÇEŞİTLERİ',
-  title: 'Sezon Balık Çeşitleri',
-  listLabel: '— Tüm Sezon Balıkları —',
-  spotlight: [
-    spotlightItem(
-      'Levrek',
-      'Sezonun klasik balığı. Pişirme tercihiniz şefe iletilir.',
-      LONG.sezonSpot,
-      undefined,
-      '625 ₺',
-    ),
-    spotlightItem(
-      'Çipura',
-      'Tezgâhın sevileni. Izgara ya da tava.',
-      LONG.sezonSpot,
-      undefined,
-      '575 ₺',
-    ),
-    spotlightItem(
-      'Lagos',
-      'Beyaz etli, doyurucu. Sezonun değerlilerinden.',
-      LONG.sezonSpot,
-      undefined,
-      '900 ₺',
-    ),
-  ],
-  fullList: [
-    listItem('Lüfer', LONG.sezonList, '775 ₺'),
-    listItem('Minekop', LONG.sezonList, '650 ₺'),
-    listItem('Fangri', LONG.sezonList, '800 ₺'),
-    listItem('Akya', LONG.sezonList, '750 ₺'),
-    listItem('Mercan', LONG.sezonList, '700 ₺'),
-    listItem('Dülger', LONG.sezonList, '800 ₺'),
-    listItem('Barbun', LONG.sezonList, '450 ₺'),
-    listItem('Kılıç', LONG.sezonList, '900 ₺'),
-    listItem('Kaya Levreği', LONG.sezonList, '650 ₺'),
-    listItem('Mezgit', LONG.sezonList, '400 ₺'),
+    // Bütün balıklar — kg fiyatıyla (günlük). Fiyatlar placeholder.
+    { ...listItem('Lüfer', LONG.sezonList, 'Güncel fiyat'), unit: 'kg' }, // TODO: fiyat ekle
+    { ...listItem('Minekop', LONG.sezonList, 'Güncel fiyat'), unit: 'kg' }, // TODO: fiyat ekle
+    { ...listItem('Fangri', LONG.sezonList, 'Güncel fiyat'), unit: 'kg' }, // TODO: fiyat ekle
+    { ...listItem('Akya', LONG.sezonList, 'Güncel fiyat'), unit: 'kg' }, // TODO: fiyat ekle
+    { ...listItem('Mercan', LONG.sezonList, 'Güncel fiyat'), unit: 'kg' }, // TODO: fiyat ekle
+    { ...listItem('Kaya Levreği', LONG.sezonList, 'Güncel fiyat'), unit: 'kg' }, // TODO: fiyat ekle
   ],
 };
 
@@ -625,6 +600,7 @@ const MENU_MEDIA: Record<string, string> = {
   'Lezzet Bombası': 'lezzet-bombasi',
   'Mevsim Salata': 'mevsim-salata',
   'Patlıcan Salata': 'patlican-salatasi',
+  Şakşuka: 'saksuka',
   // Kurtarılan — mevcut ürünlere bağlandı
   'Ahtapot Izgara': 'ahtapot-izgara',
   'Köz Biber': 'koz-biber',
@@ -687,8 +663,7 @@ export const MENU_DATA: MenuSection[] = [
   SPESIYAL_LEVREK_LOKUM,
   ARA_SICAKLAR,
   SALATALAR,
-  PORSIYON_BALIK,
-  SEZON_BALIK,
+  BALIKLARIMIZ,
   BEYAZ_KIRMIZI_ET,
   TATLI,
 ]
