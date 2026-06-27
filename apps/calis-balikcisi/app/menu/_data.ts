@@ -303,29 +303,19 @@ export const SPESIYAL_LEVREK_LOKUM: MenuSection = {
   id: 'spesiyal-levrek-lokum',
   eyebrow: 'SPESİYAL LEVREK LOKUM',
   title: 'Spesiyal Levrek Lokum',
-  listLabel: '— Tüm Spesiyal Levrek Lokumlar —',
+  listLabel: '— Spesiyal Levrek Lokum —',
   spotlight: [
-    spotlightItem(
-      'Spesiyal Levrek Lokum 1',
-      "Çalış'ın imzası, ilk versiyon. Levrek üzerine özgün bir kompozisyon.",
-      LONG.lokumSpot,
-      undefined,
-      '320 ₺',
-    ),
-    spotlightItem(
-      'Spesiyal Levrek Lokum 2',
-      'İmza tabağın ikinci yorumu. Detayda farklı, ruhta aynı.',
-      LONG.lokumSpot,
-      undefined,
-      '340 ₺',
-    ),
-    spotlightItem(
-      'Spesiyal Levrek Lokum 3',
-      'Üçüncü versiyon. Sezon dokunuşlarıyla.',
-      LONG.lokumSpot,
-      undefined,
-      '360 ₺',
-    ),
+    // TODO: fiyat ekle — kg fiyatı girilecek
+    {
+      ...spotlightItem(
+        'Spesiyal Levrek Lokum',
+        "Çalış'ın imzası. Levrek üzerine kurulu özel bir tarif.",
+        LONG.lokumSpot,
+        undefined,
+        'Güncel fiyat',
+      ),
+      unit: 'kg',
+    },
   ],
   fullList: [],
 };
@@ -494,6 +484,24 @@ export const BEYAZ_KIRMIZI_ET: MenuSection = {
   title: 'Beyaz ve Kırmızı Et',
   listLabel: '— Tüm Et Çeşitleri —',
   spotlight: [
+    // TODO: fiyat ekle — yeni ürün (porsiyon)
+    spotlightItem(
+      'Kuzu Şiş',
+      'Marine kuzu, mangalda. Köz biber eşliğinde.',
+      LONG.etSpot,
+      undefined,
+      'Güncel fiyat',
+    ),
+    // TODO: fiyat ekle — yeni ürün (porsiyon)
+    spotlightItem(
+      'Antrikot',
+      'Izgara antrikot, dinlendirilmiş. Tereyağı ve kekik.',
+      LONG.etSpot,
+      undefined,
+      'Güncel fiyat',
+    ),
+    // NOT: Köfte SİL listesinde değildi; mevcut hali (380 ₺ + izgara-kofte video)
+    // korundu. "media yok / Güncel fiyat" istenirse rapordaki seçeneklere bak.
     spotlightItem(
       'Köfte',
       'Klasik el yapımı köfte, mangalda.',
@@ -501,27 +509,16 @@ export const BEYAZ_KIRMIZI_ET: MenuSection = {
       undefined,
       '380 ₺',
     ),
+    // TODO: fiyat ekle — yeni ürün (porsiyon)
     spotlightItem(
-      'Et Çökertme',
-      'İnce dilimli et, yoğurt ve domates eşliğinde.',
+      'Tavuk Şiş',
+      'Marine tavuk şiş, kömür ateşinde.',
       LONG.etSpot,
       undefined,
-      '550 ₺',
-    ),
-    spotlightItem(
-      'Tavuk Schnitzel',
-      'İnce dövülmüş tavuk, çıtır kaplama. Limonla.',
-      LONG.etSpot,
-      undefined,
-      '360 ₺',
+      'Güncel fiyat',
     ),
   ],
-  fullList: [
-    listItem('Et Şiş', LONG.etList, '550 ₺'),
-    listItem('Tavuk Pırzola', LONG.etList, '380 ₺'),
-    listItem('Sucuklu Pizza', LONG.etList, '320 ₺'),
-    listItem('Margarita Pizza', LONG.etList, '280 ₺'),
-  ],
+  fullList: [],
 };
 
 export const TATLI: MenuSection = {
@@ -594,7 +591,7 @@ const MENU_MEDIA: Record<string, string> = {
   'Karışık Ot Tabağı': 'karisik-ot',
   'Kaya Koruğu': 'kaya-korugu',
   'Lagos Şiş': 'lahos-sis',
-  'Spesiyal Levrek Lokum 1': 'levrek-lokum',
+  'Spesiyal Levrek Lokum': 'levrek-lokum',
   'Levrek Marin': 'levrek-marin',
   'Levrek Simit': 'levrek-simit',
   'Lezzet Bombası': 'lezzet-bombasi',
