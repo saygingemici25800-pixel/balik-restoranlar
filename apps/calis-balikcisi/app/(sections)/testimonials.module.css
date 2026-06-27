@@ -112,9 +112,16 @@
   width: 110px;
   height: 110px;
   border-radius: 50%;
-  object-fit: cover;
   border: 3px solid rgba(31, 26, 18, 0.35);
-  filter: saturate(0.45) sepia(0.32);
+  background: #4b3f33;
+  color: #f3ead8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-style: normal;
+  font-size: 2.6rem;
+  line-height: 1;
   margin-bottom: 18px;
 }
 
@@ -123,7 +130,6 @@
   font-size: 1.05rem;
   font-style: normal;
   line-height: 1.45;
-  text-transform: lowercase;
   color: rgba(31, 26, 18, 0.78);
   margin: 0 0 20px;
 }
@@ -132,7 +138,6 @@
   font-family: var(--font-display);
   font-style: normal;
   font-size: 1.15rem;
-  text-transform: lowercase;
   color: rgba(31, 26, 18, 0.92);
   margin: 0;
 }
@@ -146,7 +151,14 @@
   text-decoration-thickness: 0.5px;
   color: rgba(31, 26, 18, 0.6);
   margin-top: 6px;
-  text-transform: lowercase;
+}
+
+.date {
+  font-family: var(--font-display);
+  font-style: normal;
+  font-size: 0.72rem;
+  color: rgba(31, 26, 18, 0.45);
+  margin-top: 8px;
 }
 
 /* Modal */
@@ -222,9 +234,16 @@
   width: 96px;
   height: 96px;
   border-radius: 50%;
-  object-fit: cover;
   border: 3px solid rgba(31, 26, 18, 0.35);
-  filter: saturate(0.45) sepia(0.32);
+  background: #4b3f33;
+  color: #f3ead8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-style: normal;
+  font-size: 2.2rem;
+  line-height: 1;
   flex-shrink: 0;
 }
 
@@ -240,7 +259,6 @@
   font-style: normal;
   letter-spacing: -0.01em;
   font-size: clamp(1.6rem, 3vw, 2.2rem);
-  text-transform: lowercase;
   color: rgba(31, 26, 18, 0.95);
   margin: 0;
   line-height: 1.05;
@@ -254,7 +272,6 @@
   text-underline-offset: 6px;
   text-decoration-thickness: 0.5px;
   color: rgba(31, 26, 18, 0.6);
-  text-transform: lowercase;
   margin-top: 8px;
 }
 
@@ -276,7 +293,6 @@
   font-size: clamp(1.15rem, 2.4vw, 1.45rem);
   line-height: 1.55;
   color: rgba(31, 26, 18, 0.85);
-  text-transform: lowercase;
   margin: 0;
 }
 

@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Quote, X } from 'lucide-react';
 import styles from './testimonials.module.css';
@@ -14,69 +13,63 @@ type Testimonial = {
   name: string;
   designation: string;
   description: string;
-  profileImage: string;
+  date: string;
 };
 
 const TESTIMONIALS: Testimonial[] = [
   {
     id: '1',
-    platform: 'tripadvisor',
-    name: 'tartangal',
-    designation: 'Tripadvisor',
+    platform: 'google',
+    name: 'Selin A.',
+    designation: 'Google',
+    date: '4 hafta önce',
     description:
-      "Authentic Fish restaurant with fresh ingredients. The grouper kebab was something we'd never tasted before — meaty, moist, melting in the mouth. The waiter's recommendation was perfect. We came back the next night for the same.",
-    profileImage:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=220&q=80',
+      'Mertay isimli personelinizden inanılmaz memnun kaldık. Güler yüzü ve işini severek yapması sebebiyle tekrar tekrar geleceğiz. Çok teşekkür ederiz.',
   },
   {
     id: '2',
     platform: 'google',
-    name: 'Mehmet K.',
+    name: 'Ahmet Mart',
     designation: 'Google',
+    date: '7 ay önce',
     description:
-      "Fethiye'ye her gittiğimde mutlaka uğradığım yer. Levrek lokum bir başka. Akif Usta'nın elinden çıkan iş belli oluyor — sade, doğru, dürüst.",
-    profileImage:
-      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=220&q=80',
+      'Levrek lokum balığın en güzel hali olabilir, çok beğendim. Karides beklentimin çok üzerindeydi. Girit güzeli mezesi çok lezzetliydi. Mekan büyük, ferah, manzara çok güzel. Tavsiye ederim.',
   },
   {
     id: '3',
-    platform: 'tripadvisor',
-    name: 'SYBEL E.',
-    designation: 'Tripadvisor',
+    platform: 'google',
+    name: 'S. D.',
+    designation: 'Google',
+    date: '5 ay önce',
     description:
-      "4 aydır Fethiye'deyiz, bu mekanı keşfettiğimizden beri sadece burada yiyoruz. Çok temiz, personel çok güleryüzlü, yemekler çok lezzetli. Kışın da yazın da gönül rahatlığıyla gidebilirsiniz.",
-    profileImage:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=220&q=80',
+      'Çalış Balıkçısı bizim için çok özel bir adres. Her yıl 7-8 kez keyifle geliyoruz, her seferinde en kaliteli şekilde ağırlanıyoruz. Balıklar taze, sunumlar mükemmel. Tüm ekip güler yüzlü ve profesyonel. İyi ki varsınız!',
   },
   {
     id: '4',
-    platform: 'instagram',
-    name: '@yemeustasi',
-    designation: 'Instagram',
+    platform: 'google',
+    name: 'Mert Yaşar Çetingök',
+    designation: 'Google',
+    date: '9 ay önce',
     description:
-      "Sahil kenarında, gün batımında, taze balıkla — Fethiye'nin en iyi akşam yemeği adresi. Akif Usta'yla balık üzerine sohbet etmek de ayrı bir keyif.",
-    profileImage:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=220&q=80',
+      'Mezeler çok çeşit ve lezzetli. Fesleğenli levrek marin çok çok iyiydi. Kalamar ve karidese bayıldık. Gün batımında orada olursanız çok şanslısınız. Kalabalık olmasına rağmen servis hızlı.',
   },
   {
     id: '5',
     platform: 'google',
-    name: 'Ayşe T.',
+    name: 'Yunus Emre Tan',
     designation: 'Google',
+    date: '4 hafta önce',
     description:
-      "Çupra ızgara mükemmeldi, mezeler birbirinden taze. Sahile bakan bahçede oturmak, akşamüstü meltemiyle birlikte yenen bir yemek — Fethiye'de buradan iyisi yok.",
-    profileImage:
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=220&q=80',
+      'Bir arkadaşımın tavsiyesiyle geldik, en güzel tavsiyelerden biri. Terasın manzarası harika. Can adında Fethiyeli bir arkadaş ilgilendi, kendi yerimizmiş gibi hissettirdi. Tavsiye ederim.',
   },
   {
     id: '6',
-    platform: 'tripadvisor',
-    name: 'Jason B.',
-    designation: 'Tripadvisor',
+    platform: 'google',
+    name: 'Sue Bali',
+    designation: 'Google',
+    date: '1 ay önce',
     description:
-      'Fish was beautifully cooked, the prawns were huge and meaty with a roasted garlic dip. The team was very helpful explaining the dishes. We booked again before we even left.',
-    profileImage:
-      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=220&q=80',
+      'We had fish soup full of fish and absolutely delicious. The free warm bread was amazing too. Seafood salad, calamari, garlic prawns and a grouper skewer — all so fresh and tasty. Will definitely be back soon.',
   },
 ];
 
@@ -86,6 +79,11 @@ const TRUNCATE_AT = 100;
 function truncate(text: string): string {
   if (text.length <= TRUNCATE_AT) return text;
   return `${text.slice(0, TRUNCATE_AT).trimEnd()}…`;
+}
+
+// Foto yok; avatar olarak ismin baş harfi kullanılır.
+function initialOf(name: string): string {
+  return name.trim().charAt(0).toUpperCase();
 }
 
 export function Testimonials() {
@@ -199,18 +197,18 @@ export function Testimonials() {
             aria-haspopup="dialog"
             aria-label={`${t.name} yorumu`}
           >
-            <Image
-              src={t.profileImage}
-              alt={t.name}
-              width={110}
-              height={110}
-              className={styles.profileImage}
-            />
+            <span className={styles.profileImage} aria-hidden="true">
+              {initialOf(t.name)}
+            </span>
             <p className={styles.description}>{truncate(t.description)}</p>
-            <p className={styles.name}>{t.name.toLowerCase()}.</p>
-            <p className={styles.designation}>
-              {t.designation.toLowerCase()}
+            <p className={styles.name}>
+              {t.name}
+              {t.name.trim().endsWith('.') ? '' : '.'}
             </p>
+            <p className={styles.designation}>
+              {t.designation}
+            </p>
+            <p className={styles.date}>{t.date}</p>
           </motion.button>
         ))}
       </div>
@@ -246,30 +244,27 @@ export function Testimonials() {
               </button>
 
               <div className={styles.modalHeader}>
-                <Image
-                  src={activeTestimonial.profileImage}
-                  alt={activeTestimonial.name}
-                  width={96}
-                  height={96}
-                  className={styles.modalImage}
-                />
+                <span className={styles.modalImage} aria-hidden="true">
+                  {initialOf(activeTestimonial.name)}
+                </span>
                 <div className={styles.modalIdentity}>
                   <h3
                     id={`testimonial-name-${activeTestimonial.id}`}
                     className={styles.modalName}
                   >
-                    {activeTestimonial.name.toLowerCase()}
+                    {activeTestimonial.name}
                   </h3>
                   <span className={styles.modalDesignation}>
-                    {activeTestimonial.designation.toLowerCase()}
+                    {activeTestimonial.designation}
                   </span>
+                  <span className={styles.date}>{activeTestimonial.date}</span>
                 </div>
               </div>
 
               <div className={styles.modalBody}>
                 <Quote size={28} className={styles.modalQuote} />
                 <p className={styles.modalDescription}>
-                  {activeTestimonial.description.toLowerCase()}
+                  {activeTestimonial.description}
                 </p>
               </div>
             </motion.div>
