@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Clock, Mail, MapPin, Phone } from 'lucide-react';
 import { CONTACT_INFO } from '../iletisim/_data';
 import styles from './contact-summary.module.css';
@@ -23,6 +24,27 @@ export function ContactSummary() {
             Telefonun ucunda biz, kapının ardında masanız. Çalış sahili,
             akşamüstü meltemi — gerisini birlikte hallederiz.
           </p>
+        </div>
+
+        <div className="mt-10 md:mt-12 grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-fg/5">
+            <Image
+              src="/web/cephe-gece.webp"
+              alt="Çalış Balıkçısı — gece cephesi"
+              fill
+              sizes="(min-width: 640px) 36rem, 100vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-fg/5">
+            <Image
+              src="/web/cephe-seafood.webp"
+              alt="Çalış Balıkçısı — sahil cephesi"
+              fill
+              sizes="(min-width: 640px) 36rem, 100vw"
+              className="object-cover"
+            />
+          </div>
         </div>
 
         <div className={styles.grid}>

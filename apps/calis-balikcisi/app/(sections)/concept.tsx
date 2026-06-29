@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { ManifestoReveal } from './_manifesto-reveal';
+import { WebVideo } from '../_components/web-video';
 
 const MANIFESTO_LINES = [
   'Bugün tutulan balık, bu akşam sofrada.',
@@ -13,7 +14,13 @@ export function Concept() {
       <ManifestoReveal eyebrow="FELSEFE" lines={MANIFESTO_LINES} />
       <div className="px-6 md:px-10 pb-24 md:pb-32">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center">
-          <div className="aspect-[4/5] bg-fg/5" aria-hidden="true" />
+          <div className="relative aspect-[4/5] overflow-hidden rounded-sm bg-fg/5">
+            <WebVideo
+              src="https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/web/ic-mekan.mp4"
+              poster="/web/ic-mekan.webp"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          </div>
           <div>
             <h2 className="font-display font-bold tracking-[-0.01em] text-4xl md:text-5xl leading-tight text-fg">
               Denizin En Yalın Hâli

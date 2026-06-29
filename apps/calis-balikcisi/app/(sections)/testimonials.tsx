@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Quote, X } from 'lucide-react';
 import styles from './testimonials.module.css';
@@ -171,6 +172,16 @@ export function Testimonials() {
             <ArrowRight size={20} />
           </button>
         </div>
+      </div>
+
+      <div className="relative aspect-[16/9] md:aspect-[24/9] overflow-hidden rounded-sm bg-fg/5">
+        <Image
+          src="/web/gunbatimi-teras.webp"
+          alt="Çalış Balıkçısı — gün batımında teras"
+          fill
+          sizes="(min-width: 768px) 76rem, 100vw"
+          className="object-cover"
+        />
       </div>
 
       <div

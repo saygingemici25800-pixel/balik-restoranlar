@@ -1,5 +1,6 @@
 import { CalisHero } from './(sections)/hero';
 import { Concept } from './(sections)/concept';
+import { Atmosfer } from './(sections)/atmosfer';
 import { ContactSummary } from './(sections)/contact-summary';
 import { Principles } from './(sections)/principles';
 import { DailyHarvest } from './(sections)/daily-harvest';
@@ -17,6 +18,7 @@ export default function HomePage() {
       <main>
         <CalisHero />
         <Concept />
+        <Atmosfer />
         <Principles />
         <MenuPreview />
         <DailyHarvest />

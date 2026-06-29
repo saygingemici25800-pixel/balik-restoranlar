@@ -4,16 +4,22 @@ type Catch = {
   name: string;
   latin: string;
   tag: string;
+  photo?: string;
 };
 
 const CATCHES: Catch[] = [
-  { name: 'Levrek', latin: 'Dicentrarchus labrax', tag: 'Köz Üzerinde' },
+  {
+    name: 'Levrek',
+    latin: 'Dicentrarchus labrax',
+    tag: 'Köz Üzerinde',
+    photo: '/web/balik-reyonu-3.webp',
+  },
   { name: 'Barbun', latin: 'Mullus barbatus', tag: 'Çiğ' },
 ];
 
 const TEZGAH_PHOTOS = [
-  { src: '/images/tezgah-1.jpg', alt: 'Bugün tezgâhta — taze balık' },
-  { src: '/images/tezgah-2.jpg', alt: 'Bugün tezgâhta — mezat sonrası' },
+  { src: '/web/balik-reyonu-1.webp', alt: 'Taze balık reyonu' },
+  { src: '/web/balik-reyonu-2.webp', alt: 'Reyonda meze ve deniz mahsulleri' },
 ];
 
 export function DailyHarvest() {
@@ -43,6 +49,15 @@ export function DailyHarvest() {
               key={item.name}
               className="relative aspect-[4/3] bg-fg/5 overflow-hidden"
             >
+              {item.photo ? (
+                <Image
+                  src={item.photo}
+                  alt={item.name}
+                  fill
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  className="object-cover"
+                />
+              ) : null}
               <div
                 className="absolute inset-0 bg-gradient-to-t from-bg/80 via-bg/10 to-transparent"
                 aria-hidden="true"
