@@ -128,7 +128,7 @@ export const YOGURTLU_MEZELER: MenuSection = {
     listItem('Köpoğlu', LONG.mezeList, '310 ₺'),
     listItem('Yoğurtlu Semizotu', LONG.mezeList, '310 ₺'),
     hiddenItem('Yoğurtlu Meze', LONG.mezeList),
-    hiddenItem('Bademli Havuç Tarator', LONG.mezeList),
+    listItem('Bademli Havuç Tarator', LONG.mezeList, '320 ₺'),
   ],
 };
 
@@ -177,13 +177,13 @@ export const SEBZELI_MEZELER: MenuSection = {
     listItem('Brokoli', LONG.mezeList, '300 ₺'),
     listItem('Köz Biber', LONG.mezeList, '300 ₺'),
     listItem('Karışık Ot Tabağı', LONG.mezeList, '340 ₺'),
-    hiddenItem('Patlıcan Dövme', LONG.mezeList),
-    hiddenItem('Yaprak Sarması', LONG.mezeList),
-    hiddenItem('Yunan Ezmesi', LONG.mezeList),
-    hiddenItem('Yunan Mezesi', LONG.mezeList),
-    hiddenItem('Zeytinyağlı Kereviz', LONG.mezeList),
-    hiddenItem('Mevsim Meze', LONG.mezeList),
-    hiddenItem('Kıbrıs Mezesi', LONG.mezeList),
+    listItem('Patlıcan Dövme', LONG.mezeList, '300 ₺'),
+    listItem('Etli Yaprak Sarması', LONG.mezeList, '450 ₺'),
+    listItem('Yunan Ezmesi', LONG.mezeList, '350 ₺'),
+    listItem('Yunan Mezesi', LONG.mezeList, '350 ₺'),
+    listItem('Zeytinyağlı Kereviz', LONG.mezeList, '300 ₺'),
+    listItem('Mevsim Meze', LONG.mezeList, '300 ₺'),
+    listItem('Kıbrıs Mezesi', LONG.mezeList, '350 ₺'),
   ],
 };
 
@@ -288,7 +288,7 @@ export const DENIZ_MAHSULLERI_MEZE: MenuSection = {
     listItem('Midye Marin', LONG.denizMezeList, '350 ₺'),
     listItem('Karışık Deniz Mahsülleri Salata', LONG.denizMezeList, '390 ₺'),
     hiddenItem('Karides Marin', LONG.denizMezeList),
-    hiddenItem('Kremalı Ahtapot', LONG.denizMezeList),
+    listItem('Kremalı Ahtapot', LONG.denizMezeList, '950 ₺'),
   ],
 };
 
@@ -361,7 +361,7 @@ export const ARA_SICAKLAR: MenuSection = {
     listItem('Jumbo Karides', LONG.araList, '3350 ₺'),
     listItem('Paçanga Böreği', LONG.araList, '280 ₺'),
     listItem('Balıkçı Böreği', LONG.araList, '320 ₺'),
-    listItem('Patlıcan Kadayıflı Levrek', LONG.araList, '280 ₺'),
+    listItem('Kadayıflı Levrek Sarma', LONG.araList, '400 ₺'),
     listItem('Bademli Levrek', LONG.araList, '280 ₺'),
     listItem('Anasonlu Levrek', LONG.araList, '280 ₺'),
     listItem('Domates Soslu Patlıcan Pane', LONG.araList, '380 ₺'),
@@ -374,10 +374,10 @@ export const ARA_SICAKLAR: MenuSection = {
     listItem('Şevketi Bostan', LONG.araList, '490 ₺'),
     listItem('Deniz Mahsüllü Şevketi Bostan', LONG.araList, '850 ₺'),
     listItem('Kaşar Mantar', LONG.araList, '100 ₺'),
-    hiddenItem('Çıtır Kabak', LONG.araList),
+    listItem('Çıtır Kabak', LONG.araList, '400 ₺'),
     hiddenItem('Çıtır Tabak', LONG.araList),
-    hiddenItem('Ekşili Mantar', LONG.araList),
-    hiddenItem('Izgara Peynir', LONG.araList),
+    listItem('Ekşili Mantar', LONG.araList, '320 ₺'),
+    listItem('Izgara Peynir', LONG.araList, '380 ₺'),
   ],
 };
 
@@ -414,7 +414,7 @@ export const SALATALAR: MenuSection = {
     listItem('Çoban Salata', LONG.salataList, '380 ₺'),
     listItem('Yeşil Salata', LONG.salataList, '380 ₺'),
     listItem('İstanbul Salata', LONG.salataList, '390 ₺'),
-    hiddenItem('Peynirli Mevsim Salata', LONG.salataList),
+    listItem('Peynirli Mevsim Salata', LONG.salataList, '420 ₺'),
   ],
 };
 
@@ -445,29 +445,28 @@ export const BALIKLARIMIZ: MenuSection = {
       undefined,
       '880 ₺',
     ),
-    // TODO: fiyat ekle — yeni ürün (porsiyon), gerçek fiyat girilecek
     spotlightItem(
       'Lagos Izgara',
       'Beyaz etli lagos, mangalda. Sezonun değerlilerinden.',
       LONG.porsiyonSpot,
       undefined,
-      'Güncel fiyat',
+      '2950 ₺',
     ),
   ],
   fullList: [
     listItem('Dil Şiş', LONG.porsiyonList, '980 ₺'),
     listItem('Lagos Şiş', LONG.porsiyonList, '800 ₺'),
     listItem('Somon Şiş', LONG.porsiyonList, '850 ₺'),
-    listItem('Barbun Tava / Izgara', LONG.porsiyonList, '450 ₺'),
+    { ...listItem('Barbun Tava / Izgara', LONG.porsiyonList, '3250 ₺'), unit: 'kg' },
     listItem('Balık Şaşlık', LONG.porsiyonList, '730 ₺'),
     listItem('Balık Kavurma', LONG.porsiyonList, '850 ₺'),
-    // Bütün balıklar — kg fiyatıyla (günlük). Fiyatlar placeholder.
-    { ...listItem('Lüfer', LONG.sezonList, 'Güncel fiyat'), unit: 'kg' }, // TODO: fiyat ekle
-    { ...listItem('Minekop', LONG.sezonList, 'Güncel fiyat'), unit: 'kg' }, // TODO: fiyat ekle
-    { ...listItem('Fangri', LONG.sezonList, 'Güncel fiyat'), unit: 'kg' }, // TODO: fiyat ekle
-    { ...listItem('Akya', LONG.sezonList, 'Güncel fiyat'), unit: 'kg' }, // TODO: fiyat ekle
-    { ...listItem('Mercan', LONG.sezonList, 'Güncel fiyat'), unit: 'kg' }, // TODO: fiyat ekle
-    { ...listItem('Kaya Levreği', LONG.sezonList, 'Güncel fiyat'), unit: 'kg' }, // TODO: fiyat ekle
+    // Bütün balıklar — kg fiyatıyla (günlük).
+    { ...listItem('Lüfer', LONG.sezonList, '2800 ₺'), unit: 'kg' },
+    { ...listItem('Minekop', LONG.sezonList, '2150 ₺'), unit: 'kg' },
+    { ...listItem('Fangri', LONG.sezonList, '2480 ₺'), unit: 'kg' },
+    { ...listItem('Akya', LONG.sezonList, '2150 ₺'), unit: 'kg' },
+    { ...listItem('Mercan', LONG.sezonList, '2400 ₺'), unit: 'kg' },
+    { ...listItem('Kaya Levreği', LONG.sezonList, '2250 ₺'), unit: 'kg' },
   ],
 };
 
@@ -477,21 +476,19 @@ export const BEYAZ_KIRMIZI_ET: MenuSection = {
   title: 'Beyaz ve Kırmızı Et',
   listLabel: '— Tüm Et Çeşitleri —',
   spotlight: [
-    // TODO: fiyat ekle — yeni ürün (porsiyon)
     spotlightItem(
       'Kuzu Şiş',
       'Marine kuzu, mangalda. Köz biber eşliğinde.',
       LONG.etSpot,
       undefined,
-      'Güncel fiyat',
+      '1100 ₺',
     ),
-    // TODO: fiyat ekle — yeni ürün (porsiyon)
     spotlightItem(
       'Antrikot',
       'Izgara antrikot, dinlendirilmiş. Tereyağı ve kekik.',
       LONG.etSpot,
       undefined,
-      'Güncel fiyat',
+      '1750 ₺',
     ),
     // NOT: Köfte SİL listesinde değildi; mevcut hali (380 ₺ + izgara-kofte video)
     // korundu. "media yok / Güncel fiyat" istenirse rapordaki seçeneklere bak.
@@ -502,13 +499,12 @@ export const BEYAZ_KIRMIZI_ET: MenuSection = {
       undefined,
       '750 ₺',
     ),
-    // TODO: fiyat ekle — yeni ürün (porsiyon)
     spotlightItem(
       'Tavuk Şiş',
       'Marine tavuk şiş, kömür ateşinde.',
       LONG.etSpot,
       undefined,
-      'Güncel fiyat',
+      '680 ₺',
     ),
   ],
   fullList: [],
@@ -603,7 +599,7 @@ const MENU_MEDIA: Record<string, string> = {
   'Yoğurtlu Meze': 'yogurtlu-meze',
   'Bademli Havuç Tarator': 'bademli-havuc-tarator',
   'Patlıcan Dövme': 'patlican-dovme',
-  'Yaprak Sarması': 'yaprak-sarmasi',
+  'Etli Yaprak Sarması': 'yaprak-sarmasi',
   'Yunan Ezmesi': 'yunan-ezmesi',
   'Yunan Mezesi': 'yunan-mezesi',
   'Zeytinyağlı Kereviz': 'zeytinyagli-kereviz',
