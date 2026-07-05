@@ -2,6 +2,7 @@ import { CalisHero } from './(sections)/hero';
 import { Concept } from './(sections)/concept';
 import { Atmosfer } from './(sections)/atmosfer';
 import { ContactSummary } from './(sections)/contact-summary';
+import { Instagram } from './(sections)/instagram';
 import { Ekibimiz } from './(sections)/ekibimiz';
 import { MenuPreview } from './(sections)/menu-preview';
 import { Testimonials } from './(sections)/testimonials';
@@ -18,6 +19,7 @@ export default function HomePage() {
         <Concept />
         <Atmosfer />
         <MenuPreview />
+        <Instagram />
         <Ekibimiz />
         <Testimonials />
         <ReserveCta />
