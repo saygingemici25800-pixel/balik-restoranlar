@@ -89,13 +89,6 @@ export const CORBA: MenuSection = {
       'https://images.unsplash.com/photo-1609355108742-dcbc6c51a3a3?q=80&w=987&auto=format&fit=crop',
       '350 ₺',
     ),
-    spotlightItem(
-      'Günün Çorbası',
-      'Tezgâhın o günkü tercihi. Mevsime göre değişir.',
-      'Mevsimin getirdiğine göre değişen, mutfaktan o güne özel çıkan çorba. Sürpriz seven sofralar için.',
-      'https://images.unsplash.com/photo-1616501268209-edfff098fdd2?q=80&w=987&auto=format&fit=crop',
-      '110 ₺',
-    ),
   ],
   fullList: [],
 };
