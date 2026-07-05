@@ -13,7 +13,7 @@ export function Footer() {
           <h3 className={styles.colTitle}>Çalış Balıkçısı</h3>
           <p>{CONTACT.address}</p>
           <p>Akif Usta</p>
-          <p>1987&apos;den beri</p>
+          <p>1999&apos;den beri</p>
         </div>
 
         <div className={styles.col}>

@@ -27,10 +27,16 @@ export function Concept() {
             </h2>
             <div className="mt-16 space-y-6 text-fg/80 leading-relaxed">
               <p>
-                Çalış Balıkçısı&apos;nda denizin kendi sesini dinliyoruz. Mutfağımızın felsefesi sade bir saygıdan ibaret: gereksizi çıkarıp balığın asıl karakterini ortaya koymak.
+                1999 yılında deniz ürünlerine olan tutkumuzla yola çıktık. 2014&apos;te Fethiye&apos;de &quot;İzmir Balıkçısı&quot; markasını kurarak, en taze lezzetleri misafirlerimizle buluşturduk.
               </p>
               <p>
-                Her sabah Fethiyeli balıkçılardan gelen ürün, kendi pişme yolunu kendi söyler. Köz üzerinde, yöre tuzuyla, koyu seramik üzerinde sofraya gelir.
+                2020&apos;de, bu deneyimi bir adım ileri taşıyarak, Çalış Bölgesi&apos;nde &quot;Çalış Balıkçısı&quot; markasını hayata geçirdik.
+              </p>
+              <p>
+                Bugün de aynı tutkuyla, denizden gelen en özel tatları sizlerle buluşturmaya devam ediyoruz. Geçmişimizin tecrübesini, geleceğe yönelik yenilikçi bakış açımızla harmanlayarak, misafirlerimize en iyi deneyimi sunmaya devam ediyoruz.
+              </p>
+              <p>
+                Lezzet, kalite ve huzurun bir araya geldiği restoranımızda, sizleri ağırlamaktan mutluluk duyarız.
               </p>
             </div>
             <Link

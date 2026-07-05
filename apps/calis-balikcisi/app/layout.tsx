@@ -51,14 +51,14 @@ const newsreaderFont = Newsreader({
 export const metadata: Metadata = {
   title: 'Çalış Balıkçısı — Fethiye Sahilinde Taze Deniz Ürünleri',
   description:
-    "Çalış sahilinde 1987'den beri Akif Usta'nın elinden taze deniz ürünleri. Gün batımı manzarası, mevsimsel mezeler ve rezervasyon kolaylığı ile Fethiye'nin köklü balık restoranı.",
+    "Çalış sahilinde 1999'den beri Akif Usta'nın elinden taze deniz ürünleri. Gün batımı manzarası, mevsimsel mezeler ve rezervasyon kolaylığı ile Fethiye'nin köklü balık restoranı.",
   alternates: {
     canonical: 'https://calis-balikcisi.vercel.app',
   },
   openGraph: {
     title: 'Çalış Balıkçısı — Fethiye',
     description:
-      "Çalış sahilinde 1987'den beri. Mezattan masaya, az müdahaleyle.",
+      "Çalış sahilinde 1999'den beri. Mezattan masaya, az müdahaleyle.",
     url: 'https://calis-balikcisi.vercel.app',
     siteName: 'Çalış Balıkçısı',
     locale: 'tr_TR',
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Çalış Balıkçısı — Fethiye',
     description:
-      "Çalış sahilinde 1987'den beri. Mezattan masaya, az müdahaleyle.",
+      "Çalış sahilinde 1999'den beri. Mezattan masaya, az müdahaleyle.",
     images: ['/images/tezgah-1.jpg'],
   },
 };
@@ -101,11 +101,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             '@type': 'Restaurant',
             name: 'Çalış Balıkçısı',
             description:
-              "Çalış sahilinde 1987'den beri Akif Usta'nın elinden taze deniz ürünleri. Gün batımı manzarası, mevsimsel mezeler.",
+              "Çalış sahilinde 1999'den beri Akif Usta'nın elinden taze deniz ürünleri. Gün batımı manzarası, mevsimsel mezeler.",
             url: 'https://calis-balikcisi.vercel.app',
             telephone: '+902526140000',
             email: 'info@calisbalikcisi.com',
-            foundingDate: '1987',
+            foundingDate: '1999',
             servesCuisine: [
               'Türk Mutfağı',
               'Akdeniz Mutfağı',
