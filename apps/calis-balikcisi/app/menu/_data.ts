@@ -436,14 +436,14 @@ export const BALIKLARIMIZ: MenuSection = {
       'Bütün levrek, mangalda. Limon-ot eşliğinde.',
       LONG.porsiyonSpot,
       undefined,
-      '625 ₺',
+      '980 ₺',
     ),
     spotlightItem(
       'Çipura Izgara',
       'Bütün çipura, kömür ateşinde.',
       LONG.porsiyonSpot,
       undefined,
-      '575 ₺',
+      '980 ₺',
     ),
     spotlightItem(
       'Somon Izgara',
