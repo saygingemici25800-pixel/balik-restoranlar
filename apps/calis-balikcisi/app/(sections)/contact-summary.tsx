@@ -26,22 +26,13 @@ export function ContactSummary() {
           </p>
         </div>
 
-        <div className="mt-10 md:mt-12 grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-fg/5">
+        <div className="mt-10 md:mt-12">
+          <div className="relative aspect-[16/9] overflow-hidden rounded-sm bg-fg/5">
             <Image
               src="/web/cephe-gece.webp"
               alt="Çalış Balıkçısı — gece cephesi"
               fill
-              sizes="(min-width: 640px) 36rem, 100vw"
-              className="object-cover"
-            />
-          </div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-fg/5">
-            <Image
-              src="/web/cephe-seafood.webp"
-              alt="Çalış Balıkçısı — sahil cephesi"
-              fill
-              sizes="(min-width: 640px) 36rem, 100vw"
+              sizes="(min-width: 1024px) 72rem, 100vw"
               className="object-cover"
             />
           </div>

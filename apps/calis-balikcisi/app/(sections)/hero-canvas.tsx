@@ -23,19 +23,19 @@ export function HeroCanvas() {
     ).matches;
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
+    // Kompakt geçiş: ilerleme tüm sayfaya değil, hero yüksekliğinin ~%80'ine
+    // bağlı. Böylece "yüzeyden dalış" ilk ekran içinde tamamlanır.
+    let scrollDivisor = Math.max(1, window.innerHeight * 0.8);
     let scrollProgress = 0;
     const updateScroll = () => {
-      const max =
-        document.documentElement.scrollHeight - window.innerHeight;
-      scrollProgress =
-        max > 0 ? Math.max(0, Math.min(1, window.scrollY / max)) : 0;
+      scrollProgress = Math.max(0, Math.min(1, window.scrollY / scrollDivisor));
     };
     updateScroll();
 
     const scene = new THREE.Scene();
 
     const sunsetBg = new THREE.Color(0x1a0a2e);
-    const underwaterBg = new THREE.Color(0x062a3d);
+    const underwaterBg = new THREE.Color(0x0b1e2a);
     scene.background = sunsetBg.clone();
 
     const linearFog = new THREE.Fog(0x3d1208, 30, 115);
@@ -125,6 +125,7 @@ export function HeroCanvas() {
         innerColor: { value: new THREE.Color(0xfff5cc) },
         midColor: { value: new THREE.Color(0xffcc44) },
         haloColor: { value: new THREE.Color(0xff6000) },
+        uOpacity: { value: 1 },
       },
       vertexShader: `
         varying vec2 vUv;
@@ -137,6 +138,7 @@ export function HeroCanvas() {
         uniform vec3 innerColor;
         uniform vec3 midColor;
         uniform vec3 haloColor;
+        uniform float uOpacity;
         varying vec2 vUv;
         void main() {
           float d = length(vUv);
@@ -148,7 +150,7 @@ export function HeroCanvas() {
           col = mix(col, innerColor, core);
           float alpha = max(core, gold * 0.85);
           alpha = max(alpha, outer * 0.6);
-          gl_FragColor = vec4(col, alpha);
+          gl_FragColor = vec4(col, alpha * uOpacity);
         }
       `,
       transparent: true,
@@ -483,6 +485,8 @@ export function HeroCanvas() {
       const w = container.clientWidth || window.innerWidth;
       const h = container.clientHeight || window.innerHeight;
       if (w === 0 || h === 0) return;
+      scrollDivisor = Math.max(1, window.innerHeight * 0.8);
+      updateScroll();
       renderer.setSize(w, h);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
@@ -503,10 +507,11 @@ export function HeroCanvas() {
     const applyScroll = (elapsed: number) => {
       const t = scrollProgress;
 
+      // Kamera: yüzeyden dalışa. Kompakt band içinde iner.
       const cameraY =
-        t <= 0.5
-          ? lerp(4, 0, t / 0.5)
-          : lerp(0, -8, (t - 0.5) / 0.5);
+        t <= 0.4
+          ? lerp(4, 0, t / 0.4)
+          : lerp(0, -8, (t - 0.4) / 0.6);
       const cameraZ = lerp(18, 5, t);
       camera.position.y =
         cameraY + (prefersReducedMotion ? 0 : Math.sin(elapsed * 0.785) * 0.18);
@@ -515,46 +520,55 @@ export function HeroCanvas() {
         : Math.sin(elapsed * 0.18) * 0.4;
       camera.position.z = cameraZ;
 
-      const lookY = lerp(2, -3, smoothstep(0.4, 0.7, t));
+      const lookY = lerp(2, -3, smoothstep(0.15, 0.7, t));
       camera.lookAt(0, lookY, 0);
 
+      // Güneş: ufka inip denizin altına batar + söner (yalnız visible toggle değil).
+      const sink = smoothstep(0.0, 0.6, t);
+      const sunY = lerp(4.2, -6, sink);
+      sun.position.y = sunY;
+      sunPointLight.position.y = sunY;
+      (sunMat.uniforms.uOpacity as { value: number }).value =
+        1 - smoothstep(0.25, 0.68, t);
+      sun.visible = t < 0.75;
+
+      // Renk tonu: yüzey (gün batımı) -> derin su altı, kompakt geçiş.
       (scene.background as THREE.Color)
         .copy(sunsetBg)
-        .lerp(underwaterBg, smoothstep(0.4, 0.85, t));
+        .lerp(underwaterBg, smoothstep(0.1, 0.75, t));
 
-      if (t > 0.5) {
+      if (t > 0.4) {
         scene.fog = expFog;
-        expFog.density = lerp(0, 0.035, smoothstep(0.5, 0.85, t));
+        expFog.density = lerp(0, 0.035, smoothstep(0.35, 0.8, t));
       } else {
         scene.fog = linearFog;
       }
 
-      const dim = smoothstep(0.4, 0.85, t);
+      const dim = smoothstep(0.15, 0.8, t);
       ambientLight.intensity = lerp(0.6, 0.15, dim);
       hemiLight.intensity = lerp(0.8, 0.05, dim);
-      sunPointLight.intensity = lerp(2, 0, smoothstep(0.4, 0.7, t));
-      coolAmbient.intensity = lerp(0, 0.5, smoothstep(0.5, 0.85, t));
-      underwaterPoint.intensity = lerp(0, 1.4, smoothstep(0.5, 0.85, t));
+      sunPointLight.intensity = lerp(2, 0, smoothstep(0.15, 0.6, t));
+      coolAmbient.intensity = lerp(0, 0.5, smoothstep(0.35, 0.8, t));
+      underwaterPoint.intensity = lerp(0, 1.4, smoothstep(0.35, 0.8, t));
 
-      const aboveVisible = t < 0.6;
+      const aboveVisible = t < 0.5;
       boats.forEach((b) => {
         b.visible = aboveVisible;
       });
       gulls.forEach((g) => {
         g.mesh.visible = aboveVisible;
       });
-      sun.visible = t < 0.55;
 
-      ceilingMat.opacity = lerp(0, 0.85, smoothstep(0.4, 0.7, t));
+      ceilingMat.opacity = lerp(0, 0.85, smoothstep(0.2, 0.7, t));
 
-      const fishOpacity = smoothstep(0.45, 0.85, t);
+      const fishOpacity = smoothstep(0.35, 0.8, t);
       fishList.forEach((f) => {
         f.material.opacity = fishOpacity;
       });
 
       godRays.forEach((ray) => {
         const m = ray.material as THREE.MeshBasicMaterial;
-        m.opacity = lerp(0, 0.18, smoothstep(0.5, 0.85, t));
+        m.opacity = lerp(0, 0.18, smoothstep(0.4, 0.8, t));
       });
     };
 
