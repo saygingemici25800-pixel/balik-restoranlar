@@ -138,8 +138,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   'Saturday',
                   'Sunday',
                 ],
-                opens: '12:00',
-                closes: '23:00',
+                opens: '12:30',
+                closes: '01:30',
               },
             ],
             hasMap:

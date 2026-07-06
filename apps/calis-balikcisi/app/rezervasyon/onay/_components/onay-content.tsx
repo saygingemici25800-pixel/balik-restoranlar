@@ -136,7 +136,7 @@ export function OnayContent({
             <p>
               <a href={CONTACT.emailHref}>{CONTACT.email}</a>
             </p>
-            <p>Her gün 12:00–23:00 · Pazar 12:00–22:00</p>
+            <p>Her gün 12:30 – 01:30</p>
           </div>
         </div>
 

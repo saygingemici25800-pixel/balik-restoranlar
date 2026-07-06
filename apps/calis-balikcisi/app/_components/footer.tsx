@@ -53,7 +53,7 @@ export function Footer() {
       </div>
 
       <p className={styles.hours}>
-        Her gün 12:00 — 23:00 &nbsp;·&nbsp; Pazar 12:00 — 22:00
+        Her gün 12:30 — 01:30
       </p>
 
       <p className={styles.copyright}>
