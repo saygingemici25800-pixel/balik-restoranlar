@@ -1,8 +1,11 @@
 import { CONTACT } from '@/lib/constants';
 
 export const CONTACT_INFO = {
-  phone: CONTACT.phone,
-  phoneHref: CONTACT.phoneHref,
+  mobile: CONTACT.mobile,
+  mobileHref: CONTACT.mobileHref,
+  landline: CONTACT.landline,
+  landlineHref: CONTACT.landlineHref,
+  whatsapp: CONTACT.whatsapp,
   email: CONTACT.email,
   emailHref: CONTACT.emailHref,
   address: {

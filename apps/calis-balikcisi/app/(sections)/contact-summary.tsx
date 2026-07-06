@@ -5,8 +5,16 @@ import { CONTACT_INFO } from '../iletisim/_data';
 import styles from './contact-summary.module.css';
 
 export function ContactSummary() {
-  const { phone, phoneHref, email, emailHref, address, openingHours } =
-    CONTACT_INFO;
+  const {
+    mobile,
+    mobileHref,
+    landline,
+    landlineHref,
+    email,
+    emailHref,
+    address,
+    openingHours,
+  } = CONTACT_INFO;
 
   return (
     <section
@@ -39,11 +47,25 @@ export function ContactSummary() {
         </div>
 
         <div className={styles.grid}>
-          <a href={phoneHref} className={styles.card}>
+          <div className={styles.card}>
             <Phone className={styles.icon} aria-hidden="true" />
             <span className={styles.label}>Telefon</span>
-            <span className={styles.value}>{phone}</span>
-          </a>
+            <span className={styles.value}>
+              <a
+                href={mobileHref}
+                className="hover:text-accent transition-colors"
+              >
+                {mobile}
+              </a>
+              <br />
+              <a
+                href={landlineHref}
+                className="hover:text-accent transition-colors"
+              >
+                {landline}
+              </a>
+            </span>
+          </div>
 
           <a href={emailHref} className={styles.card}>
             <Mail className={styles.icon} aria-hidden="true" />

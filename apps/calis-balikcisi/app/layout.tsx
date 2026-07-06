@@ -103,7 +103,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             description:
               "Çalış sahilinde 1999'den beri Akif Usta'nın elinden taze deniz ürünleri. Gün batımı manzarası, mevsimsel mezeler.",
             url: 'https://calis-balikcisi.vercel.app',
-            telephone: '+902526140000',
+            telephone: ['+902526220990', '+905326510848'],
             email: 'info@calisbalikcisi.com',
             foundingDate: '1999',
             servesCuisine: [

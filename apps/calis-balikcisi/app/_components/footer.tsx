@@ -19,7 +19,10 @@ export function Footer() {
         <div className={styles.col}>
           <h3 className={styles.colTitle}>İletişim</h3>
           <p>
-            <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>
+            <a href={CONTACT.mobileHref}>{CONTACT.mobile}</a>
+          </p>
+          <p>
+            <a href={CONTACT.landlineHref}>{CONTACT.landline}</a>
           </p>
           <p>
             <a href={CONTACT.emailHref}>{CONTACT.email}</a>

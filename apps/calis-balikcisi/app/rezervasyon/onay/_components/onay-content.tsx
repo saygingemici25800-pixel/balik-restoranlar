@@ -76,8 +76,11 @@ export function OnayContent({
       </div>
 
       <div className={styles.phoneBlock}>
-        <a className={styles.phoneLink} href={CONTACT.phoneHref}>
-          {CONTACT.phone}
+        <a className={styles.phoneLink} href={CONTACT.mobileHref}>
+          {CONTACT.mobile}
+        </a>
+        <a className={styles.phoneLink} href={CONTACT.landlineHref}>
+          {CONTACT.landline}
         </a>
         <p className={styles.phoneNote}>
           İptal veya değişiklik için aynı numara — telefonda halledelim.
@@ -125,7 +128,10 @@ export function OnayContent({
           </div>
           <div className={styles.colRight}>
             <p>
-              <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>
+              <a href={CONTACT.mobileHref}>{CONTACT.mobile}</a>
+            </p>
+            <p>
+              <a href={CONTACT.landlineHref}>{CONTACT.landline}</a>
             </p>
             <p>
               <a href={CONTACT.emailHref}>{CONTACT.email}</a>

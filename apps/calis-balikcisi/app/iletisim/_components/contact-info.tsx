@@ -24,8 +24,17 @@ function InfoBlock({ icon, label, children }: InfoBlockProps) {
 }
 
 export function ContactInfo() {
-  const { phone, phoneHref, email, emailHref, address, openingHours, mapEmbedSrc } =
-    CONTACT_INFO;
+  const {
+    mobile,
+    mobileHref,
+    landline,
+    landlineHref,
+    email,
+    emailHref,
+    address,
+    openingHours,
+    mapEmbedSrc,
+  } = CONTACT_INFO;
 
   return (
     <section className="max-w-7xl mx-auto px-6 md:px-10 py-24 md:py-32">
@@ -41,10 +50,16 @@ export function ContactInfo() {
           <div className="space-y-8">
             <InfoBlock icon={<Phone className="h-4 w-4" />} label="Telefon">
               <a
-                href={phoneHref}
-                className="hover:text-accent transition-colors"
+                href={mobileHref}
+                className="block hover:text-accent transition-colors"
               >
-                {phone}
+                {mobile}
+              </a>
+              <a
+                href={landlineHref}
+                className="block hover:text-accent transition-colors"
+              >
+                {landline}
               </a>
             </InfoBlock>
 

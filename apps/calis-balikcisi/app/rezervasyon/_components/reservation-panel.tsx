@@ -288,8 +288,12 @@ export function ReservationPanel({
           </p>
           <p className={styles.fineprint}>
             Telefonla rezervasyon:{' '}
-            <a href={CONTACT.phoneHref} className={styles.phoneLink}>
-              {CONTACT.phone}
+            <a href={CONTACT.mobileHref} className={styles.phoneLink}>
+              {CONTACT.mobile}
+            </a>{' '}
+            ·{' '}
+            <a href={CONTACT.landlineHref} className={styles.phoneLink}>
+              {CONTACT.landline}
             </a>
           </p>
         </div>
@@ -475,8 +479,12 @@ export function ReservationPanel({
         </p>
         <p className={styles.fineprint}>
           Telefonla rezervasyon:{' '}
-          <a href={CONTACT.phoneHref} className={styles.phoneLink}>
-            {CONTACT.phone}
+          <a href={CONTACT.mobileHref} className={styles.phoneLink}>
+            {CONTACT.mobile}
+          </a>{' '}
+          ·{' '}
+          <a href={CONTACT.landlineHref} className={styles.phoneLink}>
+            {CONTACT.landline}
           </a>
         </p>
       </div>
