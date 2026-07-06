@@ -3,8 +3,10 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Phone } from 'lucide-react';
 import { MenuDrawer } from './menu-drawer';
 import { RES_ENABLED } from '@/lib/flags';
+import { CONTACT } from '@/lib/constants';
 
 type Props = {
   className?: string;
@@ -83,20 +85,31 @@ export function SiteTopBar({ className = '' }: Props) {
           </span>
         </Link>
 
-        {RES_ENABLED && (
-          <Link
-            href="/rezervasyon"
-            className="relative inline-block justify-self-end pb-1"
+        <div className="justify-self-end flex items-center gap-3">
+          {RES_ENABLED && (
+            <Link href="/rezervasyon" className="relative inline-block pb-1">
+              <span className="text-[0.6rem] md:text-xs uppercase tracking-[0.15em] md:tracking-[0.3em] text-accent whitespace-nowrap font-light">
+                Rezervasyon
+              </span>
+              <span
+                aria-hidden="true"
+                className="absolute left-0 bottom-0 h-px w-full bg-accent"
+              />
+            </Link>
+          )}
+
+          <a
+            href={CONTACT.mobileHref}
+            aria-label="Telefonla ara"
+            className="inline-flex items-center gap-1.5 md:gap-2 rounded-full border border-accent/60 px-3 py-1.5 md:px-4 md:py-2 text-accent hover:bg-accent hover:text-bg transition-colors"
           >
-            <span className="text-[0.6rem] md:text-xs uppercase tracking-[0.15em] md:tracking-[0.3em] text-accent whitespace-nowrap font-light">
-              Rezervasyon
+            <Phone className="h-3.5 w-3.5 md:h-4 md:w-4" aria-hidden="true" />
+            <span className="text-[0.7rem] md:text-xs uppercase tracking-[0.12em] md:tracking-[0.2em] whitespace-nowrap font-light">
+              <span className="md:hidden">Ara</span>
+              <span className="hidden md:inline">{CONTACT.mobile}</span>
             </span>
-            <span
-              aria-hidden="true"
-              className="absolute left-0 bottom-0 h-px w-full bg-accent"
-            />
-          </Link>
-        )}
+          </a>
+        </div>
       </header>
 
       <MenuDrawer isOpen={isOpen} />
