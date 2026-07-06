@@ -12,9 +12,12 @@ type Props = {
 
 /**
  * Mekan/atmosfer videosu: SESSİZ + otomatik loop (menü ürün kartı davranışı DEĞİL).
- * Performans: IntersectionObserver ile yalnız görünürken oynar, ekrandan çıkınca
- * duraklar. `prefers-reduced-motion` açıksa hiç oynamaz; poster görünür kalır.
- * preload="metadata" → poster anında, video baytları görünürken iner.
+ * Performans:
+ * - Preload: video görünmeden ~600px önce (rootMargin) baytları indirmeye başlar,
+ *   böylece görünür olunca hazır — geç açılmayı önler.
+ * - Oynatma: yalnız gerçekten görünürken (threshold 0.25) oynar, ekrandan çıkınca
+ *   duraklar (erken oynatma yok).
+ * `prefers-reduced-motion` açıksa hiç oynamaz; poster görünür kalır.
  */
 export function WebVideo({ src, poster, className }: Props) {
   const ref = useRef<HTMLVideoElement>(null);
@@ -26,7 +29,24 @@ export function WebVideo({ src, poster, className }: Props) {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) return; // poster'da kal, autoplay yok
 
-    const io = new IntersectionObserver(
+    // Preload: yaklaşınca (~600px) indirmeye başla — görünene kadar bekleme.
+    const preloadIo = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            v.preload = 'auto';
+            v.load();
+            preloadIo.disconnect();
+            break;
+          }
+        }
+      },
+      { rootMargin: '600px 0px' },
+    );
+    preloadIo.observe(v);
+
+    // Oynatma: yalnız görünürken oyna/duraklat.
+    const playIo = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
@@ -38,8 +58,12 @@ export function WebVideo({ src, poster, className }: Props) {
       },
       { threshold: 0.25 },
     );
-    io.observe(v);
-    return () => io.disconnect();
+    playIo.observe(v);
+
+    return () => {
+      preloadIo.disconnect();
+      playIo.disconnect();
+    };
   }, []);
 
   return (
