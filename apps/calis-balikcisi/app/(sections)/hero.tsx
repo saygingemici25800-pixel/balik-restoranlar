@@ -36,7 +36,7 @@ export function CalisHero() {
           style={{ textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}
         >
           <p>Her sabah denizden, her akşam sofranıza.</p>
-          <p>Akif Usta&apos;nın elinden, 1999&apos;den beri.</p>
+          <p>Akif Usta&apos;nın elinden, 2014&apos;ten beri.</p>
         </div>
         <Link
           href="/menu"
