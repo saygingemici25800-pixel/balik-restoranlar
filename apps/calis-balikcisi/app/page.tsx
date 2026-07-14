@@ -7,7 +7,7 @@ import { Ekibimiz } from './(sections)/ekibimiz';
 import { MenuPreview } from './(sections)/menu-preview';
 import { Testimonials } from './(sections)/testimonials';
 import { ReserveCta } from './(sections)/reserve-cta';
-import { KardesTab } from './_components/kardes-tab';
+import { KardesMekan } from './_components/kardes-mekan';
 import { MenuIntroAnimation } from './_components/menu-intro-animation';
 
 export default function HomePage() {
@@ -24,8 +24,8 @@ export default function HomePage() {
         <Testimonials />
         <ReserveCta />
         <ContactSummary />
+        <KardesMekan />
       </main>
-      <KardesTab />
     </>
   );
 }
