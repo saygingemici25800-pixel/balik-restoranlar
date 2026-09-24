@@ -2,9 +2,10 @@
 
 import { Fragment, useEffect, useState } from 'react';
 import { getLenis } from '../../_components/lenis-provider';
-import { MENU_DATA, type MenuItem, type MenuSection } from '../_data';
+import type { MenuItem, MenuSection } from '@/lib/content/menu-types';
 
 type Props = {
+  sections: MenuSection[];
   onItemClick: (item: MenuItem, eyebrow: string) => void;
 };
 
@@ -19,12 +20,15 @@ const FLOW_SIZES = [
 ];
 
 // kg birimli ürünlerde fiyatın önüne "kg" gelir (örn. "kg 900 ₺").
+// Günlük fiyatlı ürünlerde fiyat yerine "Günlük fiyat" yazar.
 function formatPrice(item: MenuItem): string | undefined {
+  if (item.dailyPrice) return 'Günlük fiyat';
   if (!item.price) return undefined;
   return item.unit === 'kg' ? `kg ${item.price}` : item.price;
 }
 
 function computeScrollTarget(
+  sections: MenuSection[],
   targetId: string,
   closingId: string | null,
 ): number | null {
@@ -38,8 +42,8 @@ function computeScrollTarget(
 
   let shift = 0;
   if (closingId !== null && closingId !== targetId) {
-    const closingIdx = MENU_DATA.findIndex((s) => s.id === closingId);
-    const targetIdx = MENU_DATA.findIndex((s) => s.id === targetId);
+    const closingIdx = sections.findIndex((s) => s.id === closingId);
+    const targetIdx = sections.findIndex((s) => s.id === targetId);
     if (closingIdx >= 0 && targetIdx >= 0 && closingIdx < targetIdx) {
       const panel = document.getElementById(`panel-${closingId}`);
       const inner = panel?.firstElementChild as HTMLElement | null;
@@ -63,8 +67,9 @@ function runScroll(targetY: number, reduceMotion: boolean) {
   });
 }
 
-export function MenuAccordion({ onItemClick }: Props) {
-  const [openId, setOpenId] = useState<string | null>('corba');
+export function MenuAccordion({ sections, onItemClick }: Props) {
+  const firstId = sections[0]?.id ?? null;
+  const [openId, setOpenId] = useState<string | null>(firstId);
   const [reduceMotion, setReduceMotion] = useState(false);
 
   useEffect(() => {
@@ -77,15 +82,15 @@ export function MenuAccordion({ onItemClick }: Props) {
 
   useEffect(() => {
     const hash = window.location.hash.replace('#', '');
-    if (!hash || !MENU_DATA.some((s) => s.id === hash)) return;
+    if (!hash || !sections.some((s) => s.id === hash)) return;
 
-    const targetY = computeScrollTarget(hash, 'corba');
+    const targetY = computeScrollTarget(sections, hash, firstId);
     setOpenId(hash);
 
     if (targetY !== null) {
       requestAnimationFrame(() => runScroll(targetY, reduceMotion));
     }
-    // mount-only: openId default 'corba' kullanılır, reduceMotion mount snapshot'ı
+    // mount-only: openId varsayılanı ilk bölüm, reduceMotion mount snapshot'ı
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -98,7 +103,7 @@ export function MenuAccordion({ onItemClick }: Props) {
       return;
     }
 
-    const targetY = computeScrollTarget(id, openId);
+    const targetY = computeScrollTarget(sections, id, openId);
 
     setOpenId(id);
     history.replaceState(null, '', `#${id}`);
@@ -111,12 +116,12 @@ export function MenuAccordion({ onItemClick }: Props) {
   return (
     <section className="px-6 md:px-10">
       <div className="max-w-5xl mx-auto">
-        {MENU_DATA.map((section, i) => (
+        {sections.map((section, i) => (
           <Row
             key={section.id}
             section={section}
             isOpen={openId === section.id}
-            isLast={i === MENU_DATA.length - 1}
+            isLast={i === sections.length - 1}
             reduceMotion={reduceMotion}
             onToggle={() => handleToggle(section.id)}
             onItemClick={onItemClick}
@@ -222,7 +227,7 @@ function Panel({ section, onItemClick }: PanelProps) {
     <div className="px-2 pb-14 pt-4">
       <div className={`grid grid-cols-1 ${spotlightCols} items-start gap-y-10 gap-x-8`}>
         {section.spotlight.map((item) => (
-          <div key={item.name} className="text-center">
+          <div key={item.id ?? item.name} className="text-center">
             <button
               type="button"
               onClick={() => onItemClick(item, section.eyebrow)}
@@ -235,7 +240,7 @@ function Panel({ section, onItemClick }: PanelProps) {
                 {item.description}
               </p>
             ) : null}
-            {item.price ? (
+            {formatPrice(item) ? (
               <p className="mt-3 font-sans text-[0.95rem] font-medium tracking-[0.01em] text-fg/85 not-italic">
                 {formatPrice(item)}
               </p>
@@ -254,14 +259,14 @@ function Panel({ section, onItemClick }: PanelProps) {
             style={{ lineHeight: 2.4 }}
           >
             {section.fullList.map((item, i) => (
-              <Fragment key={item.name}>
+              <Fragment key={item.id ?? item.name}>
                 <button
                   type="button"
                   onClick={() => onItemClick(item, section.eyebrow)}
                   className={`inline-block mx-2 text-fg/85 hover:text-accent border-b border-transparent hover:border-accent transition-colors ${FLOW_SIZES[i % FLOW_SIZES.length]}`}
                 >
                   {item.name}
-                  {item.price ? (
+                  {formatPrice(item) ? (
                     <span className="ml-2 font-sans text-xs font-medium not-italic text-fg/75 tracking-[0.01em] align-middle">
                       {formatPrice(item)}
                     </span>

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { SiteTopBar } from '../../(sections)/top-bar';
-import { type MenuItem } from '../_data';
+import type { MenuItem, MenuSection } from '@/lib/content/menu-types';
 import { VideoHero } from './video-hero';
 import { MenuDemoVideo } from './menu-demo-video';
 import { MenuAccordion } from './menu-accordion';
@@ -10,7 +10,11 @@ import { MenuItemModal } from './menu-item-modal';
 
 type Active = { item: MenuItem; eyebrow: string } | null;
 
-export function MenuContent() {
+type MenuContentProps = {
+  sections: MenuSection[];
+};
+
+export function MenuContent({ sections }: MenuContentProps) {
   const [active, setActive] = useState<Active>(null);
 
   function open(item: MenuItem, eyebrow: string) {
@@ -38,7 +42,7 @@ export function MenuContent() {
 
       <MenuDemoVideo />
 
-      <MenuAccordion onItemClick={open} />
+      <MenuAccordion sections={sections} onItemClick={open} />
 
       <section className="py-16 md:py-20 px-6 text-center">
         <p className="text-xs uppercase tracking-[0.3em] text-fg/50">
@@ -48,6 +52,7 @@ export function MenuContent() {
 
       {active ? (
         <MenuItemModal
+          sections={sections}
           item={active.item}
           eyebrow={active.eyebrow}
           onClose={close}

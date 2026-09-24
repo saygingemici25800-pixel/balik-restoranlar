@@ -1,39 +1,39 @@
 'use client';
 
-import { useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
-import { MENU_DATA, type MenuItem } from '../_data';
+import type { MenuItem, MenuSection } from '@/lib/content/menu-types';
 
 type Props = {
+  sections: MenuSection[];
   item: MenuItem;
   eyebrow: string;
   onClose: () => void;
 };
 
-const CHAPTER_BY_EYEBROW = new Map(
-  MENU_DATA.map((section, i) => [section.eyebrow, i + 1]),
-);
+type MenuIndex = {
+  chapterByEyebrow: Map<string, number>;
+  takeByName: Map<string, number>;
+  totalDishes: number;
+};
 
-const TOTAL_DISHES = MENU_DATA.reduce(
-  (n, s) => n + s.spotlight.length + s.fullList.length,
-  0,
-);
-
-const TAKE_BY_NAME = (() => {
-  const map = new Map<string, number>();
+function buildIndex(sections: MenuSection[]): MenuIndex {
+  const takeByName = new Map<string, number>();
   let counter = 0;
-  for (const section of MENU_DATA) {
-    for (const it of section.spotlight) {
+  for (const section of sections) {
+    for (const it of [...section.spotlight, ...section.fullList]) {
       counter += 1;
-      map.set(`${section.eyebrow}::${it.name}`, counter);
-    }
-    for (const it of section.fullList) {
-      counter += 1;
-      map.set(`${section.eyebrow}::${it.name}`, counter);
+      takeByName.set(`${section.eyebrow}::${it.name}`, counter);
     }
   }
-  return map;
-})();
+  return {
+    chapterByEyebrow: new Map(
+      sections.map((section, i) => [section.eyebrow, i + 1]),
+    ),
+    takeByName,
+    totalDishes: counter,
+  };
+}
 
 const COLOR_BARS = ['#E8B4A0', '#A04B3C', '#D4A259', '#C8DDD9'];
 
@@ -41,14 +41,14 @@ function pad2(n: number): string {
   return n < 10 ? `0${n}` : String(n);
 }
 
-function formatChapter(eyebrow: string): string {
-  const idx = CHAPTER_BY_EYEBROW.get(eyebrow) ?? 0;
+function formatChapter(index: MenuIndex, eyebrow: string): string {
+  const idx = index.chapterByEyebrow.get(eyebrow) ?? 0;
   return `BÖLÜM ${pad2(idx)} — ${eyebrow}`;
 }
 
-function formatTake(eyebrow: string, name: string): string {
-  const idx = TAKE_BY_NAME.get(`${eyebrow}::${name}`) ?? 0;
-  return `TAKE ${pad2(idx)} / ${TOTAL_DISHES}`;
+function formatTake(index: MenuIndex, eyebrow: string, name: string): string {
+  const idx = index.takeByName.get(`${eyebrow}::${name}`) ?? 0;
+  return `TAKE ${pad2(idx)} / ${index.totalDishes}`;
 }
 
 function nowParts(): { hh: string; mm: string; ss: string } {
@@ -111,8 +111,9 @@ function ColorBars({ side, hideOnMobile }: ColorBarsProps) {
   );
 }
 
-export function MenuItemModal({ item, eyebrow, onClose }: Props) {
+export function MenuItemModal({ sections, item, eyebrow, onClose }: Props) {
   const titleId = useId();
+  const index = useMemo(() => buildIndex(sections), [sections]);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(false);
@@ -149,8 +150,8 @@ export function MenuItemModal({ item, eyebrow, onClose }: Props) {
     setScrolled(top > 50);
   }
 
-  const chapter = formatChapter(eyebrow);
-  const take = formatTake(eyebrow, item.name);
+  const chapter = formatChapter(index, eyebrow);
+  const take = formatTake(index, eyebrow, item.name);
   // Sadece gerçek /menu/ poster'ları foto sayılır; Unsplash/istock başlık-only.
   const photo = item.photoUrl?.startsWith('/menu/') ? item.photoUrl : undefined;
 
