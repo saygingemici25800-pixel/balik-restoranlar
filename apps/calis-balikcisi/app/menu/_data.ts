@@ -1,24 +1,10 @@
-export type MenuItem = {
-  name: string;
-  description?: string;
-  photoUrl?: string;
-  videoUrl?: string;
-  longDescription?: string;
-  price?: string;
-  /** Fiyat birimi. 'kg' -> "kg <price>" gösterilir; varsayılan 'portion'. */
-  unit?: 'kg' | 'portion';
-  /** Fiyatı henüz girilmemiş ürün: canlıda gösterilmez (MENU_DATA'da filtrelenir). */
-  hidden?: boolean;
-};
+// Statik menü — ilk aşamada YEDEK kaynak. Canlı menü site-content.json'dan
+// (lib/content) okunur; storage okunamazsa MENU_DATA'ya düşülür. Seed de
+// buradaki ham bölümlerden (RAW_SECTIONS + MENU_MEDIA) üretilir.
+import type { MenuItem, MenuSection } from '@/lib/content/menu-types';
+import { posterUrl, videoUrl } from '@/lib/content/media';
 
-export type MenuSection = {
-  id: string;
-  eyebrow: string;
-  title: string;
-  listLabel: string;
-  spotlight: MenuItem[];
-  fullList: MenuItem[];
-};
+export type { MenuItem, MenuSection };
 
 function spotlightItem(
   name: string,
@@ -548,13 +534,9 @@ export const TATLI: MenuSection = {
   ],
 };
 
-// Poster public/menu/<slug>.webp, video R2 public bucket'tan <slug>.mp4 olarak gelir.
-const R2_MENU_BASE =
-  'https://pub-0e98df07e9e945c780b0fbae31d2f1bc.r2.dev/menu';
-
 // Ürün adı -> medya slug eşlemesi. Tek doğruluk kaynağı: yeni çekim geldikçe
 // buraya bir satır eklenir, eşleşen ürün otomatik poster + video alır.
-const MENU_MEDIA: Record<string, string> = {
+export const MENU_MEDIA: Record<string, string> = {
   'Antep Acılı Ezme': 'antep-ezme',
   Atom: 'atom',
   'Balık Çorbası': 'balik-corbasi',
@@ -616,8 +598,8 @@ function withMedia(item: MenuItem): MenuItem {
   if (!slug) return item;
   return {
     ...item,
-    photoUrl: `/menu/${slug}.webp`,
-    videoUrl: `${R2_MENU_BASE}/${slug}.mp4`,
+    photoUrl: posterUrl(slug),
+    videoUrl: videoUrl(slug),
   };
 }
 
@@ -639,7 +621,8 @@ function stripHidden(section: MenuSection): MenuSection {
   };
 }
 
-export const MENU_DATA: MenuSection[] = [
+// Gizliler dahil, medya eşlenmemiş ham bölümler — seed kaynağı.
+export const RAW_SECTIONS: MenuSection[] = [
   CORBA,
   YOGURTLU_MEZELER,
   SEBZELI_MEZELER,
@@ -652,6 +635,8 @@ export const MENU_DATA: MenuSection[] = [
   BALIKLARIMIZ,
   BEYAZ_KIRMIZI_ET,
   TATLI,
-]
-  .map(applyMedia)
-  .map(stripHidden);
+];
+
+export const MENU_DATA: MenuSection[] = RAW_SECTIONS.map(applyMedia).map(
+  stripHidden,
+);

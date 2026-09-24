@@ -42,3 +42,6 @@ coverage/
 # Stitch tasarım referansları (local only)
 **/public/images/stitch/
 docs/motion-docs.db
+
+# Menü içeriği lokal fallback (Vercel Blob yokken)
+.data/
