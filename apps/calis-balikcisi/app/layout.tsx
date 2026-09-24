@@ -10,9 +10,7 @@ import Script from 'next/script';
 import '@balik/design-tokens/calis-balikcisi.css';
 import './globals.css';
 import { Footer } from './_components/footer';
-import { LenisProvider } from './_components/lenis-provider';
-import { ScrollProgress } from './_components/scroll-progress';
-import { ScrollToTop } from './_components/scroll-to-top';
+import { SiteChrome } from './_components/site-chrome';
 
 const displayFont = Cormorant_Garamond({
   subsets: ['latin'],
@@ -154,12 +152,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         }}
       />
       <body>
-        <LenisProvider>
-          <ScrollProgress />
-          {children}
-          <Footer />
-          <ScrollToTop />
-        </LenisProvider>
+        <SiteChrome footer={<Footer />}>{children}</SiteChrome>
       </body>
     </html>
   );
