@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 const CATEGORIES = ['Çiğ ve Tuzlamalar', 'Köz Üzerinde', 'Tatlı Vakti'] as const;
@@ -11,10 +12,14 @@ export function MenuPreview() {
           <div className="w-12 h-px bg-accent mx-auto mt-6" aria-hidden="true" />
         </div>
 
-        <div className="mt-12 md:mt-16 mx-auto w-full max-w-[720px] aspect-video flex items-center justify-center rounded-sm border border-dashed border-fg/20 bg-fg/[0.04]">
-          <span className="font-display italic text-base md:text-lg text-fg/35 tracking-[0.02em]">
-            video gelecek
-          </span>
+        <div className="relative mt-12 md:mt-16 mx-auto w-full max-w-[720px] aspect-video overflow-hidden rounded-sm">
+          <Image
+            src="/web/balik-reyonu-1.webp"
+            alt="Balık reyonu: buz üstünde günün balıkları ve meze vitrini"
+            fill
+            sizes="(min-width: 768px) 720px, 100vw"
+            className="object-cover object-[50%_58%]"
+          />
         </div>
 
         <ul

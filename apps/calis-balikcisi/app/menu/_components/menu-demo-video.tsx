@@ -5,36 +5,8 @@ import { useState } from 'react';
 export function MenuDemoVideo() {
   const [failed, setFailed] = useState(false);
 
-  if (failed) {
-    return (
-      <div
-        style={{
-          width: '100%',
-          maxWidth: '720px',
-          margin: '0 auto',
-          aspectRatio: '16/9',
-          background: 'rgba(31,26,18,0.3)',
-          border: '2px dashed rgba(243,234,216,0.15)',
-          borderRadius: '8px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <span
-          style={{
-            fontFamily: 'var(--serif)',
-            fontSize: '0.85rem',
-            letterSpacing: '0.3em',
-            textTransform: 'uppercase' as const,
-            color: 'rgba(243,234,216,0.4)',
-          }}
-        >
-          video gelecek
-        </span>
-      </div>
-    );
-  }
+  // Video yüklenemezse alan hiç gösterilmez — sitede "video gelecek" gibi yer tutucu metin kalmaz.
+  if (failed) return null;
 
   return (
     <div
