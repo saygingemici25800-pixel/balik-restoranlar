@@ -68,11 +68,18 @@ export function HeroCanvas() {
     camera.position.set(0, 4, 18);
     camera.lookAt(0, 2, 0);
 
-    const renderer = new THREE.WebGLRenderer({
-      antialias: !isMobile,
-      alpha: false,
-      powerPreference: 'high-performance',
-    });
+    // WebGL yoksa (eski cihaz, kapalı donanım hızlandırma) renderer hata fırlatır. Yakalanmazsa
+    // efekt hatası tüm ana sayfayı düşürür; burada erken dönülür, hero kendi zemininde kalır.
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        antialias: !isMobile,
+        alpha: false,
+        powerPreference: 'high-performance',
+      });
+    } catch {
+      return;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setClearColor(0x1a0a2e, 1);
@@ -492,6 +499,9 @@ export function HeroCanvas() {
       if (f3) fishList.push(f3);
     }
 
+    // reduced-motion'da döngü yok: `setSize` tamponu temizler, statik kare yeniden çizilmezse canvas
+    // kaydırılana kadar siyah kalır. `renderStatic` aşağıda tanımlı — referansla çağrılır.
+    let redrawStatic: (() => void) | null = null;
     const handleResize = () => {
       const w = container.clientWidth || window.innerWidth;
       const h = container.clientHeight || window.innerHeight;
@@ -501,6 +511,7 @@ export function HeroCanvas() {
       renderer.setSize(w, h);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
+      if (prefersReducedMotion) redrawStatic?.();
     };
     handleResize();
 
@@ -641,6 +652,7 @@ export function HeroCanvas() {
       renderer.render(scene, camera);
       reveal();
     };
+    redrawStatic = renderStatic;
 
     const onScroll = () => {
       updateScroll();
