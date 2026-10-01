@@ -1,11 +1,11 @@
 import Link from 'next/link';
-import { HeroCanvas } from './hero-canvas';
+import { HeroCanvasLazy } from './hero-canvas-lazy';
 import { SiteTopBar } from './top-bar';
 
 export function CalisHero() {
   return (
     <section className="relative z-0 h-[100svh] w-full overflow-hidden text-fg">
-      <HeroCanvas />
+      <HeroCanvasLazy />
 
       <div
         className="absolute inset-0 z-[1] bg-gradient-to-b from-bg/40 via-transparent to-bg/55"

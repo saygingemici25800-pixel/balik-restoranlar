@@ -76,6 +76,17 @@ export function HeroCanvas() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setClearColor(0x1a0a2e, 1);
+    // Canvas görünmez eklenir, ilk kare çizilince belirir: `alpha:false` bir WebGL canvas'ı ilk
+    // çizimden önce opak siyah gösterebilir. O ana kadar hero'nun kendi zemini (bg + gradient)
+    // görünür — siyah flaş yok, yer tutucu ile canvas aynı `fixed inset-0` kutuda (CLS 0).
+    renderer.domElement.style.opacity = '0';
+    if (!prefersReducedMotion) renderer.domElement.style.transition = 'opacity 0.6s ease-out';
+    let revealed = false;
+    const reveal = () => {
+      if (revealed) return;
+      revealed = true;
+      renderer.domElement.style.opacity = '1';
+    };
     container.appendChild(renderer.domElement);
 
     const skyGeo = new THREE.PlaneGeometry(500, 220);
@@ -621,12 +632,14 @@ export function HeroCanvas() {
       applyScroll(elapsed);
 
       renderer.render(scene, camera);
+      reveal();
       rafId = requestAnimationFrame(tick);
     };
 
     const renderStatic = () => {
       applyScroll(0);
       renderer.render(scene, camera);
+      reveal();
     };
 
     const onScroll = () => {
