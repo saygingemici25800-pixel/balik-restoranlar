@@ -17,7 +17,7 @@ const INITIAL: FormData = {
 };
 
 const INPUT_CLASS =
-  'w-full bg-transparent border-0 border-b border-fg/30 focus:border-accent focus:outline-none py-2 text-fg placeholder:text-fg/40';
+  'w-full bg-transparent border-0 border-b border-fg/30 focus:border-accent focus:outline-none py-2 text-fg placeholder:text-fg/55';
 
 const LABEL_CLASS =
   'block text-[11px] md:text-xs uppercase tracking-wider text-fg/70 mb-1.5 md:mb-2 font-light';
@@ -106,7 +106,7 @@ export function ContactForm() {
             <div className="mb-6 md:mb-8">
               <label htmlFor="contact-phone" className={LABEL_CLASS}>
                 Telefon{' '}
-                <span className="text-fg/40 normal-case tracking-normal">
+                <span className="text-fg/55 normal-case tracking-normal">
                   (isteğe bağlı)
                 </span>
               </label>
@@ -133,7 +133,7 @@ export function ContactForm() {
                 disabled={isSending}
                 value={formData.message}
                 onChange={(e) => set('message', e.target.value)}
-                className="w-full bg-transparent border-0 border-b border-fg/30 focus:border-accent focus:outline-none py-3 text-fg placeholder:text-fg/40 resize-none min-h-[120px] disabled:opacity-60"
+                className="w-full bg-transparent border-0 border-b border-fg/30 focus:border-accent focus:outline-none py-3 text-fg placeholder:text-fg/55 resize-none min-h-[120px] disabled:opacity-60"
               />
             </div>
 

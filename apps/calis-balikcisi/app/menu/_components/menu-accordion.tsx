@@ -167,7 +167,7 @@ function Row({
         className="group w-full flex items-baseline justify-between py-7 px-2 text-left"
       >
         <span className="flex flex-col">
-          <span className="text-xs uppercase tracking-widest text-fg/40">
+          <span className="text-xs uppercase tracking-widest text-fg/55">
             {section.eyebrow}
           </span>
           <span
@@ -179,7 +179,7 @@ function Row({
           </span>
         </span>
         <span className="flex items-center gap-6 shrink-0">
-          <span className="text-xs text-fg/45 tracking-wider">
+          <span className="text-xs text-fg/55 tracking-wider">
             {totalCount}
           </span>
           <span
@@ -251,7 +251,7 @@ function Panel({ section, onItemClick }: PanelProps) {
 
       {section.fullList.length > 0 ? (
         <div className="mt-12 pt-8 border-t border-fg/10">
-          <p className="text-[10px] tracking-[0.45em] text-fg/35 uppercase text-center mb-6">
+          <p className="text-[10px] tracking-[0.45em] text-fg/55 uppercase text-center mb-6">
             {section.listLabel}
           </p>
           <div

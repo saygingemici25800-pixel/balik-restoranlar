@@ -45,7 +45,7 @@ export function MenuContent({ sections }: MenuContentProps) {
       <MenuAccordion sections={sections} onItemClick={open} />
 
       <section className="py-16 md:py-20 px-6 text-center">
-        <p className="text-xs uppercase tracking-[0.3em] text-fg/50">
+        <p className="text-xs uppercase tracking-[0.3em] text-fg/55">
           Fiyatlar günün taze tezgâhına göre masa başında sunulur.
         </p>
       </section>

@@ -186,7 +186,7 @@ export function MenuItemModal({ sections, item, eyebrow, onClose }: Props) {
           }`}
           style={{ height: 'clamp(48px, 7vh, 96px)' }}
         >
-          <span className="font-mono text-[9px] md:text-[11px] tracking-[0.4em] uppercase text-accent/70 truncate">
+          <span className="font-mono text-[9px] md:text-[11px] tracking-[0.4em] uppercase text-accent truncate">
             {chapter}
           </span>
           <Timecode />
@@ -196,7 +196,7 @@ export function MenuItemModal({ sections, item, eyebrow, onClose }: Props) {
           <div className={`grid grid-cols-1 ${photo ? 'md:grid-cols-12' : ''} gap-6 md:gap-10 w-full items-center`}>
             <div className={`${photo ? 'md:col-span-5' : 'mx-auto max-w-2xl'} flex flex-col justify-center order-2 md:order-1`}>
               <p
-                className="cinema-text font-mono text-[10px] md:text-[11px] tracking-[0.4em] uppercase text-accent/80"
+                className="cinema-text font-mono text-[10px] md:text-[11px] tracking-[0.4em] uppercase text-accent"
                 style={{ animationDelay: '650ms' }}
               >
                 {eyebrow}
@@ -238,7 +238,7 @@ export function MenuItemModal({ sections, item, eyebrow, onClose }: Props) {
               ) : null}
 
               <p
-                className="cinema-text hidden md:block font-mono text-[10px] tracking-[0.4em] uppercase text-fg/40 mt-10"
+                className="cinema-text hidden md:block font-mono text-[10px] tracking-[0.4em] uppercase text-fg/55 mt-10"
                 style={{ animationDelay: '1050ms' }}
               >
                 TEZGAH — GÜNLÜK
@@ -275,7 +275,7 @@ export function MenuItemModal({ sections, item, eyebrow, onClose }: Props) {
             type="button"
             onClick={onClose}
             aria-label="Kapat"
-            className="font-mono text-[10px] md:text-[12px] tracking-[0.5em] uppercase text-accent/70 hover:text-accent transition-colors"
+            className="font-mono text-[10px] md:text-[12px] tracking-[0.5em] uppercase text-accent hover:text-fg transition-colors"
           >
             FIN ⏎
           </button>
