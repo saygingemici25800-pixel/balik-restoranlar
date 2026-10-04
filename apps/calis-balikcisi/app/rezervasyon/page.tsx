@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   description:
     'Çalış sahilinde masa ayırtın. Gün batımı saatleri için önceden rezervasyon önerilir. Online masa seçimi ve anlık onay.',
   alternates: {
-    canonical: 'https://calis-balikcisi.vercel.app/rezervasyon',
+    canonical: 'https://calisbalikcisi.com/rezervasyon',
   },
 };
 

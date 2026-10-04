@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description:
     "Çalış Balıkçısı'nın günlük taze balık menüsü. Levrek lokum, jumbo karides, kalamar ızgara ve mevsimsel mezeler. Fethiye'nin sahil restoranında Akdeniz sofrası.",
   alternates: {
-    canonical: 'https://calis-balikcisi.vercel.app/menu',
+    canonical: 'https://calisbalikcisi.com/menu',
   },
 };
 

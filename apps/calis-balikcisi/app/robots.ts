@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/rezervasyon/onay', '/admin'],
     },
-    sitemap: 'https://calis-balikcisi.vercel.app/sitemap.xml',
+    sitemap: 'https://calisbalikcisi.com/sitemap.xml',
   };
 }

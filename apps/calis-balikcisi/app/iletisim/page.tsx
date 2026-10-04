@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description:
     'Çalış Balıkçısı ile iletişime geçin. Adres: Foça Mahallesi, Çalış Sahili, Fethiye. Telefon ve e-posta ile ulaşın.',
   alternates: {
-    canonical: 'https://calis-balikcisi.vercel.app/iletisim',
+    canonical: 'https://calisbalikcisi.com/iletisim',
   },
 };
 

@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     'Çalış Balıkçısı kişisel verilerin korunması aydınlatma metni. KVKK kapsamında veri işleme politikası.',
   alternates: {
-    canonical: 'https://calis-balikcisi.vercel.app/kvkk',
+    canonical: 'https://calisbalikcisi.com/kvkk',
   },
 };
 
