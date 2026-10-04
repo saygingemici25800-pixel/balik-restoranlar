@@ -5,8 +5,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 import { CONTACT } from '@/lib/constants';
+import { FONT_VARS } from '../font-vars';
 import h from '../home.module.css';
 import { HomeMenuSheet } from './home-menu-sheet';
 import s from './home-top-bar.module.css';
@@ -14,24 +16,43 @@ import s from './home-top-bar.module.css';
 /**
  * Ana sayfa üst çubuğu (yalnız ana sayfa; diğer sayfalar SiteTopBar). Filmin üstünde saydam:
  * gerçek logo, geniş ekranda Menü · İletişim + telefon; telefon/tablette "Ara" + menü düğmesi →
- * tam ekran menü sayfası.
+ * tam ekran menü sayfası. Menü sayfası gövdeye taşınır (portal): hero kendi katman bağlamını
+ * kurduğu için içeride kalsa sonraki bölümler üstüne binerdi. Geniş ekrana geçilince kapanır.
  */
 export function HomeTopBar() {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const burger = useRef<HTMLButtonElement>(null);
+  const brand = useRef<HTMLAnchorElement>(null);
   const pathname = usePathname();
 
+  useEffect(() => setMounted(true), []);
   useEffect(() => setOpen(false), [pathname]);
 
+  // Odak görünür bir öğeye döner: geniş ekranda menü düğmesi gizli, logo bağlantısına gider.
   const close = () => {
     setOpen(false);
-    burger.current?.focus({ preventScroll: true });
+    const target = burger.current?.getClientRects().length ? burger.current : brand.current;
+    target?.focus({ preventScroll: true });
   };
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const onChange = () => {
+      if (!mq.matches) return;
+      setOpen((wasOpen) => {
+        if (wasOpen) brand.current?.focus({ preventScroll: true });
+        return false;
+      });
+    };
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
 
   return (
     <header className={s.bar}>
       <div className={`${h.wrap} ${s.row}`}>
-        <Link href="/" aria-label="Çalış Balıkçısı — Anasayfa" className={s.brand}>
+        <Link ref={brand} href="/" aria-label="Çalış Balıkçısı — Anasayfa" className={s.brand}>
           <Image src="/images/calis-logo-light.svg" alt="" width={296} height={75} priority unoptimized className={s.logo} />
         </Link>
         <div className={s.tools}>
@@ -62,7 +83,14 @@ export function HomeTopBar() {
           </button>
         </div>
       </div>
-      {open ? <HomeMenuSheet onClose={close} /> : null}
+      {open && mounted
+        ? createPortal(
+            <div className={`${h.home} ${h.night}`} style={FONT_VARS}>
+              <HomeMenuSheet onClose={close} />
+            </div>,
+            document.body,
+          )
+        : null}
     </header>
   );
 }
