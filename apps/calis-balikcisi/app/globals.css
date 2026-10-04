@@ -52,7 +52,12 @@
   --font-inter-tight: 'Kalam', cursive !important;
   --font-dm-mono: 'Kalam', cursive !important;
   --font-spectral: 'Kalam', cursive !important;
+}
 
+/* Canlı görünümün vurgu rengi: turuncu. Token dosyası aynı değişkeni #d4a259 (altın) tanımlar;
+   iki eşit :root kuralında kazananı paketteki CSS sırası belirlerdi ve build'den build'e
+   değişebiliyor. Çift :root daha yüksek öncelik: sıra ne olursa olsun turuncu kazanır. */
+:root:root {
   --sun: #d97a3c;
   --color-accent: #d97a3c;
 }
