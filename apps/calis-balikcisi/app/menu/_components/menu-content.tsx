@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { SiteTopBar } from '../../(sections)/top-bar';
 import type { MenuItem, MenuSection } from '@/lib/content/menu-types';
-import { VideoHero } from './video-hero';
 import { MenuDemoVideo } from './menu-demo-video';
 import { MenuAccordion } from './menu-accordion';
 import { MenuItemModal } from './menu-item-modal';
@@ -28,7 +27,6 @@ export function MenuContent({ sections }: MenuContentProps) {
   return (
     <>
       <SiteTopBar />
-      <VideoHero />
 
       <section className="pt-8 pb-16 md:pt-12 md:pb-20 px-6 text-center">
         <p className="text-xs uppercase tracking-[0.4em] text-accent">
