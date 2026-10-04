@@ -7,3 +7,21 @@
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
 }
+
+/* Ana sayfa "Ufuk" (2026-10-04): ikinci zemin Kum ve onun üstündeki metin renkleri.
+   Eklemedir — mevcut token değerleri değişmez; /menu bunları kullanmaz. */
+:root {
+  /* +1 zemin ve Kum üstü metin */
+  --color-sand: #efe3cc;
+  --color-sand-deep: #e6d6b8; /* Kum üstü görsel yer tutucu — METİN YOK */
+  --color-ink: #0b1e2a; /* Kum üstü metin (Gece ile aynı hex, anlam ayrı) */
+  --color-ink-soft: #4a5862; /* Kum üstü ikincil metin (5.77:1) */
+  --color-ember: #8f3f14; /* Kum üstü aksan metni (5.72:1) */
+  /* Gece üstü ikincil metin (9.36:1) — opaklıklı fg yerine */
+  --color-fg-soft: #c9bfae;
+  /* Dekoratif çizgiler (bilgi taşımaz) */
+  --color-line: rgb(245 239 230 / 0.18);
+  --color-line-ink: rgb(11 30 42 / 0.2);
+  /* Video perdeleri */
+  --scrim-rgb: 11 30 42;
+}

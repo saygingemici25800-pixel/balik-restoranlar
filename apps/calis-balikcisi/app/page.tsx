@@ -1,31 +1,35 @@
-import { CalisHero } from './(sections)/hero';
-import { Concept } from './(sections)/concept';
-import { Atmosfer } from './(sections)/atmosfer';
-import { ContactSummary } from './(sections)/contact-summary';
-import { Instagram } from './(sections)/instagram';
-import { Ekibimiz } from './(sections)/ekibimiz';
-import { MenuPreview } from './(sections)/menu-preview';
-import { Testimonials } from './(sections)/testimonials';
 import { ReserveCta } from './(sections)/reserve-cta';
-import { KardesMekan } from './_components/kardes-mekan';
-import { MenuIntroAnimation } from './_components/menu-intro-animation';
+import { Contact } from './_home/contact';
+import { Guests } from './_home/guests';
+import { Hero } from './_home/hero';
+import { HomeShell } from './_home/home-shell';
+import { Journal } from './_home/journal';
+import { MenuFeature } from './_home/menu-feature';
+import { Place } from './_home/place';
+import { SisterBand } from './_home/sister-band';
+import { Story } from './_home/story';
+import { Team } from './_home/team';
 
+/**
+ * Ana sayfa "Ufuk": iki zemin (Gece / Kum) dönüşümlü, her bölüm başında güneşli ufuk çizgisi.
+ * Hero'da Zone'dan çekilmiş gün batımı filmi; menünün ayrı hero'su; sade hareket (CSS + tek
+ * gözlemci). Rezervasyon kapalı (`ReserveCta` boş döner).
+ */
 export default function HomePage() {
   return (
-    <>
-      <MenuIntroAnimation />
+    <HomeShell>
       <main>
-        <CalisHero />
-        <Concept />
-        <Atmosfer />
-        <MenuPreview />
-        <Instagram />
-        <Ekibimiz />
-        <Testimonials />
+        <Hero />
+        <MenuFeature />
+        <Story />
+        <Place />
+        <Team />
+        <Guests />
         <ReserveCta />
-        <ContactSummary />
-        <KardesMekan />
+        <Journal />
+        <Contact />
+        <SisterBand />
       </main>
-    </>
+    </HomeShell>
   );
 }

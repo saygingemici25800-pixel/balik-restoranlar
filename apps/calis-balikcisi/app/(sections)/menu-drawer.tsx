@@ -52,6 +52,8 @@ export function MenuDrawer({ isOpen }: Props) {
             key={link.href}
             href={link.href}
             aria-current={active ? 'page' : undefined}
+            // kapalıyken görünmez: Tab sırasından çıkar (aria-hidden içinde odaklanabilir öğe kalmasın)
+            tabIndex={isOpen ? undefined : -1}
             className={`font-display ${link.weightClass} tracking-[-0.01em] ${link.sizeClass} transition-all duration-700 ease-out ${
               active ? 'text-accent' : 'text-fg hover:text-accent'
             } ${

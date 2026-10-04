@@ -1,0 +1,101 @@
+/* Hero: Zone filmi tam ekran; tek, küçük bir başlık kartı sol altta (film başlık kartı
+   sadeliği). Film yazının olmadığı her yerde temiz kalır: perdeler yalnız yazının arkasında. */
+.hero {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  min-height: 30rem; min-height: max(100svh, 30rem);
+  padding-top: calc(var(--bar-h) + 1.5rem);
+  --bar-h: 64px;
+  --focus: var(--color-fg);
+}
+@media (min-width: 1024px) { .hero { --bar-h: 84px; } }
+
+.media { position: absolute; inset: 0; z-index: -2; --hero-focus: 58% 50%; }
+@media (min-width: 768px) { .media { --hero-focus: 50% 50%; } }
+
+.scrimTop {
+  position: absolute; inset-inline: 0; top: 0; z-index: -1; pointer-events: none; height: 136px;
+  background: linear-gradient(to bottom, rgb(var(--scrim-rgb) / 0.84) 0%, rgb(var(--scrim-rgb) / 0.76) 40%, rgb(var(--scrim-rgb) / 0.3) 74%, rgb(var(--scrim-rgb) / 0) 100%);
+}
+@media (min-width: 1024px) { .scrimTop { height: 176px; } }
+
+/* Alt perde yazı bloğuna bağlı: kısa ekranda da yazı her zaman ≥ %78 perde üstünde. */
+.content { position: relative; z-index: 10; padding-bottom: calc(max(1.75rem, min(var(--gutter), 7svh)) + env(safe-area-inset-bottom)); }
+.content::before {
+  content: ''; position: absolute; z-index: -1; pointer-events: none; inset-inline: 0; bottom: 0; top: -7rem;
+  background: linear-gradient(to bottom, rgb(var(--scrim-rgb) / 0) 0, rgb(var(--scrim-rgb) / 0.45) 3.5rem, rgb(var(--scrim-rgb) / 0.78) 7rem, rgb(var(--scrim-rgb) / 0.86) 100%);
+}
+@media (min-width: 768px) {
+  .content::before {
+    top: -10rem;
+    background: linear-gradient(to bottom, rgb(var(--scrim-rgb) / 0) 0, rgb(var(--scrim-rgb) / 0.5) 5rem, rgb(var(--scrim-rgb) / 0.78) 10rem, rgb(var(--scrim-rgb) / 0.84) 100%);
+    /* yazının sağında söner: L = yazının sol kenarı (.wrap) */
+    --L: max(var(--gutter), (100% - var(--maxw)) / 2);
+    -webkit-mask-image: linear-gradient(to right, #000 0, #000 calc(var(--L) + 34rem), transparent calc(var(--L) + 64rem));
+    mask-image: linear-gradient(to right, #000 0, #000 calc(var(--L) + 34rem), transparent calc(var(--L) + 64rem));
+  }
+}
+
+.contentRow { position: relative; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.card { min-width: 0; }
+
+.title {
+  margin: 0; font-family: var(--ff-display); font-weight: 400;
+  font-size: 10.5vh; font-size: min(clamp(2.75rem, 1.5rem + 4vw, 6rem), 10.5svh);
+  line-height: 0.98; letter-spacing: -0.022em; word-spacing: 0.03em; color: var(--color-fg);
+  font-variant-numeric: lining-nums;
+}
+.title em { font-style: italic; font-weight: 400; letter-spacing: -0.02em; color: var(--color-fg); }
+
+.actions { margin-top: clamp(1.25rem, 0.6rem + 1.6vw, 2.25rem); display: flex; align-items: center; flex-wrap: wrap; column-gap: 28px; row-gap: 4px; }
+@media (max-width: 479px) { .actions { flex-direction: column; align-items: flex-start; } }
+
+.btnSun {
+  display: inline-flex; align-items: center; gap: 12px; min-height: 48px; padding-inline: 22px 18px;
+  background: var(--color-accent); color: var(--color-ink); border: 1px solid var(--color-accent); border-radius: 2px;
+  font-family: var(--ff-label); font-weight: 500; font-size: 0.75rem; line-height: 1; letter-spacing: 0.14em; text-transform: uppercase;
+  transition: background-color 200ms var(--ease-out), border-color 200ms var(--ease-out);
+}
+.btnSun:hover, .btnSun:focus-visible { background: var(--color-fg); border-color: var(--color-fg); }
+.chip { font-size: 0.6875rem; letter-spacing: 0.08em; padding: 3px 5px 2px; border: 1px solid rgb(var(--scrim-rgb) / 0.5); border-radius: 2px; }
+/* Zone düğmesi bir pencere açar, sayfaya gitmez: ok yerine "3B" çipi */
+.noArrow { display: none; }
+
+.textLink {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 48px; color: var(--color-fg);
+  font-family: var(--ff-label); font-weight: 500; font-size: 0.75rem; line-height: 1; letter-spacing: 0.14em; text-transform: uppercase;
+}
+.underline { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 7px; text-decoration-color: rgb(245 239 230 / 0.55); transition: text-decoration-color 200ms var(--ease-out); }
+.textLink:hover .underline, .textLink:focus-visible .underline { text-decoration-color: var(--color-accent); }
+.arrow { display: inline-block; transition: transform 200ms var(--ease-out); }
+.textLink:hover .arrow, .textLink:focus-visible .arrow { transform: translateX(4px); }
+@media (min-width: 1024px) { .btnSun, .textLink { font-size: 0.8125rem; min-height: 52px; } .btnSun { padding-inline: 26px 22px; } }
+
+/* Video durdur: disk (telefonda yalnız simge), geniş ekranda yanında etiket */
+.pause {
+  position: relative; flex: none; display: inline-flex; align-items: center; gap: 4px; min-height: 44px; color: var(--color-fg);
+  font-family: var(--ff-label); font-weight: 500; font-size: 0.6875rem; letter-spacing: 0.16em; text-transform: uppercase;
+  margin-inline-end: -5px;
+}
+.pauseLabel { display: none; }
+/* telefonda disk "Menüyü Keşfet" satırının sağ ucunda: başlık kartı tüm genişliği kullanır */
+@media (max-width: 479px) { .pause { position: absolute; inset-inline-end: calc(var(--gutter) - 5px); bottom: 2px; margin: 0; } }
+@media (min-width: 768px) { .pauseLabel { display: inline; } }
+.disk { position: relative; width: 44px; height: 44px; display: grid; place-items: center; }
+.disk::before {
+  content: ''; position: absolute; inset: 5px; border-radius: 50%;
+  border: 1px solid rgb(245 239 230 / 0.34); background: rgb(var(--scrim-rgb) / 0.45);
+  transition: border-color 200ms var(--ease-out);
+}
+.pause:hover .disk::before { border-color: var(--color-fg); }
+.disk svg { position: relative; width: 10px; height: 10px; }
+
+/* Odak: video üstünde her karede görünür (açık halka + koyu hale) */
+.hero :focus-visible { outline: 2px solid var(--color-fg); outline-offset: 3px; box-shadow: 0 0 0 6px rgb(var(--scrim-rgb) / 0.55); }
+
+/* Açılış: tek, kısa dizi (< 1.2 s, yalnız CSS). Poster (LCP) hiç hareket etmez. */
+@keyframes heroRise { from { opacity: 0; transform: translate3d(0, 10px, 0); } to { opacity: 1; transform: none; } }
+@keyframes heroFade { from { opacity: 0; } to { opacity: 1; } }
+.actions { animation: heroRise 560ms var(--ease-out) 460ms both; }
+.pause { animation: heroFade 400ms linear 720ms both; }
+@media (prefers-reduced-motion: reduce) { .actions, .pause { animation: none; } }

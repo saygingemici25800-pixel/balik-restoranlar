@@ -1,0 +1,50 @@
+/* Ana sayfa hareket sistemi — beş temel, tek gözlemci (reveal-observer). Gizleme anlık,
+   yalnız GÖRÜNME canlanır. JS yoksa ya da hareket azaltılmışsa her şey baştan görünür. */
+
+.root[data-motion='on'] [data-reveal='rise']:not([data-shown]) { opacity: 0; transform: translate3d(0, 16px, 0); }
+.root[data-motion='on'] [data-reveal='rise'][data-shown] {
+  transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+  transition-delay: calc(min(var(--i, 0), 6) * 70ms);
+}
+.root[data-motion='on'] [data-reveal='line']:not([data-shown]) .lineInner { transform: translate3d(0, 110%, 0); }
+.root[data-motion='on'] [data-reveal='line'][data-shown] .lineInner {
+  transition: transform 900ms var(--ease-expo) calc(var(--i, 0) * 90ms);
+}
+.root[data-motion='on'] [data-reveal='frame']:not([data-shown]) { clip-path: inset(6%); }
+.root[data-motion='on'] [data-reveal='frame']:not([data-shown]) > .frameInner { transform: scale(1.06); }
+.root[data-motion='on'] [data-reveal='frame'][data-shown] { transition: clip-path 1100ms var(--ease-inout) calc(var(--i, 0) * 120ms); }
+.root[data-motion='on'] [data-reveal='frame'][data-shown] > .frameInner { transition: transform 1400ms var(--ease-out) calc(var(--i, 0) * 120ms); }
+.root[data-motion='on'] [data-reveal='rule']:not([data-shown]) { transform: scaleX(0); }
+.root[data-motion='on'] [data-reveal='rule'][data-shown] { transition: transform 1000ms var(--ease-expo) 120ms; }
+.root[data-motion='on'] [data-reveal='settle']:not([data-shown]) img { transform: scale(1.06); }
+.root[data-motion='on'] [data-reveal='settle'][data-shown] img { transition: transform 1600ms var(--ease-out); }
+
+/* satır maskesi: İ noktaları, Ç/Ş çengelleri ve Kalam çıkıntıları kırpılmasın */
+.line { display: block; overflow: hidden; padding-block: 0.14em 0.1em; margin-block: -0.14em -0.1em; }
+.lineInner { display: block; will-change: transform; }
+.frameInner { position: absolute; inset: 0; }
+
+/* hero: JS beklemeden ilk boyamada (CSS anahtar kareleri) */
+@keyframes lineIn { from { transform: translate3d(0, 110%, 0); } to { transform: none; } }
+@keyframes riseIn { from { opacity: 0; transform: translate3d(0, 16px, 0); } to { opacity: 1; transform: none; } }
+@keyframes drawIn { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes settleIn { from { transform: scale(1.06); } to { transform: none; } }
+.loadLine { animation: lineIn 900ms var(--ease-expo) both; animation-delay: calc(180ms + var(--i, 0) * 90ms); }
+.loadRise { animation: riseIn 700ms var(--ease-out) both; animation-delay: var(--d, 0ms); }
+.loadDraw { animation: drawIn 1000ms var(--ease-expo) both; animation-delay: var(--d, 520ms); transform-origin: left; }
+.loadFade { animation: fadeIn 600ms linear both; animation-delay: var(--d, 900ms); }
+.loadSettle { animation: settleIn 2400ms var(--ease-out) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .root [data-reveal],
+  .root .lineInner,
+  .root .frameInner,
+  .root [data-reveal] img {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    transition: none !important;
+  }
+  .loadLine, .loadRise, .loadDraw, .loadFade, .loadSettle { animation: none !important; }
+}

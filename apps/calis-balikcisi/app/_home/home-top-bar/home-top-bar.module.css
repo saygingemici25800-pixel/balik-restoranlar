@@ -1,0 +1,46 @@
+/* Ana sayfa üst çubuğu: filmin üstünde saydam, gerçek logo solda; sağda yalnız gerekenler.
+   /menu ve diğer sayfalar kendi SiteTopBar'ını kullanır (bu bileşen yalnız ana sayfada). */
+.bar { position: absolute; inset-inline: 0; top: 0; z-index: 20; animation: barFade 500ms linear 60ms both; }
+.row { height: var(--bar-h, 64px); display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { display: inline-flex; align-items: center; min-height: 44px; }
+.logo { height: 30px; width: auto; }
+@media (min-width: 768px) { .logo { height: 34px; } }
+@media (min-width: 1024px) { .logo { height: 42px; } }
+
+.tools { display: flex; align-items: center; gap: 6px; margin-inline-end: -12px; }
+.nav { display: none; }
+@media (min-width: 1024px) { .nav { display: flex; align-items: center; gap: 4px; margin-inline-end: 8px; } }
+.navLink, .call {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding-inline: 12px; color: var(--color-fg);
+  font-family: var(--ff-label); font-weight: 500; font-size: 0.75rem; line-height: 1; letter-spacing: 0.16em; text-transform: uppercase;
+}
+.navLink:hover, .navLink:focus-visible, .call:hover .callText, .call:focus-visible .callText { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; }
+.call svg { width: 16px; height: 16px; flex: none; color: var(--color-accent); }
+.callLong { display: none; font-variant-numeric: tabular-nums; }
+@media (min-width: 768px) { .callShort { display: none; } .callLong { display: inline; } }
+.sep { width: 1px; height: 18px; background: var(--color-line); }
+@media (min-width: 1024px) { .sep.mobileOnly { display: none; } }
+.burger { width: 44px; height: 44px; display: grid; place-items: center; color: var(--color-fg); }
+.burger svg { width: 24px; height: 24px; }
+.burger:hover { color: var(--color-accent); }
+@media (min-width: 1024px) { .burger { display: none; } }
+
+/* Menü sayfası (telefon/tablet): tam ekran, opak Gece */
+.sheet { position: fixed; inset: 0; z-index: 60; background: var(--color-bg); color: var(--color-fg); display: flex; flex-direction: column; animation: barFade 240ms linear both; }
+.sheet > * { width: 100%; }
+.sheetNav { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.sheetLink {
+  display: flex; align-items: baseline; gap: 18px; padding-block: 14px; border-bottom: 1px solid var(--color-line);
+  font-family: var(--ff-display); font-weight: 400; font-size: clamp(2.75rem, 2rem + 4vw, 5rem); line-height: 1.12; letter-spacing: -0.02em;
+}
+.sheetNo { font-family: var(--ff-label); font-size: 0.75rem; letter-spacing: 0.16em; color: var(--color-accent); }
+.sheetFoot { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; padding-block: 24px calc(24px + env(safe-area-inset-bottom)); }
+.sheetMeta, .sheetAction { font-family: var(--ff-label); font-weight: 500; font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase; }
+.sheetMeta { color: var(--color-fg-soft); }
+.sheetAction { display: inline-flex; align-items: center; min-height: 44px; color: var(--color-fg); }
+.sheetAction:hover, .sheetAction:focus-visible { color: var(--color-accent); }
+
+.bar :focus-visible, .sheet :focus-visible { outline: 2px solid var(--color-fg); outline-offset: 3px; box-shadow: 0 0 0 6px rgb(var(--scrim-rgb) / 0.55); }
+
+@keyframes barFade { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .bar, .sheet { animation: none; } }

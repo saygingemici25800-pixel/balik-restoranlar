@@ -17,7 +17,9 @@ type ColorArgs = { opacityValue?: string | number };
  */
 const asTailwindColor = (fn: (args: ColorArgs) => string) => fn as unknown as string;
 
-const token = (name: 'bg' | 'fg' | 'accent' | 'muted') =>
+type TokenName = 'bg' | 'fg' | 'accent' | 'muted' | 'sand' | 'sand-deep' | 'ink' | 'ink-soft' | 'ember' | 'fg-soft';
+
+const token = (name: TokenName) =>
   asTailwindColor(({ opacityValue }) =>
     opacityValue === undefined || String(opacityValue).startsWith('var(')
       ? `var(--color-${name})`
@@ -35,6 +37,13 @@ const config: Config = {
       fg: token('fg'),
       accent: token('accent'),
       muted: token('muted'),
+      // Ana sayfa "Ufuk": ikinci zemin (Kum) ve üstündeki metinler
+      sand: token('sand'),
+      'sand-deep': token('sand-deep'),
+      ink: token('ink'),
+      'ink-soft': token('ink-soft'),
+      ember: token('ember'),
+      'fg-soft': token('fg-soft'),
     },
     extend: {
       fontFamily: {
@@ -43,6 +52,10 @@ const config: Config = {
         fraunces: ['var(--font-fraunces)'],
         mono: ['var(--font-dm-mono)'],
         reader: ['var(--font-newsreader)'],
+        // yalnız ana sayfa sarmalayıcısında (`[data-home]`) çözülür
+        headline: ['var(--ff-display)'],
+        label: ['var(--ff-label)'],
+        hand: ['var(--font-handwritten)'],
       },
       keyframes: {
         // Zone pano kartı girişi (docs/zone-3d-modul.md bölüm 7.4)
