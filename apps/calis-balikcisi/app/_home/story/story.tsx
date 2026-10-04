@@ -17,7 +17,7 @@ export function Story() {
     <section className={`${h.night} ${h.section}`} aria-labelledby="hikaye-title">
       <AmbientGroup>
         <div className={h.wrap}>
-          <ChapterHead no="02" label="Hikâye" note="1999'dan beri" />
+          <ChapterHead no="02" label="Hikâye" note="2020'den beri" />
           <div className={h.grid}>
             <MaskLines id="hikaye-title" className={`${h.h2} col-span-full lg:col-span-6 lg:col-start-7 lg:row-start-1`} lines={['Denizin en', <span key="y"><em>yalın</em> hâli.</span>]} />
             <figure className="col-span-full mt-10 lg:col-span-5 lg:row-span-2 lg:row-start-1 lg:mt-0">

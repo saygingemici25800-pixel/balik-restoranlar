@@ -13,13 +13,13 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE),
   title: 'Çalış Balıkçısı — Fethiye Sahilinde Taze Deniz Ürünleri',
   description:
-    "Çalış sahilinde 1999'dan beri Akif Usta'nın elinden taze deniz ürünleri. Gün batımı manzarası, mevsimsel mezeler ve rezervasyon kolaylığı ile Fethiye'nin köklü balık restoranı.",
+    "Çalış sahilinde 2020'den beri Akif Usta'nın elinden taze deniz ürünleri. Gün batımı manzarası, mevsimsel mezeler ve rezervasyon kolaylığı ile Fethiye'de bir sahil balık restoranı.",
   alternates: {
     canonical: 'https://calisbalikcisi.com',
   },
   openGraph: {
     title: 'Çalış Balıkçısı — Fethiye',
-    description: "Çalış sahilinde 1999'dan beri. Mezattan masaya, az müdahaleyle.",
+    description: "Çalış sahilinde 2020'den beri. Mezattan masaya, az müdahaleyle.",
     url: 'https://calisbalikcisi.com',
     siteName: 'Çalış Balıkçısı',
     locale: 'tr_TR',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Çalış Balıkçısı — Fethiye',
-    description: "Çalış sahilinde 1999'dan beri. Mezattan masaya, az müdahaleyle.",
+    description: "Çalış sahilinde 2020'den beri. Mezattan masaya, az müdahaleyle.",
     images: [SHARE_IMAGE],
   },
 };
@@ -64,11 +64,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               '@type': 'Restaurant',
               name: 'Çalış Balıkçısı',
               description:
-                "Çalış sahilinde 1999'dan beri Akif Usta'nın elinden taze deniz ürünleri. Gün batımı manzarası, mevsimsel mezeler.",
+                "Çalış sahilinde 2020'den beri Akif Usta'nın elinden taze deniz ürünleri. Gün batımı manzarası, mevsimsel mezeler.",
               url: 'https://calisbalikcisi.com',
               telephone: ['+902526220990', '+905326510848'],
               email: 'info@calisbalikcisi.com',
-              foundingDate: '1999',
+              foundingDate: '2020',
               servesCuisine: ['Türk Mutfağı', 'Akdeniz Mutfağı', 'Deniz Ürünleri'],
               priceRange: '₺₺₺',
               address: {
