@@ -44,6 +44,16 @@ const config: Config = {
         mono: ['var(--font-dm-mono)'],
         reader: ['var(--font-newsreader)'],
       },
+      keyframes: {
+        // Zone pano kartı girişi (docs/zone-3d-modul.md bölüm 7.4)
+        'zone-board-in': {
+          from: { opacity: '0', transform: 'scale(0.94)' },
+          to: { opacity: '1', transform: 'scale(1)' },
+        },
+      },
+      animation: {
+        'zone-board-in': 'zone-board-in 0.45s cubic-bezier(0.4, 1.4, 0.7, 0.95) both',
+      },
     },
   },
   plugins: [],
