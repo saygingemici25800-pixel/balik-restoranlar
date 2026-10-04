@@ -57,7 +57,7 @@ export function Footer() {
       </p>
 
       <p className={styles.copyright}>
-        © 2026 Çalış Balıkçısı. Tüm hakları saklıdır.
+        Tasarım &amp; geliştirme: Saygın Gemici
       </p>
     </footer>
   );
