@@ -30,7 +30,7 @@
 @keyframes drawIn { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes settleIn { from { transform: scale(1.06); } to { transform: none; } }
-.loadLine { animation: lineIn 900ms var(--ease-expo) both; animation-delay: calc(180ms + var(--i, 0) * 90ms); }
+.loadLine { animation: lineIn 900ms var(--ease-expo) both; animation-delay: calc(var(--intro, 0ms) + 180ms + var(--i, 0) * 90ms); }
 .loadRise { animation: riseIn 700ms var(--ease-out) both; animation-delay: var(--d, 0ms); }
 .loadDraw { animation: drawIn 1000ms var(--ease-expo) both; animation-delay: var(--d, 520ms); transform-origin: left; }
 .loadFade { animation: fadeIn 600ms linear both; animation-delay: var(--d, 900ms); }

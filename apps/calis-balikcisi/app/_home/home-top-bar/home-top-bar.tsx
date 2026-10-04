@@ -53,7 +53,7 @@ export function HomeTopBar() {
     <header className={s.bar}>
       <div className={`${h.wrap} ${s.row}`}>
         <Link ref={brand} href="/" aria-label="Çalış Balıkçısı — Anasayfa" className={s.brand}>
-          <Image src="/images/calis-logo-light.svg" alt="" width={296} height={75} priority unoptimized className={s.logo} />
+          <Image src="/images/calis-logo-light.svg" alt="" width={296} height={75} priority unoptimized className={s.logo} data-brand-logo="" />
         </Link>
         <div className={s.tools}>
           <nav aria-label="Ana menü" className={s.nav}>

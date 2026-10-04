@@ -374,3 +374,15 @@ body:has([data-page="onay"]) footer[data-global-footer] {
     animation: none !important;
   }
 }
+
+/* Ana sayfa açılışı (app/_home/intro). Kaydırma kilidi açılış betiğinin kendi koyup kendi kaldırdığı
+   ayrı öznitelikte (JS gecikse de sayfa donmaz); zaman değişkenleri yalnız ana sayfa ağacında
+   (sayfa değişince onunla gider). Oturumda bir kez; hareket azaltmada `data-intro="seen"`. */
+html[data-intro-lock] {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+html[data-intro='run'] [data-home] {
+  --intro: 3050ms;
+  --intro-bar: 420ms;
+}

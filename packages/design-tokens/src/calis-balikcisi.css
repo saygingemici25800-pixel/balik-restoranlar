@@ -24,4 +24,6 @@
   --color-line-ink: rgb(11 30 42 / 0.2);
   /* Video perdeleri */
   --scrim-rgb: 11 30 42;
+  /* Logodaki balık mavisi (yalnız logo/marka işareti) */
+  --color-logo-blue: #1aa0e0;
 }

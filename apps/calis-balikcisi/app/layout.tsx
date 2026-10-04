@@ -50,6 +50,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="tr"
+      // ana sayfa açılış betiği data-intro / data-intro-lock ekler (yalnız bu öğedeki öznitelik farkı)
+      suppressHydrationWarning
       className={`${displayFont.variable} ${bodyFont.variable} ${frauncesFont.variable} ${dmMonoFont.variable} ${newsreaderFont.variable}`}
     >
       <body>

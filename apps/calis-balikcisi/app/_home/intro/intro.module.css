@@ -1,0 +1,105 @@
+/*
+ * Açılış (≈3.7 s, yalnız CSS; JS yalnız "geç", oturum ve temizlik için):
+ *   0.0  ufuk çizgisi ortadan açılır
+ *   0.25 güneş batmaya başlar, gökyüzü ısınır; 0.7 suda parıltılar
+ *   1.15 balık sudan sıçrar, ufkun üstünden geçip logodaki yerine oturur (2.15)
+ *   1.9  tabela soldan sağa yazılır (2.7)
+ *   2.95 perde ufuktan açılır, logo üst çubuktaki gerçek logonun yerine uçar (3.75)
+ * Zaman tek değişkende: --exit (JS "geç" deyince şimdiye çeker). Hareket azaltmada hiç yok.
+ */
+.root {
+  --exit: 2950ms;
+  --hz: 46%;
+  --ease-io: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-x: cubic-bezier(0.16, 1, 0.3, 1);
+  position: fixed; inset: 0; z-index: 80; pointer-events: auto; overflow: hidden;
+  animation: rootPass 1ms linear var(--exit) forwards, rootOut 1ms linear calc(var(--exit) + 820ms) forwards;
+}
+:global(html[data-intro='seen']) .root { display: none; }
+@media (prefers-reduced-motion: reduce) { .root { display: none; } }
+
+/* Perde: ufkun üstü ve altı, açılışta ikiye ayrılır */
+.top, .bottom { position: absolute; inset-inline: 0; background: var(--color-bg); }
+.top { top: 0; height: var(--hz); overflow: hidden; animation: panelUp 800ms var(--ease-io) var(--exit) both; }
+.bottom { top: var(--hz); bottom: 0; overflow: hidden; animation: panelDown 800ms var(--ease-io) var(--exit) both; }
+
+/* Gökyüzü ısınır: güneşin arkasında, ufka yaslanan sıcak hale */
+.glow {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 55% 75% at 50% 100%, color-mix(in srgb, var(--color-accent) 26%, transparent), transparent 72%);
+  animation: fadeIn 1100ms linear 250ms both;
+}
+.sun {
+  --d: clamp(96px, 15vw, 196px);
+  position: absolute; left: 50%; bottom: 0; width: var(--d); height: var(--d); margin-left: calc(var(--d) / -2); border-radius: 50%;
+  background: radial-gradient(circle at 50% 36%, color-mix(in srgb, var(--color-accent) 62%, var(--color-fg)), var(--color-accent) 58%, color-mix(in srgb, var(--color-accent) 78%, black));
+  box-shadow: 0 0 calc(var(--d) * 0.45) color-mix(in srgb, var(--color-accent) 45%, transparent);
+  animation: sunSet 2900ms cubic-bezier(0.33, 0, 0.25, 1) 150ms both, fadeOut 260ms linear var(--exit) forwards;
+}
+
+/* Suda parıltılar: güneşin yansıması, nefes alır gibi */
+.glints { position: absolute; left: 50%; top: 10px; width: 0; animation: fadeIn 500ms linear 700ms both, fadeOut 220ms linear var(--exit) forwards; }
+.glint { position: absolute; left: 0; height: 3px; border-radius: 2px; background: var(--color-accent); transform-origin: center; animation: shimmer 1400ms ease-in-out infinite alternate; }
+.glint:nth-child(1) { top: 0; width: clamp(72px, 12vw, 160px); margin-left: calc(clamp(72px, 12vw, 160px) / -2); opacity: 0.9; }
+.glint:nth-child(2) { top: 12px; width: clamp(48px, 8vw, 108px); margin-left: calc(clamp(48px, 8vw, 108px) / -2); opacity: 0.65; animation-delay: -350ms; }
+.glint:nth-child(3) { top: 26px; width: clamp(30px, 5vw, 66px); margin-left: calc(clamp(30px, 5vw, 66px) / -2); opacity: 0.45; animation-delay: -700ms; }
+.glint:nth-child(4) { top: 42px; width: clamp(14px, 2.4vw, 32px); margin-left: calc(clamp(14px, 2.4vw, 32px) / -2); opacity: 0.3; animation-delay: -1050ms; }
+
+/* Ufuk çizgisi: sitenin "Ufuk" çizgisi; ortadan açılır, perde açılırken söner */
+.horizon {
+  position: absolute; left: 0; right: 0; top: var(--hz); height: 1px; margin-top: -0.5px;
+  background: color-mix(in srgb, var(--color-fg) 46%, transparent); transform-origin: center;
+  animation: drawLine 800ms var(--ease-x) 0ms both, fadeOut 200ms linear var(--exit) forwards;
+}
+
+/* Logo: tabela; balık ve yazı aynı kutuda üst üste (aynı viewBox) */
+.lockup {
+  --w: min(78vw, 520px);
+  position: absolute; left: 50%; top: calc(var(--hz) + clamp(56px, 9vh, 104px)); width: var(--w); aspect-ratio: 296 / 75; margin-left: calc(var(--w) / -2);
+  transform-origin: 0 0;
+  animation: flip 800ms var(--ease-io) var(--exit) forwards, fadeOut 170ms linear calc(var(--exit) + 640ms) forwards;
+}
+.word, .fish { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.word { color: var(--color-fg); clip-path: inset(0 100% 0 0); animation: wipe 800ms cubic-bezier(0.65, 0, 0.35, 1) 1900ms forwards; }
+.fish { color: var(--color-logo-blue); transform-origin: 15.4% 45%; animation: leap 1150ms linear 1050ms both; }
+
+/* Köşe etiketleri: yer ve yıl — markanın künyesi */
+.labels {
+  position: absolute; inset-inline: 0; bottom: max(20px, env(safe-area-inset-bottom)); display: flex; justify-content: space-between; gap: 16px;
+  padding-inline: clamp(1.25rem, 4.4vw, 4rem); color: var(--color-fg-soft);
+  font-family: var(--ff-label); font-weight: 500; font-size: 0.6875rem; letter-spacing: 0.18em; text-transform: uppercase;
+  animation: fadeIn 600ms linear 300ms both, fadeOut 200ms linear var(--exit) forwards;
+}
+
+/* "Geç": son kompozisyona atla, perde hemen açılsın (--exit JS ile şimdiye çekilir) */
+.skip .word { animation: none; clip-path: none; }
+.skip .fish { animation: none; opacity: 1; transform: none; }
+
+@keyframes drawLine { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeOut { to { opacity: 0; } }
+/* Güneş ufka yakın başlar, yarısına kadar ufkun ardına gömülür (alt yarı perdenin kenarında kesilir) */
+@keyframes sunSet {
+  from { transform: translate3d(0, -78%, 0); }
+  to { transform: translate3d(0, 46%, 0); }
+}
+@keyframes shimmer { from { transform: scaleX(0.55); } to { transform: scaleX(1); } }
+/* Sıçrayış: sudan solda alçaktan çıkar, ufkun epey üstünde güneşin önünden geçer, ileri dalarak
+   logodaki yerine oturur. Çıkışta yavaşlayan, inişte hızlanan iki eğri; burun hıza göre döner. */
+@keyframes leap {
+  0% { opacity: 0; transform: translate3d(-46%, 74%, 0) rotate(-26deg) scale(0.9); animation-timing-function: cubic-bezier(0.18, 0.6, 0.36, 1); }
+  12% { opacity: 1; }
+  50% { transform: translate3d(-13%, -205%, 0) rotate(38deg) scale(1); animation-timing-function: cubic-bezier(0.56, 0, 0.8, 0.44); }
+  86% { transform: translate3d(1%, 7%, 0) rotate(-5deg); animation-timing-function: cubic-bezier(0.3, 0, 0.3, 1); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes wipe { to { clip-path: inset(0 0 0 0); } }
+@keyframes panelUp { to { transform: translate3d(0, -100%, 0); } }
+@keyframes panelDown { to { transform: translate3d(0, 100%, 0); } }
+@keyframes flip { to { transform: translate3d(var(--fx, 0px), var(--fy, -48px), 0) scale(var(--fs, 0.6)); } }
+@keyframes rootPass { to { pointer-events: none; } }
+@keyframes rootOut { to { visibility: hidden; pointer-events: none; } }
+/* JS ölçülü uçuşu (Web Animations) üstlenince CSS'teki varsayılan uçuş kapanır; yalnız sönüş kalır */
+.flipjs { animation: fadeOut 170ms linear calc(var(--exit) + 640ms) forwards; }
+
+/* html[data-intro] kuralları (--intro, kaydırma) globals.css'te: CSS modülünde saf global seçici olmaz. */

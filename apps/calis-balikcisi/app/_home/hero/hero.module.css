@@ -96,6 +96,6 @@
 /* Açılış: tek, kısa dizi (< 1.2 s, yalnız CSS). Poster (LCP) hiç hareket etmez. */
 @keyframes heroRise { from { opacity: 0; transform: translate3d(0, 10px, 0); } to { opacity: 1; transform: none; } }
 @keyframes heroFade { from { opacity: 0; } to { opacity: 1; } }
-.actions { animation: heroRise 560ms var(--ease-out) 460ms both; }
-.pause { animation: heroFade 400ms linear 720ms both; }
+.actions { animation: heroRise 560ms var(--ease-out) both; animation-delay: calc(var(--intro, 0ms) + 460ms); }
+.pause { animation: heroFade 400ms linear both; animation-delay: calc(var(--intro, 0ms) + 720ms); }
 @media (prefers-reduced-motion: reduce) { .actions, .pause { animation: none; } }

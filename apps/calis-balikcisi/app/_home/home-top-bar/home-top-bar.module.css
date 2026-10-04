@@ -1,6 +1,6 @@
 /* Ana sayfa üst çubuğu: filmin üstünde saydam, gerçek logo solda; sağda yalnız gerekenler.
    /menu ve diğer sayfalar kendi SiteTopBar'ını kullanır (bu bileşen yalnız ana sayfada). */
-.bar { position: absolute; inset-inline: 0; top: 0; z-index: 20; animation: barFade 500ms linear 60ms both; }
+.bar { position: absolute; inset-inline: 0; top: 0; z-index: 20; animation: barFade 500ms linear both; animation-delay: calc(var(--intro, 0ms) + var(--intro-bar, 60ms)); }
 .row { height: var(--bar-h, 64px); display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .brand { display: inline-flex; align-items: center; min-height: 44px; }
 .logo { height: 30px; width: auto; }

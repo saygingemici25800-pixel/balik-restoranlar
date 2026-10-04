@@ -3,6 +3,7 @@ import { Contact } from './_home/contact';
 import { Guests } from './_home/guests';
 import { Hero } from './_home/hero';
 import { HomeShell } from './_home/home-shell';
+import { Intro } from './_home/intro';
 import { Journal } from './_home/journal';
 import { MenuFeature } from './_home/menu-feature';
 import { Place } from './_home/place';
@@ -13,11 +14,12 @@ import { Team } from './_home/team';
 /**
  * Ana sayfa "Ufuk": iki zemin (Gece / Kum) dönüşümlü, her bölüm başında güneşli ufuk çizgisi.
  * Hero'da Zone'dan çekilmiş gün batımı filmi; menünün ayrı hero'su; sade hareket (CSS + tek
- * gözlemci). Rezervasyon kapalı (`ReserveCta` boş döner).
+ * gözlemci). İlk açılışta markanın kısa künyesi (`Intro`). Rezervasyon kapalı (`ReserveCta` boş döner).
  */
 export default function HomePage() {
   return (
     <HomeShell>
+      <Intro />
       <main>
         <Hero />
         <MenuFeature />

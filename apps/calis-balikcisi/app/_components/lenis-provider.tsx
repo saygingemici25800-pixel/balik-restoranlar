@@ -38,6 +38,21 @@ export function LenisProvider({ children }: Props) {
       touchMultiplier: 2,
     });
 
+    // Ana sayfa açılışı sürerken (html[data-intro-lock]) yumuşak kaydırma durur — overflow:hidden
+    // Lenis'in programatik kaydırmasını engellemez. Kilit kalkınca, başka bir kilit yoksa başlar.
+    const html = document.documentElement;
+    let introWatch: MutationObserver | null = null;
+    if ('introLock' in html.dataset) {
+      lenisInstance.stop();
+      introWatch = new MutationObserver(() => {
+        if ('introLock' in html.dataset) return;
+        introWatch?.disconnect();
+        introWatch = null;
+        if (html.style.overflow !== 'hidden') lenisInstance?.start();
+      });
+      introWatch.observe(html, { attributes: true, attributeFilter: ['data-intro-lock'] });
+    }
+
     let rafId = 0;
     function raf(time: number) {
       lenisInstance?.raf(time);
@@ -46,6 +61,7 @@ export function LenisProvider({ children }: Props) {
     rafId = requestAnimationFrame(raf);
 
     return () => {
+      introWatch?.disconnect();
       cancelAnimationFrame(rafId);
       lenisInstance?.destroy();
       lenisInstance = null;
