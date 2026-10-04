@@ -7,9 +7,8 @@ import { ChapterHead } from '../chapter-head';
 import { HandNote } from '../hand-note';
 import { MaskLines } from '../mask-lines';
 import { AmbientGroup, AmbientVideo, VideoToggle } from '../media';
-import { Timeline } from './timeline';
 
-/** 02 Hikâye (Gece): iç salon videosu + kısa hikâye + zaman çizgisi. */
+/** 02 Hikâye (Gece): iç salon videosu + kısa hikâye. */
 const i = (n: number) => ({ '--i': n }) as CSSProperties;
 
 export function Story() {
@@ -41,7 +40,6 @@ export function Story() {
               </span>
             </div>
           </div>
-          <Timeline />
         </div>
       </AmbientGroup>
     </section>
