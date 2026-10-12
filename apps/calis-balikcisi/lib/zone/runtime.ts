@@ -49,6 +49,8 @@ export type ZoneRuntime = {
     seenViews: Record<CharView, boolean>;
     /** Sıfırlamadan bu yana biriken SİMÜLASYON süresi (sn) — duvar saati değil. */
     simTime: number;
+    /** Film çekimi (lab): sinema kamerası açık — kalabalık kahramana göre soluklaşmaz. */
+    cinema: boolean;
   };
 };
 
@@ -79,6 +81,7 @@ const runtime: ZoneRuntime = {
     peakSpread: 0,
     seenViews: { back: false, back34: false, side: false, front: false },
     simTime: 0,
+    cinema: false,
   },
 };
 
@@ -233,7 +236,7 @@ export function resolveObstacles() {
  * Bir simülasyon adımı: girdi → konum → **iki açı**. Kare başına tam bir kez çağrılır.
  *
  * `char.ang` ve `cam.ang` aynı `want` hedefinden, aynı karede, farklı hızlarda döner.
- * Aradaki fark sprite'ın hangi açıdan çizileceğini belirler (bölüm 6.1).
+ * Aradaki fark karakterin kameraya hangi yönünü gösterdiğini belirler (bölüm 6.1).
  */
 export function stepWorld(dt: number, reduced: boolean) {
   runtime.debug.simTime += dt;
@@ -255,9 +258,9 @@ export function stepWorld(dt: number, reduced: boolean) {
   }
   // Girdi bitince `cam.ang` yerinde kalır — kamera kendi kendine eski yönüne DÖNMEZ.
 
-  // bob: yürürken hafif zıplama (bölüm 6.1)
+  // bob: yürürken hafif zıplama (bölüm 6.1); adım temposu hıza göre (yavaş yürüyüşte ayak kaymasın)
   if (len > MOVING && !reduced) {
-    char.bob += dt * 11;
+    char.bob += dt * (4.5 + 6.5 * len);
     char.y = CHAR_START.y + Math.abs(Math.sin(char.bob)) * 0.07;
   } else {
     char.y += (CHAR_START.y - char.y) * 0.2;
@@ -265,11 +268,13 @@ export function stepWorld(dt: number, reduced: boolean) {
 
   return {
     moving: len > MOVING,
+    /** Girdi şiddeti 0–1 (joystick yarım itilince yarım hız): adım genişliği buna göre. */
+    pace: len,
     lean: len > MOVING && !reduced ? Math.sin(char.bob) * 0.05 : null,
   };
 }
 
-/** Sahne ekrandaki sprite'ı buraya bildirir; `__ZONE_STATS__` okur. */
+/** Sahne karakterin kameraya dönük yönünü buraya bildirir; `__ZONE_STATS__` okur. */
 export function reportSprite(
   view: CharView,
   mirrored: boolean,
@@ -282,6 +287,11 @@ export function reportSprite(
   const abs = Math.abs(spread);
   if (abs > runtime.debug.peakSpread) runtime.debug.peakSpread = abs;
   runtime.debug.seenViews[view] = true;
+}
+
+/** Sinema kamerası (yalnız lab/geliştirme) açık mı — `useFollowCamera` bildirir. */
+export function setCinema(on: boolean) {
+  runtime.debug.cinema = on;
 }
 
 /** Test, bir ölçüm penceresine başlarken çağırır. */

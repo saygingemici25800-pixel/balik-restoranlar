@@ -4,11 +4,10 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { useLayoutEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
-import { readBrand } from '@/lib/zone/brand';
 import { LEVEL_Y } from '@/lib/zone/frames';
 import { noRaycast } from '@/lib/zone/instancing';
 import { type Ambient, stepAmbient } from '@/lib/zone/npc/ambient';
-import { acquireStandingAtlas } from '@/lib/zone/npc/atlas';
+import { buildBodyGeometry } from '@/lib/zone/npc/body';
 import { createCrowdMaterial } from '@/lib/zone/npc/crowd-material';
 import { PALETTE } from '@/lib/zone/npc/roster';
 import { zoneRuntime } from '@/lib/zone/runtime';
@@ -17,7 +16,7 @@ import { acquireShadowTexture } from '@/lib/zone/textures';
 
 /**
  * Ayakta duran ve yürüyen kurgusal insanlar (sahil yolu, kumsal, yanlar) — TEK çizim çağrısı,
- * gölgeleri bir çağrı daha. Kare, aynalama, sekme ve uçlarda solma shader'da; CPU yalnız
+ * gölgeleri bir çağrı daha (3B gövde, toon). Yön, adım, sekme ve uçlarda solma shader'da; CPU yalnız
  * yürüyenlerin konumunu ilerletir (`stepAmbient`) ve onların örnek verisini yazar.
  *
  * POV ve kat geçişinde dünya durur; hareket azaltmada herkes yerinde, duruş karesinde.
@@ -43,8 +42,7 @@ export function Strollers({ ambient, reduced, shadows }: StrollersProps) {
   const movers = useMemo(() => list.flatMap((s, i) => (s.path ? [i] : [])), [list]);
 
   const geometry = useMemo(() => {
-    const g = new THREE.PlaneGeometry(1, 1);
-    g.translate(0, 0.5, 0);
+    const g = buildBodyGeometry('standing');
     const n = list.length;
     const attr = (size: number, fill: (s: (typeof list)[number], out: Float32Array, i: number) => void) => {
       const a = new Float32Array(n * size);
@@ -63,7 +61,7 @@ export function Strollers({ ambient, reduced, shadows }: StrollersProps) {
     return g;
   }, [list]);
 
-  const material = useMemo(() => createCrowdMaterial('standing', acquireStandingAtlas(), PALETTE, readBrand().bg), []);
+  const material = useMemo(() => createCrowdMaterial('standing', PALETTE), []);
 
   const write = (i: number) => {
     const s = list[i];
@@ -92,11 +90,10 @@ export function Strollers({ ambient, reduced, shadows }: StrollersProps) {
 
   useFrame((_, delta) => {
     const u = material.uniforms;
-    const atlas = acquireStandingAtlas();
-    if (u.uAtlas.value !== atlas) u.uAtlas.value = atlas;
     u.uMove.value = reduced ? 0 : 1;
-    const { char } = zoneRuntime();
-    u.uHero.value.set(char.x, LEVEL_Y[char.level], char.z);
+    const { char, debug } = zoneRuntime();
+    // film çekiminde (lab) kahramana göre soluklaşma yok: kadrajda noktalı insan kalmasın
+    u.uHero.value.set(char.x, debug.cinema ? -100 : LEVEL_Y[char.level], char.z);
 
     const sh = shadowMesh.current;
     if (sh) {
@@ -126,7 +123,7 @@ export function Strollers({ ambient, reduced, shadows }: StrollersProps) {
         name="zone-strollers-people"
         args={[geometry, material, list.length]}
         raycast={noRaycast}
-        // billboard genişliği shader'da: geometri sınırı gerçeği yansıtmaz
+        // yön ve poz shader'da: geometri sınırı gerçeği yansıtmaz
         frustumCulled={false}
       />
       {shadows ? (

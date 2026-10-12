@@ -24,7 +24,7 @@ import {
 import { CAM_START_ANG, CHAR_START } from '@/lib/zone/runtime';
 import { chairSpots, type ChairSpot, TABLES, type TableStyle } from '@/lib/zone/venue-layout';
 import type { NpcLang, NpcPlace, NpcPose } from './lines';
-import { SEATED_SILS, type SeatedSil } from './person';
+import { type Sil, SILS } from './sils';
 import { hash32, mulberry32, pick, type Rng, weighted } from './rng';
 
 export type CrowdTier = 'off' | 'low' | 'high';
@@ -113,7 +113,7 @@ const HAT = [6, 7] as const;
 /* --------------------------------- kurallar -------------------------------- */
 
 const SEED = hash32('calis-zone-crowd-v1');
-/** Oturanın balon dayanağı: baş tepesi (oturan sprite'ta ~1.23 m) + biraz. */
+/** Oturanın balon dayanağı: baş tepesi (oturan gövdede ~1.23 m) + biraz. */
 export const SEATED_HEAD = 1.3;
 
 const OCCUPANCY: Record<TableStyle, number> = { outdoor: 0.7, indoor: 0.5, upper: 0.55 };
@@ -179,7 +179,7 @@ function blocked(t: (typeof TABLES)[number]): boolean {
 
 /* --------------------------------- seçimler -------------------------------- */
 
-export type Person = { sil: SeatedSil; age: 'adult' | 'elder' | 'kid' };
+export type Person = { sil: Sil; age: 'adult' | 'elder' | 'kid' };
 
 /**
  * Kişinin paleti (ten, üst, alt, saç/şapka indeksleri). Aynı gruptakiler aynı üstü giymez
@@ -224,7 +224,7 @@ function sizeFor(rng: Rng, g: Group): number {
 
 function peopleFor(rng: Rng, g: Group, n: number): Person[] {
   const adult = (): Person => ({
-    sil: weighted<SeatedSil>(rng, g === 'tourists'
+    sil: weighted<Sil>(rng, g === 'tourists'
       ? [['sunhat', 45], ['short', 25], ['long', 20], ['bun', 10]]
       : [['short', 40], ['long', 35], ['bun', 15], ['sunhat', 10]]),
     age: 'adult',
@@ -415,7 +415,7 @@ export function buildCrowd(tier: CrowdTier): Crowd {
         y: dy,
         z: c.z,
         face,
-        row: SEATED_SILS.indexOf(person.sil),
+        row: SILS.indexOf(person.sil),
         pal,
         scale,
         phase: rng(),

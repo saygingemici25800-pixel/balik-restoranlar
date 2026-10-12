@@ -14,7 +14,7 @@
  */
 import { LEVEL_Y, NPC_PALETTE, ROAD_Z_MIN, SAND_Y, STAIR } from '@/lib/zone/frames';
 import { BEACH_UMBRELLAS } from '@/lib/zone/venue-layout';
-import { type Sil, SILS } from './pen';
+import { type Sil, SILS } from './sils';
 import { hash32, mulberry32, pick, type Rng, weighted } from './rng';
 import type { NpcLang } from './lines';
 import { type CrowdTier, type Diner, type Person, paletteFor, SEATED_HEAD, type TableItem, type Talk, touristLang } from './roster';
@@ -78,7 +78,7 @@ const RAIL_Z = ROAD_Z_MIN + 0.3;
 const SHORE_STAND_Z = -28.8;
 const SHORE_WALK_Z = -30.4;
 const LAND_Y = -0.03;
-/** Havluda oturan: oturan sprite'ta kalça 0.47; kalça kumun 6 cm üstünde. */
+/** Havluda oturan: oturan gövdede kalça 0.47; kalça kumun 6 cm üstünde (baldırlar kumda kalır). */
 const SIT_Y = SAND_Y + 0.06 - 0.47;
 
 const faceOf = (dx: number, dz: number) => Math.atan2(dx, dz);

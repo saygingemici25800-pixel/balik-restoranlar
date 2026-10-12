@@ -17,7 +17,7 @@ import {
   POV_LERP,
   povTargets,
 } from '@/lib/zone/frames';
-import { consumeCameraSnap, zoneRuntime } from '@/lib/zone/runtime';
+import { consumeCameraSnap, setCinema, zoneRuntime } from '@/lib/zone/runtime';
 import { useZoneStore } from '@/lib/zone/store';
 import { CAMERA_POSTS, type CameraPost } from '@/lib/zone/venue-layout';
 
@@ -102,9 +102,10 @@ export function useFollowCamera(reduced: boolean) {
 
   useFrame(() => {
     // Dev/QA: sinema kamerası (hero videosu çekimi) — production'da derlemeden düşer.
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== 'production' || process.env.NEXT_PUBLIC_ZONE_LAB === '1') {
       const cine = (window as unknown as { __ZONE_CINEMA_CAM__?: { p: number[]; t: number[]; fov?: number } })
         .__ZONE_CINEMA_CAM__;
+      setCinema(Boolean(cine));
       if (cine) {
         camera.position.set(cine.p[0] ?? 0, cine.p[1] ?? 0, cine.p[2] ?? 0);
         camera.lookAt(cine.t[0] ?? 0, cine.t[1] ?? 0, cine.t[2] ?? 0);

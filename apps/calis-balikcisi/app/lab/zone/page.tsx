@@ -13,7 +13,8 @@ export const metadata: Metadata = {
  * Perde site chrome'unun (footer, kaydırma göstergesi) üstünü tam ekran örter.
  */
 export default function ZoneLabPage() {
-  if (process.env.NODE_ENV === 'production') notFound();
+  // production'da 404; yalnız film çekimi için derlenen build'de (NEXT_PUBLIC_ZONE_LAB=1) açık
+  if (process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_ZONE_LAB !== '1') notFound();
 
   return (
     <main className="fixed inset-0 z-[100] bg-bg">

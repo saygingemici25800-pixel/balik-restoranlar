@@ -1,39 +1,50 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 
 import type { HeroKind } from '@/lib/zone/figure';
 import { useZoneStore } from '@/lib/zone/store';
 
 /**
- * Zone'a girmeden karakter seçimi: "Erkek / Kız". Sahne bu sırada arkada kurulur; seçim yapılınca
- * (sahne hazırsa hemen) Zone başlar. `three` import ETMEZ; önizleme çizimi (`figure`) kapı
- * açılınca ayrı chunk olarak iner, ana sayfa bundle'ına girmez.
+ * Zone'a girmeden karakter seçimi: balıkçı ya da etekli kız. Sahne bu sırada arkada kurulur; seçim
+ * yapılınca (sahne hazırsa hemen) Zone başlar. `three` import ETMEZ; önizlemeler sahnedeki 3B
+ * gövdenin toon çizimi (şeffaf PNG, `public/images/zone`), yazı yerine cinsiyet simgesi.
  */
 
-const CHOICES: readonly { kind: HeroKind; label: string; note: string }[] = [
-  { kind: 'erkek', label: 'Erkek', note: 'kasketli balıkçı' },
-  { kind: 'kiz', label: 'Kız', note: 'etekli, saç bantlı' },
+const CHOICES: readonly { kind: HeroKind; label: string }[] = [
+  { kind: 'erkek', label: 'Erkek' },
+  { kind: 'kiz', label: 'Kız' },
 ];
 
-const W = 220;
-const H = 280;
-
-function HeroPreview({ kind }: { kind: HeroKind }) {
-  const canvas = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    let alive = true;
-    void Promise.all([import('@/lib/zone/figure'), import('@/lib/zone/brand')]).then(([fig, brand]) => {
-      const x = canvas.current?.getContext('2d');
-      if (alive && x) fig.drawFigure(x, 'front', brand.readBrand(), W, H, kind);
-    })
-      // chunk inmezse önizleme boş kalır; düğmenin adı ve notu seçimi yine anlatır
-      .catch(() => {});
-    return () => {
-      alive = false;
-    };
-  }, [kind]);
-  return <canvas ref={canvas} width={W} height={H} aria-hidden="true" className="h-[140px] w-[110px] md:h-[168px] md:w-[132px]" />;
+/** ♂ halka + sağ üste ok · ♀ halka + altta artı (çizgi, 24 birimlik kutu). */
+function Glyph({ kind }: { kind: HeroKind }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="26"
+      height="26"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="text-bg"
+    >
+      {kind === 'erkek' ? (
+        <>
+          <circle cx="9.5" cy="14.5" r="5.5" />
+          <path d="M13.4 10.6 20 4M14.5 4H20v5.5" />
+        </>
+      ) : (
+        <>
+          <circle cx="12" cy="9" r="5.5" />
+          <path d="M12 14.5V21M8.8 18h6.4" />
+        </>
+      )}
+    </svg>
+  );
 }
 
 export function HeroChoice({ progress }: { progress: number }) {
@@ -60,12 +71,19 @@ export function HeroChoice({ progress }: { progress: number }) {
             type="button"
             onClick={() => choose(c.kind)}
             data-testid={`zone-hero-${c.kind}`}
-            aria-label={`${c.label} karakterle gir — ${c.note}`}
+            aria-label={`${c.label} karakterle gir`}
             className="group flex flex-col items-center gap-2 rounded-2xl border-2 border-fg/20 bg-fg px-4 pb-4 pt-3 text-bg transition-[transform,border-color] duration-300 hover:-translate-y-1 hover:border-accent focus-visible:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg motion-reduce:transition-none motion-reduce:hover:translate-y-0"
           >
-            <HeroPreview kind={c.kind} />
-            <span className="text-lg font-semibold uppercase tracking-[0.16em]">{c.label}</span>
-            <span className="text-xs text-bg/75">{c.note}</span>
+            <Image
+              src={`/images/zone/hero-${c.kind}.png`}
+              alt=""
+              width={720}
+              height={1040}
+              sizes="(min-width: 768px) 125px, 104px"
+              loading="eager"
+              className="h-[150px] w-[104px] transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transition-none md:h-[180px] md:w-[125px]"
+            />
+            <Glyph kind={c.kind} />
           </button>
         ))}
       </div>

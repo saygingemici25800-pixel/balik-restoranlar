@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import { readBrand } from '@/lib/zone/brand';
 import { FACADE_Z, LEVEL_Y } from '@/lib/zone/frames';
 import { noRaycast } from '@/lib/zone/instancing';
+import { BUBBLE_LAYER } from '@/lib/zone/toon';
 import { BUBBLE_CANVAS, bubbleFont, drawBubble } from '@/lib/zone/npc/bubble';
 import {
   bubbleView,
@@ -147,7 +148,10 @@ export function ChatBubbles({ speakers, slots, reduced }: ChatBubblesProps) {
           key={i}
           ref={(m) => {
             meshes.current[i] = m;
-            if (m) m.onBeforeRender = place(i);
+            if (!m) return;
+            m.onBeforeRender = place(i);
+            // kontur geçişinden sonra en üstte çizilir: çizgi almaz, okunur kalır
+            m.layers.set(BUBBLE_LAYER);
           }}
           args={[geometry]}
           visible={false}

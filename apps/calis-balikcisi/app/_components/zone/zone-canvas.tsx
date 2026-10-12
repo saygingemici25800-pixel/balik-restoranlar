@@ -50,6 +50,7 @@ import { LevelTransition } from './level-transition';
 import { Promenade } from './promenade';
 import { Reyon } from './reyon';
 import { Stairs } from './stairs';
+import { ToonPass } from './toon-pass';
 import { Tables } from './tables';
 import { Umbrellas } from './umbrellas';
 import { UpperFloor } from './upper-floor';
@@ -111,7 +112,7 @@ export function ZoneCanvas({ className, onReady }: ZoneCanvasProps) {
 
   // Dev sayaçları — yalnız development'ta (prod'da tree-shake).
   useEffect(() => {
-    if (process.env.NODE_ENV === 'production') return;
+    if (process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_ZONE_LAB !== '1') return;
     const w = window as unknown as Record<string, unknown>;
     w.__ZONE_ANG__ = { angLerp, normalizeAngle, smoothing, viewFor, mirrorFor };
     w.__ZONE_DEBUG_RESET__ = resetZoneDebug;
@@ -119,6 +120,12 @@ export function ZoneCanvas({ className, onReady }: ZoneCanvasProps) {
     // Dev/QA: belirli kat + konum + bakış yönüne anında geç (kamera kaymadan yerine oturur).
     w.__ZONE_TRAVEL__ = travelTo;
     w.__ZONE_SCENE__ = () => liveScene;
+    // Film çekimi: joystick'i kısmen itilmiş gibi tut (yavaş yürüyüş); 0,0 bırakır.
+    w.__ZONE_JOY__ = (x: number, y: number) => {
+      const rt = zoneRuntime();
+      rt.joy.x = x;
+      rt.joy.y = y;
+    };
     w.__ZONE_STATS__ = () => {
       const rt = zoneRuntime();
       let meshes = 0;
@@ -165,6 +172,7 @@ export function ZoneCanvas({ className, onReady }: ZoneCanvasProps) {
       delete w.__ZONE_TELEPORT__;
       delete w.__ZONE_TRAVEL__;
       delete w.__ZONE_SCENE__;
+      delete w.__ZONE_JOY__;
     };
   }, []);
 
@@ -217,6 +225,8 @@ export function ZoneCanvas({ className, onReady }: ZoneCanvasProps) {
             `FollowCamera` yalnızca o açıyı kamera konumuna çevirir. */}
         <Character reduced={reduced} />
         <FollowCamera reduced={reduced} />
+        {/* Görünüm: çizgi film — toon ışık kademeleri + mürekkep kontur; balonlar en üstte */}
+        <ToonPass />
         <SceneDisposer
           onDispose={() => {
             stats.disposed += 1;

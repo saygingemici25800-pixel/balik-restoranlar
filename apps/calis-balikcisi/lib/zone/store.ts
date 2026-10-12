@@ -127,6 +127,6 @@ export const useZoneStore = create<ZoneStore>((set, get) => ({
 }));
 
 // Dev/QA: testler store'a buradan erişir (prod'da tree-shake edilir).
-if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
+if (typeof window !== 'undefined' && (process.env.NODE_ENV !== 'production' || process.env.NEXT_PUBLIC_ZONE_LAB === '1')) {
   (window as unknown as Record<string, unknown>).__ZONE__ = useZoneStore;
 }
